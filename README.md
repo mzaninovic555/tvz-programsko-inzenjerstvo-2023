@@ -1,1 +1,1 @@
-# tvz-programsko-inzinjerstvo-2023
+# tvz-programsko-inzenjerstvo-2023
