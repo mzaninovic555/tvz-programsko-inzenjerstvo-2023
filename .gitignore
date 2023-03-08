@@ -203,3 +203,7 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Misc
+.parcel-cache
+dist
