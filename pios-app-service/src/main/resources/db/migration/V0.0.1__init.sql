@@ -11,7 +11,8 @@ create table USERS
   PASSWORD      TEXT               not null,
   EMAIL         VARCHAR(100)       not null,
   DESCRIPTION   TEXT,
-  CREATION_DATE TIMESTAMP default current_timestamp,
+  CREATION_DATE TIMESTAMP                   default current_timestamp,
+  IS_ACTIVATED  boolean            not null default false,
   ROLE_ID       SERIAL             not null
 );
 
