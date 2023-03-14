@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.model.review.ReviewRepository">
+  <resultMap id="reviewResultMap" type="hr.tvz.pios.model.review.Review">
+    <id     property="id"           column="id" />
+    <result property="rating"       column="rating" />
+    <association property="post" javaType="hr.tvz.pios.model.post.Post"
+                 resultMap="hr.tvz.pios.model.post.PostRepository.postResultMap"
+                 columnPrefix="p_"/>
+    <association property="user" javaType="hr.tvz.pios.model.user.User"
+                 resultMap="hr.tvz.pios.model.user.UserRepository.userResultMap"
+                 columnPrefix="u_"/>
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="reviewResultMapColumns">
+    ${alias}id               ${columnPrefix}id,
+    ${alias}rating           ${columnPrefix}rating,
+    ${alias}post_id          ${columnPrefix}post_id,
+    ${alias}user_id          ${columnPrefix}user_id
+  </sql>
+
+  <!-- SELECT -->
+  <select id="getById" resultMap="reviewResultMap">
+    select
+    <include refid="reviewResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    <include refid="hr.tvz.pios.model.post.PostRepository.postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value="p_"/>
+    </include>
+    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value="u_"/>
+    </include>
+    from REVIEWS r
+      join posts p on p.id = r.post_id
+      join users u on u.id = r.user_id
+    where r.id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="hr.tvz.pios.model.review.Review">
+    insert into REVIEWS (
+      id,
+      rating,
+      post_id,
+      user_id
+    ) values (
+      #{id},
+      #{rating},
+      #{post.id},
+      #{user.id}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="hr.tvz.pios.model.review.Review">
+    update REVIEWS
+    set id = #{id},
+        rating = #{rating},
+        post_id = #{post.id},
+        user_id = #{user.id}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from REVIEWS
+    where id = #{id}
+  </delete>
+</mapper>

@@ -1,5 +1,8 @@
 package hr.tvz.pios.model.build;
 
+import hr.tvz.pios.model.component.Component;
+import hr.tvz.pios.model.user.User;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +23,8 @@ public class Build {
   String link;
 
   Boolean isPublic;
+
+  User user;
+
+  List<Component> components;
 }

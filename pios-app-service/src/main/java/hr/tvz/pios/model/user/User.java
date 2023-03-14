@@ -1,5 +1,6 @@
 package hr.tvz.pios.model.user;
 
+import hr.tvz.pios.model.role.Role;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,4 +26,6 @@ public class User {
   LocalDateTime creationDate;
 
   Boolean isActivated;
+
+  Role role;
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.model.manufacturer.ManufacturerRepository">
+  <resultMap id="ManufacturerResultMap" type="hr.tvz.pios.model.manufacturer.Manufacturer">
+    <id     property="id"          column="id" />
+    <result property="name"        column="name" />
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="ManufacturerResultMapColumns">
+    ${alias}id                ${columnPrefix}id,
+    ${alias}name              ${columnPrefix}name
+  </sql>
+
+  <!-- SELECT -->
+  <select id="getById" resultMap="ManufacturerResultMap">
+    select
+    <include refid="ManufacturerResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from MANUFACTURERS
+    where id = #{id}
+  </select>
+
+  <insert id="insert" parameterType="hr.tvz.pios.model.manufacturer.Manufacturer">
+    insert into MANUFACTURERS (
+      id,
+      name
+    ) values (
+      #{id},
+      #{name}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="hr.tvz.pios.model.manufacturer.Manufacturer">
+    update MANUFACTURERS
+    set id = #{id},
+        name = #{name}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from MANUFACTURERS
+    where id = #{id}
+  </delete>
+</mapper>
