@@ -9,7 +9,9 @@
     <result property="description"    column="description" />
     <result property="creationDate"   column="creation_date" />
     <result property="isActivated"    column="is_activated" />
-    <result property="roleId"         column="role_id" />
+    <association property="role"      javaType="hr.tvz.pios.model.role.Role"
+                 resultMap="hr.tvz.pios.model.role.RoleRepository.roleResultMap"
+                 columnPrefix="r_"/>
   </resultMap>
 
   <!-- SQL -->
@@ -27,21 +29,31 @@
   <select id="getById" resultMap="userResultMap">
     select
     <include refid="userResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="u."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from USERS
-    where id = #{id}
+    <include refid="hr.tvz.pios.model.role.RoleRepository.roleResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value="r_"/>
+    </include>
+    from USERS u
+      join roles r on r.id = u.role_id
+    where u.id = #{id}
   </select>
 
   <select id="getByUsername" resultMap="userResultMap">
     select
     <include refid="userResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="u."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from USERS
-    where username = #{username}
+    <include refid="hr.tvz.pios.model.role.RoleRepository.roleResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value="r_"/>
+    </include>
+    from USERS u
+      join roles r on r.id = u.role_id
+    where u.username = #{username}
   </select>
 
   <insert id="insert" parameterType="hr.tvz.pios.model.user.User">
@@ -62,7 +74,7 @@
       #{description},
       #{creationDate},
       #{isActivated},
-      #{roleId}
+      #{role.id}
     )
   </insert>
 
@@ -75,7 +87,7 @@
         description = #{description},
         creation_date = #{creationDate},
         is_activated = #{isActivated},
-        role_id = #{roleId}
+        role_id = #{role.id}
     where id = #{id}
   </update>
 

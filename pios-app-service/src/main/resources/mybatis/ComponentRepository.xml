@@ -8,7 +8,9 @@
     <result property="type"              column="type" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
     <result property="data"              column="data" />
     <result property="imageBase64"       column="imageBase64" />
-    <result property="manufacturerId"    column="manufacturer_id" />
+    <association property="manufacturer" javaType="hr.tvz.pios.model.manufacturer.Manufacturer"
+                 resultMap="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMap"
+                 columnPrefix="m_"/>
   </resultMap>
 
   <!-- SQL -->
@@ -26,21 +28,31 @@
   <select id="getById" resultMap="componentResultMap">
     select
     <include refid="componentResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from COMPONENTS
-    where id = #{id}
+    <include refid="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="m_"/>
+    </include>
+    from COMPONENTS c
+      join MANUFACTURERS m on c.manufacturer_id = m.id
+    where c.id = #{id}
   </select>
 
   <select id="getByType" resultMap="componentResultMap">
     select
     <include refid="componentResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from COMPONENTS
-    where type = #{type}
+    <include refid="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="m_"/>
+    </include>
+    from COMPONENTS c
+      join MANUFACTURERS m on c.manufacturer_id = m.id
+    where c.type = #{type}
   </select>
 
   <insert id="insert" parameterType="hr.tvz.pios.model.component.Component">
@@ -59,7 +71,7 @@
       #{type},
       #{data},
       #{imageBase64},
-      #{manufacturer_id}
+      #{manufacturer.id}
     )
   </insert>
 
@@ -71,7 +83,7 @@
         type = #{type},
         data = #{data},
         image_base64 = #{imageBase64},
-        manufacturer_id = #{manufacturer_id}
+        manufacturer_id = #{manufacturer.id}
     where id = #{id}
   </update>
 

@@ -7,7 +7,12 @@
     <result property="description"      column="description" />
     <result property="link"             column="link" />
     <result property="isPublic"         column="is_public" />
-    <result property="userId"           column="user_id" />
+    <association property="user" javaType="hr.tvz.pios.model.user.User"
+                 resultMap="hr.tvz.pios.model.user.UserRepository.userResultMap"
+                 columnPrefix="u_" />
+    <collection property="components" columnPrefix="c_"
+                resultMap="hr.tvz.pios.model.component.ComponentRepository.componentResultMap"
+                ofType="hr.tvz.pios.model.component.Component" />
   </resultMap>
 
   <!-- SQL -->
@@ -24,20 +29,43 @@
   <select id="getById" resultMap="buildResultMap">
     select
     <include refid="buildResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from BUILDS
-    where id = #{id}
+    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value="u_"/>
+    </include>
+    <include refid="hr.tvz.pios.model.component.ComponentRepository.componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>
+    from BUILDS b
+      join users u on u.id = b.user_id
+      join builds_components bc on b.id = bc.build_id
+      join components c on bc.component_id = c.id
+    where b.id = #{id}
   </select>
 
   <select id="getByUserId" resultMap="buildResultMap">
     select
+    select
     <include refid="buildResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from BUILDS
+    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value="u_"/>
+    </include>
+    <include refid="hr.tvz.pios.model.component.ComponentRepository.componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>
+    from BUILDS b
+      join users u on u.id = b.user_id
+      join builds_components bc on b.id = bc.build_id
+      join components c on bc.component_id = c.id
     where user_id = #{userId}
   </select>
 
@@ -55,7 +83,17 @@
       #{description},
       #{link},
       #{isPublic},
-      #{userId}
+      #{user.id}
+    )
+  </insert>
+
+  <insert id="insertBuildComponent">
+    insert into builds_components (
+      component_id,
+      build_id
+    ) values (
+      #{buildId},
+      #{componentId}
     )
   </insert>
 

@@ -1,5 +1,7 @@
 package hr.tvz.pios.model.review;
 
+import hr.tvz.pios.model.post.Post;
+import hr.tvz.pios.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +17,7 @@ public class Review {
 
   Character rating;
 
-  Long postId;
+  Post post;
 
-  Long userId;
+  User user;
 }

@@ -4,8 +4,12 @@
   <resultMap id="reviewResultMap" type="hr.tvz.pios.model.review.Review">
     <id     property="id"           column="id" />
     <result property="rating"       column="rating" />
-    <result property="postId"       column="post_id" />
-    <result property="userId"       column="user_id" />
+    <association property="post" javaType="hr.tvz.pios.model.post.Post"
+                 resultMap="hr.tvz.pios.model.post.PostRepository.postResultMap"
+                 columnPrefix="p_"/>
+    <association property="user" javaType="hr.tvz.pios.model.user.User"
+                 resultMap="hr.tvz.pios.model.user.UserRepository.userResultMap"
+                 columnPrefix="u_"/>
   </resultMap>
 
   <!-- SQL -->
@@ -20,11 +24,21 @@
   <select id="getById" resultMap="reviewResultMap">
     select
     <include refid="reviewResultMapColumns">
-      <property name="alias" value=""/>
+      <property name="alias" value="r."/>
       <property name="columnPrefix" value=""/>
     </include>
-    from REVIEWS
-    where id = #{id}
+    <include refid="hr.tvz.pios.model.post.PostRepository.postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value="p_"/>
+    </include>
+    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value="u_"/>
+    </include>
+    from REVIEWS r
+      join posts p on p.id = r.post_id
+      join users u on u.id = r.user_id
+    where r.id = #{id}
   </select>
 
   <insert id="insert" parameterType="hr.tvz.pios.model.review.Review">
@@ -36,8 +50,8 @@
     ) values (
       #{id},
       #{rating},
-      #{postId},
-      #{userId}
+      #{post.id},
+      #{user.id}
     )
   </insert>
 
@@ -45,8 +59,8 @@
     update REVIEWS
     set id = #{id},
         rating = #{rating},
-        post_id = #{postId},
-        user_id = #{userId}
+        post_id = #{post.id},
+        user_id = #{user.id}
     where id = #{id}
   </update>
 

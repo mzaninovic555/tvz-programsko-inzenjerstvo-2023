@@ -1,6 +1,7 @@
 package hr.tvz.pios.model.component;
 
 import hr.tvz.pios.common.Type;
+import hr.tvz.pios.model.manufacturer.Manufacturer;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,5 +26,5 @@ public class Component {
 
   String imageBase64;
 
-  Long manufacturerId;
+  Manufacturer manufacturer;
 }
