@@ -1,6 +1,6 @@
 package hr.tvz.pios.model.component;
 
-import hr.tvz.pios.common.Types;
+import hr.tvz.pios.common.Type;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +19,11 @@ public class Component {
 
   BigDecimal price;
 
-  Types type;
+  Type type;
 
   String data;
 
   String imageBase64;
+
+  Long manufacturerId;
 }

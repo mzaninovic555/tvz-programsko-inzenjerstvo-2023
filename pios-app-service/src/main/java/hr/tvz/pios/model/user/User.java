@@ -25,4 +25,6 @@ public class User {
   LocalDateTime creationDate;
 
   Boolean isActivated;
+
+  Long roleId;
 }

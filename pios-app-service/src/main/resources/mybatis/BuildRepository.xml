@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.model.build.BuildRepository">
+  <resultMap id="buildResultMap" type="hr.tvz.pios.model.build.Build">
+    <id     property="id"               column="id" />
+    <result property="title"            column="title" />
+    <result property="description"      column="description" />
+    <result property="link"             column="link" />
+    <result property="isPublic"         column="is_public" />
+    <result property="userId"           column="user_id" />
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="buildResultMapColumns">
+    ${alias}id                 ${columnPrefix}id,
+    ${alias}title              ${columnPrefix}title,
+    ${alias}description        ${columnPrefix}description,
+    ${alias}link               ${columnPrefix}link,
+    ${alias}is_public          ${columnPrefix}is_public,
+    ${alias}user_id            ${columnPrefix}user_id
+  </sql>
+
+  <!-- SELECT -->
+  <select id="getById" resultMap="buildResultMap">
+    select
+    <include refid="buildResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from BUILDS
+    where id = #{id}
+  </select>
+
+  <select id="getByUserId" resultMap="buildResultMap">
+    select
+    <include refid="buildResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from BUILDS
+    where user_id = #{userId}
+  </select>
+
+  <insert id="insert" parameterType="hr.tvz.pios.model.build.Build">
+    insert into BUILDS (
+      id,
+      title,
+      description,
+      link,
+      is_public,
+      user_id
+    ) values (
+      #{id},
+      #{title},
+      #{description},
+      #{link},
+      #{isPublic},
+      #{userId}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="hr.tvz.pios.model.build.Build">
+    update BUILDS
+    set id = #{id},
+        title = #{title},
+        description = #{description},
+        link = #{link},
+        is_public = #{isPublic},
+        user_id = #{userId}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from BUILDS
+    where id = #{id}
+  </delete>
+</mapper>

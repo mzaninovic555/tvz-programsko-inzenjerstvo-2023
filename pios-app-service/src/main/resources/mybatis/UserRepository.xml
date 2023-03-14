@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.model.user.UserRepository">
+  <resultMap id="userResultMap" type="hr.tvz.pios.model.user.User">
+    <id     property="id"             column="id" />
+    <result property="username"       column="username" />
+    <result property="password"       column="password" />
+    <result property="email"          column="email" />
+    <result property="description"    column="description" />
+    <result property="creationDate"   column="creation_date" />
+    <result property="isActivated"    column="is_activated" />
+    <result property="roleId"         column="role_id" />
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="userResultMapColumns">
+    ${alias}id               ${columnPrefix}id,
+    ${alias}username         ${columnPrefix}username,
+    ${alias}password         ${columnPrefix}password,
+    ${alias}email            ${columnPrefix}email,
+    ${alias}description      ${columnPrefix}description,
+    ${alias}creation_date    ${columnPrefix}creation_date,
+    ${alias}is_activated     ${columnPrefix}is_activated
+  </sql>
+
+  <!-- SELECT -->
+  <select id="getById" resultMap="userResultMap">
+    select
+    <include refid="userResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from USERS
+    where id = #{id}
+  </select>
+
+  <select id="getByUsername" resultMap="userResultMap">
+    select
+    <include refid="userResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from USERS
+    where username = #{username}
+  </select>
+
+  <insert id="insert" parameterType="hr.tvz.pios.model.user.User">
+    insert into USERS (
+      id,
+      username,
+      password,
+      email,
+      description,
+      creation_date,
+      is_activated,
+      role_id
+    ) values (
+      #{id},
+      #{username},
+      #{password},
+      #{email},
+      #{description},
+      #{creationDate},
+      #{isActivated},
+      #{roleId}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="hr.tvz.pios.model.user.User">
+    update USERS
+    set id = #{id},
+        username = #{username},
+        password = #{password},
+        email = #{email},
+        description = #{description},
+        creation_date = #{creationDate},
+        is_activated = #{isActivated},
+        role_id = #{roleId}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from USERS
+    where id = #{id}
+  </delete>
+</mapper>

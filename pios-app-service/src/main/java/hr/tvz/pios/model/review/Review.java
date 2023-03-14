@@ -14,4 +14,8 @@ public class Review {
   Long id;
 
   Character rating;
+
+  Long postId;
+
+  Long userId;
 }

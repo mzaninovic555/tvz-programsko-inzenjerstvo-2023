@@ -20,4 +20,6 @@ public class Build {
   String link;
 
   Boolean isPublic;
+
+  Long userId;
 }
