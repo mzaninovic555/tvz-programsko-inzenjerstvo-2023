@@ -1,5 +1,6 @@
 package hr.tvz.pios.model.build;
 
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,7 @@ public interface BuildRepository {
 
   Optional<Build> getById(Long id);
 
-  Optional<Build> getByUserId(Long userId);
+  List<Build> getByUserId(Long userId);
 
   void insert(Build build);
 
