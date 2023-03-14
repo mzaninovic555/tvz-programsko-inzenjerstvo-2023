@@ -49,7 +49,6 @@
 
   <select id="getByUserId" resultMap="buildResultMap">
     select
-    select
     <include refid="buildResultMapColumns">
       <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
