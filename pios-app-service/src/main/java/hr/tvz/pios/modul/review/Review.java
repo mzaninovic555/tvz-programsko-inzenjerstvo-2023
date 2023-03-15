@@ -1,7 +1,7 @@
-package hr.tvz.pios.model.review;
+package hr.tvz.pios.modul.review;
 
-import hr.tvz.pios.model.post.Post;
-import hr.tvz.pios.model.user.User;
+import hr.tvz.pios.modul.post.Post;
+import hr.tvz.pios.modul.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

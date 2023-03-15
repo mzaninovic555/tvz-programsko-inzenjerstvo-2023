@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.component;
+package hr.tvz.pios.modul.component;
 
 import hr.tvz.pios.common.Type;
 import java.util.Optional;

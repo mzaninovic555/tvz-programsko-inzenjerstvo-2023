@@ -1,7 +1,7 @@
-package hr.tvz.pios.model.build;
+package hr.tvz.pios.modul.build;
 
-import hr.tvz.pios.model.component.Component;
-import hr.tvz.pios.model.user.User;
+import hr.tvz.pios.modul.component.Component;
+import hr.tvz.pios.modul.user.User;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

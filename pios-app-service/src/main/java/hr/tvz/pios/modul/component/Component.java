@@ -1,7 +1,7 @@
-package hr.tvz.pios.model.component;
+package hr.tvz.pios.modul.component;
 
 import hr.tvz.pios.common.Type;
-import hr.tvz.pios.model.manufacturer.Manufacturer;
+import hr.tvz.pios.modul.manufacturer.Manufacturer;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

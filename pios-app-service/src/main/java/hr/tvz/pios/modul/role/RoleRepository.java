@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.post;
+package hr.tvz.pios.modul.role;
 
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
@@ -6,13 +6,13 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface PostRepository {
+public interface RoleRepository {
 
-  Optional<Post> getById(Long id);
+  Optional<Role> getById(Long id);
 
-  void insert(Post post);
+  Optional<Role> getByName(String role);
 
-  Integer updateById(Post post);
+  void insert(Role role);
 
   Integer deleteById(Long id);
 }

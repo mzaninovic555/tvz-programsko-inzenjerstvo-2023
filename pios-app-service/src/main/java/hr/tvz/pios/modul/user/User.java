@@ -1,6 +1,6 @@
-package hr.tvz.pios.model.user;
+package hr.tvz.pios.modul.user;
 
-import hr.tvz.pios.model.role.Role;
+import hr.tvz.pios.modul.role.Role;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
