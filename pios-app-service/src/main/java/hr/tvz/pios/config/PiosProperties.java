@@ -3,6 +3,9 @@ package hr.tvz.pios.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Properties koji se koriste u ostatku aplikacije.
+ */
 @Configuration
 @ConfigurationProperties(prefix = "pios")
 public class PiosProperties {
@@ -22,9 +25,25 @@ public class PiosProperties {
     }
   }
 
-  //TODO jwt properties
-  private static class Jwt {
+  public static class Jwt {
+    private String secret;
+    private Long validitySeconds;
 
+    public String getSecret() {
+      return secret;
+    }
+
+    public void setSecret(String secret) {
+      this.secret = secret;
+    }
+
+    public Long getValiditySeconds() {
+      return validitySeconds;
+    }
+
+    public void setValiditySeconds(Long validitySeconds) {
+      this.validitySeconds = validitySeconds;
+    }
   }
 
   public Mail getMail() {
