@@ -1,12 +1,9 @@
 import {Toast} from 'primereact/toast';
 import React, {useRef} from 'react';
 import {ToastContext} from '../context/ToastContext';
+import {JSXChildrenProps} from '~/@types';
 
-interface ToastComponentProps {
-  children: JSX.Element | JSX.Element[];
-}
-
-const ToastWrapper = (props: ToastComponentProps) => {
+const ToastWrapper = (props: JSXChildrenProps) => {
   const toast = useRef<Toast>(null);
   return (
     <>
