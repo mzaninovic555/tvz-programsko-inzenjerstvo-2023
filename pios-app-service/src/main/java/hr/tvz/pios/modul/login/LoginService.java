@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginService {
 
+  final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
   @Autowired
   JwtService jwtService;
   @Autowired
@@ -27,7 +29,6 @@ public class LoginService {
   }
 
   private Boolean isMatchingPassword(String loginPassword, String userPassword) {
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     return encoder.matches(loginPassword, userPassword);
   }
 }
