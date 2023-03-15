@@ -16,12 +16,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-  @Autowired
-  JwtFilter jwtFilter;
+  @Autowired JwtFilter jwtFilter;
 
   // ovdje dodati URL koje ne treba autentificirati
   public static final String[] UNAUTHENTICATED_URLS = {
-
+      "/api/v1/login"
   };
 
   @Bean
@@ -36,9 +35,13 @@ public class SecurityConfig {
     http.headers().frameOptions().disable();
     http.cors();
 
-    http.exceptionHandling().authenticationEntryPoint(
-        ((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
-    ).and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling()
+        .authenticationEntryPoint(
+            ((request, response, authException) -> {
+              response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            }))
+        .and();
 
     return http.build();
   }
