@@ -90,7 +90,7 @@ public class JwtService {
     } catch (IllegalArgumentException e) {
       LOGGER.debug("JWT token compact of handler are invalid.");
     }
-    return true;
+    return false;
   }
 
   private ApplicationUser getApplicationUserFromJwt(String jwtToken) {
