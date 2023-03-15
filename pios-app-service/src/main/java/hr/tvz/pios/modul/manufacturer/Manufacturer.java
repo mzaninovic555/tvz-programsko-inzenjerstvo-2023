@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.post;
+package hr.tvz.pios.modul.manufacturer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Post {
+public class Manufacturer {
 
   Long id;
 
-  String title;
-
-  String content;
+  String name;
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hr.tvz.pios.model.user.UserRepository">
-  <resultMap id="userResultMap" type="hr.tvz.pios.model.user.User">
+  <resultMap id="userResultMap" type="hr.tvz.pios.modul.user.User">
     <id     property="id"             column="id" />
     <result property="username"       column="username" />
     <result property="password"       column="password" />
@@ -9,8 +9,8 @@
     <result property="description"    column="description" />
     <result property="creationDate"   column="creation_date" />
     <result property="isActivated"    column="is_activated" />
-    <association property="role"      javaType="hr.tvz.pios.model.role.Role"
-                 resultMap="hr.tvz.pios.model.role.RoleRepository.roleResultMap"
+    <association property="role"      javaType="hr.tvz.pios.modul.role.Role"
+                 resultMap="hr.tvz.pios.modul.role.RoleRepository.roleResultMap"
                  columnPrefix="r_"/>
   </resultMap>
 
@@ -32,7 +32,7 @@
       <property name="alias" value="u."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.role.RoleRepository.roleResultMapColumns">
+    <include refid="hr.tvz.pios.modul.role.RoleRepository.roleResultMapColumns">
       <property name="alias" value="r."/>
       <property name="columnPrefix" value="r_"/>
     </include>
@@ -47,7 +47,7 @@
       <property name="alias" value="u."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.role.RoleRepository.roleResultMapColumns">
+    <include refid="hr.tvz.pios.modul.role.RoleRepository.roleResultMapColumns">
       <property name="alias" value="r."/>
       <property name="columnPrefix" value="r_"/>
     </include>
@@ -56,7 +56,7 @@
     where u.username = #{username}
   </select>
 
-  <insert id="insert" parameterType="hr.tvz.pios.model.user.User">
+  <insert id="insert" parameterType="hr.tvz.pios.modul.user.User">
     insert into USERS (
       id,
       username,
@@ -78,7 +78,7 @@
     )
   </insert>
 
-  <update id="updateById" parameterType="hr.tvz.pios.model.user.User">
+  <update id="updateById" parameterType="hr.tvz.pios.modul.user.User">
     update USERS
     set id = #{id},
         username = #{username},

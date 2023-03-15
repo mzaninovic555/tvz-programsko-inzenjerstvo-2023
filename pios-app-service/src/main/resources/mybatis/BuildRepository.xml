@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hr.tvz.pios.model.build.BuildRepository">
-  <resultMap id="buildResultMap" type="hr.tvz.pios.model.build.Build">
+  <resultMap id="buildResultMap" type="hr.tvz.pios.modul.build.Build">
     <id     property="id"               column="id" />
     <result property="title"            column="title" />
     <result property="description"      column="description" />
     <result property="link"             column="link" />
     <result property="isPublic"         column="is_public" />
-    <association property="user" javaType="hr.tvz.pios.model.user.User"
-                 resultMap="hr.tvz.pios.model.user.UserRepository.userResultMap"
+    <association property="user" javaType="hr.tvz.pios.modul.user.User"
+                 resultMap="hr.tvz.pios.modul.user.UserRepository.userResultMap"
                  columnPrefix="u_" />
     <collection property="components" columnPrefix="c_"
-                resultMap="hr.tvz.pios.model.component.ComponentRepository.componentResultMap"
-                ofType="hr.tvz.pios.model.component.Component" />
+                resultMap="hr.tvz.pios.modul.component.ComponentRepository.componentResultMap"
+                ofType="hr.tvz.pios.modul.component.Component" />
   </resultMap>
 
   <!-- SQL -->
@@ -32,11 +32,11 @@
       <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+    <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
       <property name="alias" value="u."/>
       <property name="columnPrefix" value="u_"/>
     </include>
-    <include refid="hr.tvz.pios.model.component.ComponentRepository.componentResultMapColumns">
+    <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
     </include>
@@ -53,11 +53,11 @@
       <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.user.UserRepository.userResultMapColumns">
+    <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
       <property name="alias" value="u."/>
       <property name="columnPrefix" value="u_"/>
     </include>
-    <include refid="hr.tvz.pios.model.component.ComponentRepository.componentResultMapColumns">
+    <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
     </include>
@@ -68,7 +68,7 @@
     where user_id = #{userId}
   </select>
 
-  <insert id="insert" parameterType="hr.tvz.pios.model.build.Build">
+  <insert id="insert" parameterType="hr.tvz.pios.modul.build.Build">
     insert into BUILDS (
       id,
       title,
@@ -96,7 +96,7 @@
     )
   </insert>
 
-  <update id="updateById" parameterType="hr.tvz.pios.model.build.Build">
+  <update id="updateById" parameterType="hr.tvz.pios.modul.build.Build">
     update BUILDS
     set id = #{id},
         title = #{title},

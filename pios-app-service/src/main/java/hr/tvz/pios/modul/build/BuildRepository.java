@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.build;
+package hr.tvz.pios.modul.build;
 
 import java.util.List;
 import java.util.Optional;

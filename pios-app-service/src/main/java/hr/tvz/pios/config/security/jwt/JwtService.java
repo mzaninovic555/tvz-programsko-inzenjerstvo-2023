@@ -3,7 +3,7 @@ package hr.tvz.pios.config.security.jwt;
 import hr.tvz.pios.config.PiosProperties;
 import hr.tvz.pios.config.security.user.ApplicationUser;
 import hr.tvz.pios.config.security.user.UserAuthentication;
-import hr.tvz.pios.model.user.User;
+import hr.tvz.pios.modul.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

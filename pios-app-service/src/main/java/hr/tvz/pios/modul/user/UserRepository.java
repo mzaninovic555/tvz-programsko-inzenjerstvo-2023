@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.user;
+package hr.tvz.pios.modul.user;
 
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;

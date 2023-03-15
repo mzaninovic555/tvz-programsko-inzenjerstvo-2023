@@ -1,6 +1,6 @@
-package hr.tvz.pios.model.manufacturer;
+package hr.tvz.pios.modul.manufacturer;
 
-import hr.tvz.pios.model.post.Post;
+import hr.tvz.pios.modul.post.Post;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;

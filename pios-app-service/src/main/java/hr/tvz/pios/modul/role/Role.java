@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.role;
+package hr.tvz.pios.modul.role;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

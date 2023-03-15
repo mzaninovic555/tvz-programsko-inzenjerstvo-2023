@@ -1,4 +1,4 @@
-package hr.tvz.pios.model.review;
+package hr.tvz.pios.modul.review;
 
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;

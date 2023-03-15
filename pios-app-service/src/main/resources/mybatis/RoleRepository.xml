@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hr.tvz.pios.model.role.RoleRepository">
-  <resultMap id="roleResultMap" type="hr.tvz.pios.model.role.Role">
+  <resultMap id="roleResultMap" type="hr.tvz.pios.modul.role.Role">
     <id     property="id"             column="id" />
     <result property="role"           column="role" />
   </resultMap>
@@ -33,7 +33,7 @@
     where role = #{role}
   </select>
 
-  <insert id="insert" parameterType="hr.tvz.pios.model.role.Role">
+  <insert id="insert" parameterType="hr.tvz.pios.modul.role.Role">
     insert into ROLES (
       id,
       role

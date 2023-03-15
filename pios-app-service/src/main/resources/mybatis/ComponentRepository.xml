@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hr.tvz.pios.model.component.ComponentRepository">
-  <resultMap id="componentResultMap" type="hr.tvz.pios.model.component.Component">
+  <resultMap id="componentResultMap" type="hr.tvz.pios.modul.component.Component">
     <id     property="id"                column="id" />
     <result property="name"              column="name" />
     <result property="price"             column="price" />
     <result property="type"              column="type" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
     <result property="data"              column="data" />
     <result property="imageBase64"       column="imageBase64" />
-    <association property="manufacturer" javaType="hr.tvz.pios.model.manufacturer.Manufacturer"
-                 resultMap="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMap"
+    <association property="manufacturer" javaType="hr.tvz.pios.modul.manufacturer.Manufacturer"
+                 resultMap="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMap"
                  columnPrefix="m_"/>
   </resultMap>
 
@@ -31,7 +31,7 @@
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
     </include>
@@ -46,7 +46,7 @@
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.model.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
     </include>
@@ -55,7 +55,7 @@
     where c.type = #{type}
   </select>
 
-  <insert id="insert" parameterType="hr.tvz.pios.model.component.Component">
+  <insert id="insert" parameterType="hr.tvz.pios.modul.component.Component">
     insert into COMPONENTS (
       id,
       name,
@@ -75,7 +75,7 @@
     )
   </insert>
 
-  <update id="updateById" parameterType="hr.tvz.pios.model.component.Component">
+  <update id="updateById" parameterType="hr.tvz.pios.modul.component.Component">
     update COMPONENTS
     set id = #{id},
         name = #{name},
