@@ -71,7 +71,6 @@ public class SecurityConfig {
       throws IOException {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(status);
-    var t = response.getOutputStream();
-    mapper.writeValue(t, new ErrorResponse(message));
+    mapper.writeValue(response.getOutputStream(), new ErrorResponse(message));
   }
 }
