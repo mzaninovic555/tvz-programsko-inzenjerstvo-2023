@@ -3,13 +3,14 @@ package hr.tvz.pios.common;
 /**
  * Odgovor za slučajeve kada se desi iznimka.
  *
- * @param message error poruka.
+ * @param message Error poruka.
+ * @param errors Opcionalna lista detaljnih.
  */
 public record ErrorResponse(String message, ErrorField[] errors) {
   /**
    * Rekord za pojedinosti o erroru.
    *
-   * @param name Ime polja na koje je vezana greška.
+   * @param name Ime polja za koje je vezana greška.
    * @param message Poruka o grešci.
    */
   public record ErrorField(String name, String message) {}
