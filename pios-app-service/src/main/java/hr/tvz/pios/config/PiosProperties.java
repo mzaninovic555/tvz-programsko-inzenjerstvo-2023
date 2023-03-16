@@ -13,6 +13,7 @@ public class PiosProperties {
   Mail mail = new Mail();
 
   Jwt jwt = new Jwt();
+
   public static class Mail {
     private String from;
 
