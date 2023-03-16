@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="hr.tvz.pios.model.user.UserRepository">
+<mapper namespace="hr.tvz.pios.modul.user.UserRepository">
   <resultMap id="userResultMap" type="hr.tvz.pios.modul.user.User">
     <id     property="id"             column="id" />
     <result property="username"       column="username" />
@@ -46,7 +46,7 @@
     <include refid="userResultMapColumns">
       <property name="alias" value="u."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.role.RoleRepository.roleResultMapColumns">
       <property name="alias" value="r."/>
       <property name="columnPrefix" value="r_"/>

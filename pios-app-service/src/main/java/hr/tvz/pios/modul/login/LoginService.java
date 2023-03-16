@@ -5,6 +5,8 @@ import hr.tvz.pios.modul.user.User;
 import hr.tvz.pios.modul.user.UserRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +15,25 @@ public class LoginService {
 
   final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-  @Autowired
-  JwtService jwtService;
-  @Autowired
-  UserRepository userRepository;
+  @Autowired JwtService jwtService;
+  @Autowired UserRepository userRepository;
 
-  //TODO odluciti sto vraca metoda
-  public void login(String username, String password) {
+  /**
+   * Provodi akciju logiranja u aplikaciju.
+   *
+   * @param username Korisničko ime.
+   * @param password Lozinka.
+   * @return @{@link LoginResponse} koji sadrži ili error poruku ili JWT token.
+   */
+  public ResponseEntity<LoginResponse> login(String username, String password) {
     Optional<User> userOptional = userRepository.getByUsername(username);
     if (userOptional.isEmpty() || !isMatchingPassword(password, userOptional.get().getPassword())) {
-      return;
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(new LoginResponse(null, "Invalid username/password"));
     }
 
-    jwtService.createJwtToken(userOptional.get()); //stvoriti login s ovim, bumo vidli
+    var token = jwtService.createJwtToken(userOptional.get());
+    return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token, null));
   }
 
   private Boolean isMatchingPassword(String loginPassword, String userPassword) {
