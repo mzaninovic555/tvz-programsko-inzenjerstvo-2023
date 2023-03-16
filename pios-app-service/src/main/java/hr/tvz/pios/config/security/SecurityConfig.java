@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-/** Konfiguracijska klasa za Spring Security. */
+/**
+ * Konfiguracijska klasa za Spring Security.
+ */
 @Configuration
 public class SecurityConfig {
   private final PiosJwtDecoder piosJwtDecoder;
@@ -26,7 +28,9 @@ public class SecurityConfig {
   }
 
   // ovdje dodati URL koje ne treba autentificirati
-  public static final String[] UNAUTHENTICATED_URLS = {"/api/v1/login"};
+  public static final String[] UNAUTHENTICATED_URLS = {
+      "/api/v1/login",
+  };
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
