@@ -32,7 +32,7 @@ public class LoginService {
           .body(new LoginResponse(null, "Invalid username/password"));
     }
 
-    var token = jwtService.createJwtToken(userOptional.get());
+    String token = jwtService.createJwtToken(userOptional.get());
     return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token, null));
   }
 

@@ -4,6 +4,7 @@ import hr.tvz.pios.config.security.user.UserAuthentication;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -24,12 +25,12 @@ public class PiosAuthConverter implements Converter<Jwt, AbstractAuthenticationT
   public AbstractAuthenticationToken convert(Jwt source) {
     List<String> errors = new ArrayList<>();
 
-    var username = source.getClaimAsString("sub");
+    String username = source.getClaimAsString("sub");
     if (StringUtils.isEmptyOrWhitespace(username)) {
       errors.add("username is missing");
     }
 
-    var roles = source.getClaimAsString("roles");
+    String roles = source.getClaimAsString("roles");
     if (StringUtils.isEmptyOrWhitespace(roles)) {
       errors.add("authorities is missing");
     }
@@ -41,7 +42,7 @@ public class PiosAuthConverter implements Converter<Jwt, AbstractAuthenticationT
               new OAuth2Error(OAuth2ErrorCodes.INVALID_TOKEN, String.join(", ", errors), null)));
     }
 
-    var rolesMapped =
+    Set<SimpleGrantedAuthority> rolesMapped =
         Arrays.stream(roles.split(", "))
             .map(r -> new SimpleGrantedAuthority("ROLE_" + r))
             .collect(Collectors.toSet());
