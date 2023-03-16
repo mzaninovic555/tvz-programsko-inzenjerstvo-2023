@@ -21,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
   private final PiosJwtDecoder piosJwtDecoder;
   private final PiosAuthConverter piosAuthConverter;
+  private final ObjectMapper mapper = new ObjectMapper();
 
   public SecurityConfig(PiosJwtDecoder piosJwtDecoder, PiosAuthConverter piosAuthConverter) {
     this.piosJwtDecoder = piosJwtDecoder;
@@ -71,7 +72,6 @@ public class SecurityConfig {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(status);
     var t = response.getOutputStream();
-    ObjectMapper mapper = new ObjectMapper();
     mapper.writeValue(t, new ErrorResponse(message));
   }
 }
