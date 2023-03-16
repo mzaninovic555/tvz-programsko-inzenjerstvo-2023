@@ -5,6 +5,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class PIOSApplicationTests {
-	@Test
-	void contextLoads() {}
+  @Test
+  void contextLoads() {}
 }
