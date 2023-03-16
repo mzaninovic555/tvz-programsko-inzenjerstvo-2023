@@ -34,6 +34,32 @@
     <module>pios-app-ui-dist</module>
   </modules>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.1.2</version>
+        <configuration>
+          <configLocation>dev/checkstyle/checkstyle.xml</configLocation>
+          <suppressionsFileExpression>dev/checkstyle/suppressions.xml</suppressionsFileExpression>
+          <violationSeverity>info</violationSeverity>
+          <propertyExpansion>samedir=dev/checkstyle/</propertyExpansion>
+          <logViolationsToConsole>true</logViolationsToConsole>
+        </configuration>
+        <dependencies>
+          <!-- https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyle -->
+          <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>10.5.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+    </plugins>
+  </build>
+
 <!--  <dependencyManagement>-->
 <!--    <dependencies>-->
 <!--      <dependency>-->
