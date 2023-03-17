@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servis za slanje mailova.
+ */
 @Service
 public class EmailService {
   private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
@@ -23,7 +26,7 @@ public class EmailService {
   private void posaljiMail(String toAddress) {
     MimeMessagePreparator messagePreparator = mimeMessage -> {
       MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-      messageHelper.setFrom(piosProperties.getMail().getFrom());
+      messageHelper.setFrom(piosProperties.mail().from());
       messageHelper.setTo(toAddress);
       messageHelper.setSubject("Temp");
       messageHelper.setText("generirani thymeleaf", true);

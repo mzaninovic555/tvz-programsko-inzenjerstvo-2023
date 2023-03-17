@@ -1,0 +1,136 @@
+.p-warning {
+  color: #cc8925;
+}
+
+.invisible-outline {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 6px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.error-outline {
+  border: 1px solid #e24c4c;
+  border-radius: 6px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.field > label {
+  font-weight: 700;
+}
+
+:root {
+  --background-secondary: #f8f9fa;
+}
+
+/* Bootstrap container copy-paste :D */
+.container {
+  width: 100%;
+  padding-right: .75rem;
+  padding-left: .75rem;
+  margin-right: auto;
+  margin-left: auto
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: 576px
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 960px
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1140px
+  }
+}
+
+@media (min-width: 1400px){
+  .container {
+    max-width: 1320px
+  }
+}
+
+/* Custom nav coloring */
+.nav-item {
+  border-bottom: 2px solid var(--background-secondary);
+}
+
+.nav-current-item {
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.nav-current-item > a > span {
+  color: var(--primary-color) !important;
+}
+
+.nav-item > a, .nav-current-item > a {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.action-column {
+  white-space: nowrap;
+  width: 0 !important;
+  padding: 0.75rem !important;
+}
+
+.action-column > div {
+  display: flex;
+  justify-content: end;
+}
+
+/* Custom spinner TODO */
+.pios-loading-spinner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tbl-exp {
+  transition: cubic-bezier(.17,.67,.83,.67) 0.2s;
+  speak: none;
+  font-variant: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: primeicons;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 1;
+  font-size: 10px;
+  display: inline-block;
+}
+
+.tbl-exp.expanded {
+  transform: rotate(90deg);
+}
+
+.tbl-exp:before {
+  content: "\e901";
+}
+
+.pios-toast {
+  z-index: 11100 !important;
+}

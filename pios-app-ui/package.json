@@ -4,10 +4,6 @@
   "private": true,
   "source": "src/index.html",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
     "@types/node": "^16.18.14",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
@@ -23,9 +19,7 @@
   },
   "scripts": {
     "build": "parcel build",
-    "start": "parcel --open",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "start": "parcel --open"
   },
   "browserslist": {
     "production": [
@@ -40,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "buffer": "^6.0.3",
     "eslint": "^8.35.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.32.2",

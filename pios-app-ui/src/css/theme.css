@@ -1,0 +1,322 @@
+body {
+  margin: 0;
+}
+
+/* Fieldset modifications */
+.p-fieldset-legend {
+  padding: 0.5rem 0.75rem !important;
+}
+
+.p-fieldset, .p-card {
+  background-color: var(--background-secondary) !important;
+}
+
+.p-fieldset {
+  margin: 0;
+}
+
+/* Make input fields smaller */
+.p-button, .p-inputtext {
+  padding: 0.6rem 0.75rem !important;
+}
+
+.p-dropdown-label.p-inputtext {
+  padding-right: 1.5rem !important;
+}
+
+.p-button.p-button-icon-only:not(.p-paginator-element) {
+  padding: 0.5rem 0 !important;
+}
+
+.p-multiselect-token > span {
+  font-size: 12px;
+}
+
+.p-multiselect-label {
+  padding: 0.6rem !important;
+  padding-right: 1.25rem !important;
+}
+
+.has-odabrane-opcije > .p-multiselect-label-container > .p-multiselect-label {
+  padding: 0.375rem !important;
+  padding-right: 1rem !important;
+}
+
+.p-multiselect-token {
+  padding-left: 0.3rem !important;
+  padding-right: 0.3rem !important;
+}
+
+/* PretragaTablica modifications */
+.pretraga-paginator {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.pretraga-paginator > .p-paginator-current {
+  margin-right: auto !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.pretraga-paginator > .p-dropdown {
+  margin-left: auto !important;
+}
+
+/* Datatable modifications */
+/* Datatable outline */
+.p-datatable-wrapper {
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  border-bottom: 0;
+}
+
+/* Decrease sort button size */
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  font-size: 0.75rem !important;
+}
+
+/* Decrease expanding column to minimum */
+.p-datatable td.table-expander {
+  width: 0;
+  padding: 0.5rem !important;
+}
+
+.p-datatable th.table-expander {
+  padding-left: 0.5rem !important;
+}
+
+/* Align fields to the left */
+.p-datatable .p-datatable-thead > tr > th:not(.action-column):not(.table-expander) {
+  padding-left: 0.75rem !important;
+}
+
+/* Align fields to the left + decrease padding */
+.p-datatable tr > td:not(.table-expander):not(.action-column) {
+  padding: 0.75rem !important;
+}
+
+/* Decrease paginator size */
+.p-paginator .p-dropdown {
+  height: 2.5rem !important;
+}
+
+.p-paginator-first, .p-paginator-prev, .p-paginator-pages .p-paginator-page, .p-paginator-next, .p-paginator-last {
+  height: 2.5rem !important;
+  min-width: 2.5rem !important;
+}
+
+.p-paginator .p-dropdown .p-dropdown-label {
+  padding-right: 0 !important;
+}
+
+.p-dropdown .p-dropdown-trigger {
+  width: 2.5rem;
+}
+
+/** Center dropdown text */
+.p-dropdown-label {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Set dialog input fields width to 100% */
+.p-dialog .p-inputtext, .p-dialog .p-dropdown, .p-dialog .p-multiselect {
+  width: 100%;
+}
+
+/* "Animated" table expansion */
+@keyframes pios-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: unset;
+  }
+}
+
+.p-datatable-row-expansion {
+  animation: pios-fade 0.2s 1 0ms cubic-bezier(.17,.67,.83,.67);
+}
+
+/* Remove toast content margin */
+.p-toast-detail {
+  margin-top: 0 !important;
+}
+
+.p-card-content > .flex h3 {
+  font-size: 16px;
+}
+
+.p-dialog-header {
+  background-color: #f3f3f3 !important;
+}
+
+.p-dialog-content {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.p-dialog .p-dialog-footer button {
+  margin: 0.5rem 0 0 0.5rem;
+}
+
+/* Modifikacije za pretragu korisnika koja ima 2 taba */
+.korisnik-pretraga-tabview > .p-tabview-panels {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.korisnik-pretraga-tabview .p-tabview-nav,
+.korisnik-pretraga-tabview .p-tabview-nav-link,
+.korisnik-pretraga-tabview .p-tabview-panels {
+  background-color: transparent !important;
+}
+
+.korisnik-pretraga-tabview .p-tabview-nav-link > span {
+  display: flex;
+}
+
+.korisnik-pretraga-tabview .p-tabview-nav-link {
+  padding: .75rem 1.25rem !important;
+}
+
+/* PretragaTablica loading overlay color */
+.p-datatable > .p-component-overlay {
+  background-color: #0000001f;
+}
+
+/* Fix za "izdužene" gumbe na paginatoru */
+.p-paginator > .p-button.p-button-icon-only {
+  width: unset !important;
+}
+
+.modal-sm {
+  width: 90%;
+}
+
+.modal-md {
+  width: 90%;
+}
+
+.modal-lg, .modal-xl {
+  width: 98%;
+}
+
+/* Css za modale */
+@media (min-width: 576px) {
+  .modal-sm {
+    width: 70%;
+  }
+
+  .modal-md {
+    width: 75%;
+  }
+
+  .modal-lg {
+    width: 80%;
+  }
+
+  .modal-xl {
+    width: 90%;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-sm {
+    width: 60%;
+  }
+
+  .modal-md {
+    width: 70%;
+  }
+
+  .modal-lg {
+    width: 80%;
+  }
+
+  .modal-xl {
+    width: 90%;
+  }
+}
+
+@media (min-width: 992px) {
+  .modal-sm {
+    width: 50%;
+  }
+
+  .modal-md {
+    width: 60%;
+  }
+
+  .modal-lg {
+    width: 70%;
+  }
+
+  .modal-xl {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-sm {
+    width: 40%;
+  }
+
+  .modal-md {
+    width: 50%;
+  }
+
+  .modal-lg {
+    width: 60%;
+  }
+
+  .modal-xl {
+    width: 70%;
+  }
+}
+
+@media (min-width: 1400px){
+  .modal-sm {
+    width: 30%;
+  }
+
+  .modal-md {
+    width: 40%;
+  }
+
+  .modal-lg {
+    width: 50%;
+  }
+
+  .modal-xl {
+    width: 60%;
+  }
+}
+
+@media (min-width: 1630px){
+  .modal-sm {
+    width: 25%;
+  }
+
+  .modal-md {
+    width: 35%;
+  }
+
+  .modal-lg {
+    width: 45%;
+  }
+
+  .modal-xl {
+    width: 55%;
+  }
+}
+
+.p-toast-message-icon.pi.pi-times:before {
+  content: "\e90c";
+}
+
+.color-primary {
+  color: var(--primary-color) !important;
+}

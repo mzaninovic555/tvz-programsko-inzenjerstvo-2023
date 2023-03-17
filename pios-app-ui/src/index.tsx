@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './css/index.css';
+import './css/theme.css';
+import './css/styles.css';
 import 'primeflex/primeflex.min.css';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/primereact.min.css';
