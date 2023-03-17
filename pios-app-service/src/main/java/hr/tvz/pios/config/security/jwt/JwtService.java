@@ -27,8 +27,8 @@ public class JwtService {
 
   @PostConstruct
   private void postConstruct() {
-    this.jwtSecret = piosProperties.getJwt().getSecret();
-    this.jwtValiditySeconds = piosProperties.getJwt().getValiditySeconds();
+    this.jwtSecret = piosProperties.jwt().secret();
+    this.jwtValiditySeconds = piosProperties.jwt().validitySeconds();
   }
 
   /**

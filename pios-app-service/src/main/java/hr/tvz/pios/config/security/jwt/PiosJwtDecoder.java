@@ -40,7 +40,7 @@ public class PiosJwtDecoder implements JwtDecoder {
     try {
       Jwts.parserBuilder()
           .setSigningKey(
-              Keys.hmacShaKeyFor(Decoders.BASE64.decode(piosProperties.getJwt().getSecret())))
+              Keys.hmacShaKeyFor(Decoders.BASE64.decode(piosProperties.jwt().secret())))
           .build()
           .parseClaimsJws(token);
     } catch (ExpiredJwtException e) {
