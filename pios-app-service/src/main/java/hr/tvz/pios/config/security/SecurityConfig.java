@@ -52,9 +52,8 @@ public class SecurityConfig {
 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    http.csrf().disable();
+    http.csrf().disable().cors().disable();
     http.headers().frameOptions().disable();
-    http.cors();
 
     http.exceptionHandling()
         .accessDeniedHandler(

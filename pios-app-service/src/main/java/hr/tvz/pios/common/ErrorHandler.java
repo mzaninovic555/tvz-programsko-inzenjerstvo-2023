@@ -20,8 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);
-  public static final List<String> MISSING_DATA_ERROR_TYPES =
-      List.of("NotNull", "NotBlank", "NotEmpty");
 
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
@@ -29,7 +27,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
       HttpHeaders headers,
       HttpStatusCode status,
       WebRequest request) {
-    LOGGER.warn("handleHttpMessageNotReadable: {}", ex);
+    LOGGER.warn("handleHttpMessageNotReadable", ex);
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
   }
 
