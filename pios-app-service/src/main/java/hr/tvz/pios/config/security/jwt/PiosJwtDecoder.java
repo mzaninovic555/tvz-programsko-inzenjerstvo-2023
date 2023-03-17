@@ -1,5 +1,6 @@
 package hr.tvz.pios.config.security.jwt;
 
+import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import hr.tvz.pios.config.PiosProperties;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -66,7 +67,7 @@ public class PiosJwtDecoder implements JwtDecoder {
     }
 
     try {
-      var parsedJwt = JWTParser.parse(token);
+      JWT parsedJwt = JWTParser.parse(token);
       var headers = new LinkedHashMap<>(parsedJwt.getHeader().toJSONObject());
       var claims = new LinkedHashMap<>(parsedJwt.getJWTClaimsSet().getClaims());
       if (claims.get(JwtClaimNames.IAT) instanceof Date iat) {

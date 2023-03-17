@@ -24,4 +24,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Test
-      run: mvn test -Dspring.profiles.active=test
+      run: mvn test -Dspring.profiles.active=test checkstyle:check
