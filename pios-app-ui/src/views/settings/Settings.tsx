@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthAutoRedirect from '../../components/AuthAutoRedirect';
+import AuthAutoRedirect from '../../common/auth/AuthAutoRedirect';
 
 const Settings = () => {
   return (<AuthAutoRedirect loggedInToHome={false} customLocation="/login">
