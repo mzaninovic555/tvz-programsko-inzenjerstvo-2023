@@ -3,7 +3,7 @@ import AuthAutoRedirect from '../../components/AuthAutoRedirect';
 
 const Register = () => {
   return (<AuthAutoRedirect loggedInToHome={true}>
-    <p>login</p>
+    <p>registration</p>
   </AuthAutoRedirect>);
 };
 
