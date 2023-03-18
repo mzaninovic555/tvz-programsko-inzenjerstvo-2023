@@ -34,7 +34,7 @@
     ]
   },
   "devDependencies": {
-    "buffer": "^6.0.3",
+    "buffer": "^5.7.1",
     "eslint": "^8.35.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-react": "^7.32.2",
