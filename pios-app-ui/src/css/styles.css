@@ -134,3 +134,7 @@
 .pios-toast {
   z-index: 11100 !important;
 }
+
+.card-content-no-bottom-margin > .p-card-body > .p-card-content {
+  padding-bottom: 0;
+}
