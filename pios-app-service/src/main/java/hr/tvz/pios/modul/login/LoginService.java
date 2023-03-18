@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.login;
 
+import hr.tvz.pios.common.Message;
 import hr.tvz.pios.config.security.jwt.JwtService;
 import hr.tvz.pios.modul.user.User;
 import hr.tvz.pios.modul.user.UserRepository;
@@ -10,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servis za provodbu logiranja u aplikaciju.
+ */
 @Service
 public class LoginService {
 
@@ -29,7 +33,7 @@ public class LoginService {
     Optional<User> userOptional = userRepository.getByUsername(username);
     if (userOptional.isEmpty() || !isMatchingPassword(password, userOptional.get().getPassword())) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(new LoginResponse(null, "Invalid username/password"));
+          .body(new LoginResponse(null, Message.error("Invalid username/password")));
     }
 
     String token = jwtService.createJwtToken(userOptional.get());
