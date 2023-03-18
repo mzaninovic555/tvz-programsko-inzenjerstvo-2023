@@ -1,22 +1,27 @@
-import React, {SyntheticEvent, useRef, useState} from 'react';
+import React, {SyntheticEvent, useRef} from 'react';
 import {Menubar} from 'primereact/menubar';
 import {appName, menuItems} from '../../common/const';
-import {Image} from 'primereact/image';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {MenuItem, MenuItemCommandEvent} from 'primereact/menuitem';
 import {Menu} from 'primereact/menu';
 import {Button} from 'primereact/button';
+import useAuthContext from '../../context/AuthContext';
+import useToastContext from '../../context/ToastContext';
+import {apiToToast} from '../../common/messages/messageHelper';
+import {logoutSuccessMessage} from '../../common/messages/LocalMessages';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const userMenu = useRef<Menu>(null);
+  const {auth, setToken} = useAuthContext();
   const userButton = useRef<Button>(null);
-  const [username, setUsername] = useState<string>('N/A');
+  const location = useLocation();
+  const {toast} = useToastContext();
 
   const items = menuItems.map(((x) => ({...x})));
 
   const navigateToUrl = (e: MenuItemCommandEvent, url: string) => {
-    e.originalEvent.preventDefault();
+    e?.originalEvent?.preventDefault();
     navigate(url);
   };
 
@@ -27,7 +32,7 @@ const Navbar = () => {
     }
 
     menuItem.command = (e: MenuItemCommandEvent) => navigateToUrl(e, menuItem.url!);
-    const path = '/' + (window.location.pathname.split('/').filter((str) => str)[0] || '');
+    const path = '/' + (location.pathname.split('/').filter((str) => str)[0] || '');
     menuItem.className = path == menuItem.url ? 'nav-current-item' : 'nav-item';
   });
 
@@ -41,7 +46,8 @@ const Navbar = () => {
   );
 
   const logOut = () => {
-    // TODO
+    setToken(undefined);
+    toast.current?.show(apiToToast(logoutSuccessMessage));
   };
 
   const userMenuItems: MenuItem[] = [
@@ -61,11 +67,17 @@ const Navbar = () => {
 
   const authDiv = (
     <div className="flex justify-content-center">
-      <>
-        <Menu model={userMenuItems} popup ref={userMenu}/>
-        <Button className="p-button-text" ref={userButton} label={username} icon="pi pi-user"
-          onClick={showUserMenu} aria-haspopup/>
-      </>
+      {auth.authenticated && <>
+        <>
+          <Menu model={userMenuItems} popup ref={userMenu}/>
+          <Button className="p-button-text" ref={userButton} label={auth.info?.username} icon="pi pi-user"
+            onClick={showUserMenu} aria-haspopup/>
+        </>
+      </>}
+      {!auth.authenticated && location.pathname != '/login' && location.pathname != '/register' && <>
+        <Button label="Sign in" className="p-button-text" icon="pi pi-sign-in"
+          onClick={(e) => navigateToUrl(e as any, '/login')} aria-haspopup/>
+      </>}
     </div>
   );
 
