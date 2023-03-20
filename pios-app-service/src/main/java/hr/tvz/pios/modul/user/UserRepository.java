@@ -12,6 +12,8 @@ public interface UserRepository {
 
   Optional<User> getByUsername(String username);
 
+  Optional<User> getByEmail(String email);
+
   void insert(User user);
 
   Integer updateById(User user);

@@ -4,15 +4,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.tvz.pios.common.ErrorResponse;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
+import hr.tvz.pios.modul.user.CustomOAuth2User;
+import hr.tvz.pios.modul.user.CustomOAuth2UserService;
+import hr.tvz.pios.modul.user.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 /**
  * Konfiguracijska klasa za Spring Security.
@@ -33,17 +42,36 @@ public class SecurityConfig {
     "/api/v1/login",
   };
 
+  @Autowired
+  private CustomOAuth2UserService oauthUserService;
+
+  @Autowired
+  private UserService userService;
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-        authorize ->
-            authorize
-                .requestMatchers(UNAUTHENTICATED_URLS)
-                .permitAll()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+    http.authorizeHttpRequests()
+            .requestMatchers(UNAUTHENTICATED_URLS)
+            .permitAll()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+            .permitAll()
+            .requestMatchers("/api/**")
+            .authenticated()
+            .anyRequest()
+            .permitAll()
+            .and()
+            .oauth2Login()
+            .loginPage("/oauth2/authorization/github")
+            .userInfoEndpoint()
+            .userService(oauthUserService)
+            .and()
+            .successHandler((request, response, authentication) -> {
+              CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+
+              userService.processOAuthPostLogin(oauthUser.getName());
+
+              response.sendRedirect("/");
+            });
 
     http.oauth2ResourceServer()
         .jwt()
