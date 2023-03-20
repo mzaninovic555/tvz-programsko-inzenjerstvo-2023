@@ -58,7 +58,6 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.user.User">
     insert into USERS (
-      id,
       username,
       password,
       email,
@@ -67,7 +66,6 @@
       is_activated,
       role_id
     ) values (
-      #{id},
       #{username},
       #{password},
       #{email},
