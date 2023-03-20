@@ -57,7 +57,6 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.component.Component">
     insert into COMPONENTS (
-      id,
       name,
       price,
       type,
@@ -65,7 +64,6 @@
       image_base64,
       manufacturer_id
     ) values (
-      #{id},
       #{name},
       #{price},
       #{type},
