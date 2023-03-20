@@ -27,11 +27,9 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.post.Post">
     insert into POSTS (
-      id,
       title,
       content
     ) values (
-      #{id},
       #{title},
       #{content}
     )

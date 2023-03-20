@@ -25,10 +25,8 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.manufacturer.Manufacturer">
     insert into MANUFACTURERS (
-      id,
       name
     ) values (
-      #{id},
       #{name}
     )
   </insert>

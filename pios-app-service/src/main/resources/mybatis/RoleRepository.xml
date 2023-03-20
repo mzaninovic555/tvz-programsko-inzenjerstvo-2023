@@ -35,10 +35,8 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.role.Role">
     insert into ROLES (
-      id,
       role
     ) values (
-      #{id},
       #{role}
     )
   </insert>

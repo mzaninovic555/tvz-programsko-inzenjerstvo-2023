@@ -70,14 +70,12 @@
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.build.Build">
     insert into BUILDS (
-      id,
       title,
       description,
       link,
       is_public,
       user_id
     ) values (
-      #{id},
       #{title},
       #{description},
       #{link},
