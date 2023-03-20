@@ -68,10 +68,11 @@ public class SecurityConfig {
             .successHandler((request, response, authentication) -> {
               CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
 
-              userService.processOAuthPostLogin(oauthUser.getName());
-
+              userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
+              //redirect nakon logina sa oauth2
               response.sendRedirect("/");
             });
+    //TODO dodati redirect na frontend i jwt token za oauth2 usera
 
     http.oauth2ResourceServer()
         .jwt()

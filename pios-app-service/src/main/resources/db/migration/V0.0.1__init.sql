@@ -8,8 +8,8 @@ create table USERS
 (
   ID            SERIAL      primary key,
   USERNAME      VARCHAR(20) unique not null,
-  PASSWORD      TEXT               not null,
-  EMAIL         VARCHAR(100)       not null,
+  PASSWORD      TEXT,
+  EMAIL         VARCHAR(100),
   DESCRIPTION   TEXT,
   CREATION_DATE TIMESTAMP                   default current_timestamp,
   IS_ACTIVATED  boolean            not null default false,
