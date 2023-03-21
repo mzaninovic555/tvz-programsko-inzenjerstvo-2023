@@ -29,7 +29,9 @@ jobs:
         run: mvn test checkstyle:check
 
       - name: Build
-        run: mvn package -P ui -pl pios-app-ui
+        run: |
+          mvn package -P ui -pl pios-app-ui
+          mvn package
 
       - name: Run ls
         run: ls && ls ./pios-app-service && ls ./pios-app-service/target
