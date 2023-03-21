@@ -15,9 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run ls
-        run: ls
-
       - name: Set up JDK 19
         uses: actions/setup-java@v3
         with:
@@ -26,19 +23,30 @@ jobs:
           cache: maven
 
       - name: Test
-        run: mvn test checkstyle:check
+        run: mvn test checkstyle:check -q
 
       - name: Build
         run: |
           mvn package -P ui -pl pios-app-ui
           mvn package
 
-      - name: Run ls
-        run: ls && ls ./pios-app-service && ls ./pios-app-service/target
-
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "./pios-app-service/target/pios-app-service-*.jar"
 
-#      - name: Deploy to production
+      - name: Prepare jar
+        run: |
+          mkdir temp
+          mv ./pios-app-service/target/pios-app-service-*.jar temp
+          ls temp
+
+      - name: Deploy to production
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-Dzvc -i --delete"
+          SOURCE: "temp/"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: "$HOME/app/"
