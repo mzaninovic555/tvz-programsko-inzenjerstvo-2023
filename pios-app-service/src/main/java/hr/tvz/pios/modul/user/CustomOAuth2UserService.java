@@ -11,13 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-    private final Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
+  private final Logger logger = LoggerFactory.getLogger(CustomOAuth2UserService.class);
 
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User user =  super.loadUser(userRequest);
-        logger.debug("OAuth2 user details: {}", user.getAttributes());
-        return new CustomOAuth2User(user);
-    }
+  @Override
+  public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+    OAuth2User user = super.loadUser(userRequest);
+    logger.debug("OAuth2 user details: {}", user.getAttributes());
+    return new CustomOAuth2User(user);
+  }
 
 }
