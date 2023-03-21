@@ -1,0 +1,35 @@
+name: Push build to production
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 19
+        uses: actions/setup-java@v3
+        with:
+          java-version: '19'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Test
+        run: mvn test -Dspring.profiles.active=test checkstyle:check
+
+      - name: Build
+        run: mvn package -P ui -pl pios-app-ui
+
+      - name: Create tag
+        run: git tag $(git rev-parse HEAD)
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: "pios-app-service/target/pios-app-service-*.jar"
+
+      - name: Deploy to production
