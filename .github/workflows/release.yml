@@ -24,11 +24,6 @@ jobs:
       - name: Build
         run: mvn package -P ui -pl pios-app-ui
 
-      - name: Create tag
-        run: |
-          git tag $(git rev-parse HEAD)
-          git push origin $(git rev-parse HEAD)
-
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
