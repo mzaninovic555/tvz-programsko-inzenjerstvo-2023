@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.tvz.pios.common.ErrorResponse;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
+import hr.tvz.pios.modul.user.CustomOAuth2User;
+import hr.tvz.pios.modul.user.CustomOAuth2UserService;
+import hr.tvz.pios.modul.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,17 +37,37 @@ public class SecurityConfig {
     "/api/v1/login",
   };
 
+  @Autowired
+  private CustomOAuth2UserService oauthUserService;
+
+  @Autowired
+  private UserService userService;
+
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests(
-        authorize ->
-            authorize
-                .requestMatchers(UNAUTHENTICATED_URLS)
-                .permitAll()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+    http.authorizeHttpRequests()
+            .requestMatchers(UNAUTHENTICATED_URLS)
+            .permitAll()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+            .permitAll()
+            .requestMatchers("/api/**")
+            .authenticated()
+            .anyRequest()
+            .permitAll()
+            .and()
+            .oauth2Login()
+            .loginPage("/oauth2/authorization/github")
+            .userInfoEndpoint()
+            .userService(oauthUserService)
+            .and()
+            .successHandler((request, response, authentication) -> {
+              CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+
+              userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
+              //redirect nakon logina sa oauth2
+              response.sendRedirect("/");
+            });
+    //TODO dodati redirect na frontend i jwt token za oauth2 usera
 
     http.oauth2ResourceServer()
         .jwt()
