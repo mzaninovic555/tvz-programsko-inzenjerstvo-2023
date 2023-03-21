@@ -39,7 +39,6 @@ jobs:
         run: |
           mkdir temp
           mv ./pios-app-service/target/pios-app-service-*.jar temp
-          ls temp
 
       - name: Deploy to production
         uses: easingthemes/ssh-deploy@main
@@ -49,4 +48,4 @@ jobs:
           SOURCE: "temp/"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: "$HOME/app/"
+          TARGET: ${{ format('/home/{0}/app', secrets.REMOTE_USER) }}
