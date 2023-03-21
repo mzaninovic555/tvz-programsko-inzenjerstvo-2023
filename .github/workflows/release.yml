@@ -22,13 +22,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Test
-        run: mvn test checkstyle:check -q
-
       - name: Build
         run: |
-          mvn package -P ui -pl pios-app-ui
-          mvn package
+          mvn package -P ui -pl pios-app-ui -q
+          mvn package -q checkstyle:check
 
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
