@@ -21,11 +21,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: 18
-
       - name: Test
         run: mvn test -Dspring.profiles.active=test checkstyle:check
 
