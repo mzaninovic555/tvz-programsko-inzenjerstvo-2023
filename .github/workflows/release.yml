@@ -31,9 +31,12 @@ jobs:
       - name: Build
         run: mvn package -P ui -pl pios-app-ui
 
+      - name: Run ls
+        run: ls && ls ./pios-app-service && ls ./pios-app-service/target
+
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          artifacts: "pios-app-service/target/pios-app-service-*.jar"
+          artifacts: "./pios-app-service/target/pios-app-service-*.jar"
 
 #      - name: Deploy to production
