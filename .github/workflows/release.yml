@@ -32,4 +32,4 @@ jobs:
         with:
           artifacts: "pios-app-service/target/pios-app-service-*.jar"
 
-      - name: Deploy to production
+#      - name: Deploy to production
