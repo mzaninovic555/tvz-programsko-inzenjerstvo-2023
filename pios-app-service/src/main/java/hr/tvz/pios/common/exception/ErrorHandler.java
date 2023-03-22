@@ -62,7 +62,8 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
       HttpStatusCode status,
       WebRequest request) {
     LOGGER.warn("handleHttpMessageNotReadable", ex);
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BasicResponse(ex.getMessage()));
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(new BasicResponse(Message.error(ex.getMessage())));
   }
 
   /** Metoda za handling MethodArgumentNotValidException-a. */
@@ -75,7 +76,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
     LOGGER.debug("MethodArgumentNotValidException", ex);
     final List<FieldError> errors = ex.getBindingResult().getFieldErrors();
     if (errors.isEmpty()) {
-      return ResponseEntity.badRequest().body(new BasicResponse("Bad request"));
+      return ResponseEntity.badRequest().body(new BasicResponse(Message.error("Bad request")));
     }
 
     final List<Message> poruke = new ArrayList<>();
