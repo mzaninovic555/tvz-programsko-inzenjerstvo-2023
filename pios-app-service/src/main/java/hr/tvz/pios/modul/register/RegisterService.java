@@ -31,6 +31,11 @@ public class RegisterService {
   @Autowired
   EmailService emailService;
 
+  /**
+   * Vrši registraciju korisnika uz provjeru o postojećem email i username.
+   * @param request {@link RegisterRequest}
+   * @return {@link ResponseEntity}
+   */
   public ResponseEntity<RegisterResponse> register(RegisterRequest request) {
     if (userRepository.isUsernameTaken(request.username())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -57,6 +62,11 @@ public class RegisterService {
     return ResponseEntity.ok().build();
   }
 
+  /**
+   * Aktivira registriranog korisnika po username i timestampu kreiranja.
+   * @param request {@link ActivateRequest}
+   * @return {@link ResponseEntity}
+   */
   public ResponseEntity<RegisterResponse> activateUser(ActivateRequest request) {
     var pairUsernameTimestamp = decodeUsernameTimestamp(request.activationToken());
     Optional<User> userToActivate = userRepository.getByUsername(pairUsernameTimestamp.getLeft());
