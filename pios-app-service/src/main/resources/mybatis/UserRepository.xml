@@ -113,14 +113,19 @@
 
   <update id="updateById" parameterType="hr.tvz.pios.modul.user.User">
     update USERS
-    set id = #{id},
-        username = #{username},
+    set username = #{username},
         password = #{password},
         email = #{email},
         description = #{description},
         creation_date = #{creationDate},
         is_activated = #{isActivated},
         role_id = #{role.id}
+    where id = #{id}
+  </update>
+
+  <update id="updateIsActivatedById">
+    update USERS
+    set is_activated = #{isActivated}
     where id = #{id}
   </update>
 

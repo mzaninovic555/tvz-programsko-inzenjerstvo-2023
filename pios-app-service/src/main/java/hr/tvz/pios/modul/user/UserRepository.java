@@ -30,5 +30,7 @@ public interface UserRepository {
 
   Integer updateById(User user);
 
+  Integer updateIsActivatedById(Long id, Boolean isActivated);
+
   Integer deleteById(Long id);
 }
