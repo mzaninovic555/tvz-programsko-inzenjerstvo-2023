@@ -39,18 +39,19 @@ public class RegisterService {
   public ResponseEntity<RegisterResponse> register(RegisterRequest request) {
     if (userRepository.isUsernameTaken(request.username())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(new RegisterResponse(Message.error("Username is already in use")));
+          .body(new RegisterResponse(Message.error("Username is already in use", "username")));
     }
 
     if (userRepository.isEmailTaken(request.email())) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(new RegisterResponse(Message.error("Email is already in use")));
+          .body(new RegisterResponse(Message.error("Email is already in use", "email")));
     }
     Role role = roleRepository.getByName(hr.tvz.pios.common.Role.ROLE_USER.name()).get();
     User newUser = User.builder()
         .username(request.username())
         .password(encoder.encode(request.password()))
         .email(request.email())
+        .isActivated(Boolean.FALSE)
         .creationDate(LocalDateTime.now())
         .role(role)
         .build();

@@ -2,15 +2,13 @@ import React, {useEffect, useReducer, useRef, useState} from 'react';
 import AuthAutoRedirect from '../../common/auth/AuthAutoRedirect';
 import InputReducer, {emptyState, reducer} from "../../common/hooks/Reducer";
 import {Messages} from "primereact/messages";
-import useAuthContext from "../../context/AuthContext";
 import useToastContext from "../../context/ToastContext";
-import {login} from "../../views/login/LoginService";
-import {apiToMessages, apiToToast} from "../../common/messages/messageHelper";
+import {apiToMessages} from "../../common/messages/messageHelper";
 import {Card} from "primereact/card";
 import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
-import {loginSuccessMessage} from "../../common/messages/LocalMessages";
+import {register} from "../../views/register/RegisterService";
 
 const Register = () => {
 
@@ -30,7 +28,6 @@ const Register = () => {
   const [requesting, setRequesting] = useState(false);
 
   const messages = useRef<Messages>(null);
-  const {setToken} = useAuthContext();
   const {toast} = useToastContext();
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,34 +40,31 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (!submitted || usernameInput.error || passwordInput.error) {
+    if (!submitted || usernameInput.error || passwordInput.error || emailInput.error || descriptionInput.error) {
       return;
     }
     setSubmitted(false);
-    void doLogin();
+    void doRegister();
   }, [submitted]);
 
-  const doLogin = async () => {
+  const doRegister = async () => {
     messages.current?.clear();
     setRequesting(true);
-    const response = await login(usernameInput.value, passwordInput.value).catch(console.error);
+    const response = await register(emailInput.value, usernameInput.value, passwordInput.value, descriptionInput.value)
+                          .catch(console.error);
     setRequesting(false);
 
     if (!response) {
       return;
     }
 
-    if (response.token) {
-      setToken(response.token);
-      toast.current?.show(apiToToast(loginSuccessMessage));
-    }
     if (response.message) {
       messages.current?.show(apiToMessages(response.message));
     }
   };
 
   return (<AuthAutoRedirect loggedInToHome={true}>
-    <Card title="Login" className="w-4 m-auto card-content-no-bottom-margin">
+    <Card title="Register" className="w-4 m-auto card-content-no-bottom-margin">
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit} className="flex flex-column m-auto">
         <InputText className="mb-1" placeholder="Email" value={emailInput.value} autoComplete="email"
