@@ -56,6 +56,21 @@
     where u.username = #{username}
   </select>
 
+  <select id="getByEmail" resultMap="userResultMap">
+    select
+    <include refid="userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.role.RoleRepository.roleResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value="r_"/>
+    </include>
+    from USERS u
+    join roles r on r.id = u.role_id
+    where u.email = #{email,jdbcType=VARCHAR}
+  </select>
+
   <insert id="insert" parameterType="hr.tvz.pios.modul.user.User">
     insert into USERS (
       username,
