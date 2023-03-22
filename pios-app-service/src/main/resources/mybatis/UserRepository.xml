@@ -26,6 +26,26 @@
   </sql>
 
   <!-- SELECT -->
+  <select id="isUsernameTaken" resultType="Boolean">
+    select
+      case
+        when count(*) > 0 then 1
+        else 0
+      end
+    from users u
+    where u.username = #{username}
+  </select>
+
+  <select id="isEmailTaken" resultType="Boolean">
+    select
+      case
+        when count(*) > 0 then 1
+        else 0
+        end
+    from users u
+    where u.email = #{email}
+  </select>
+
   <select id="getById" resultMap="userResultMap">
     select
     <include refid="userResultMapColumns">
@@ -54,6 +74,21 @@
     from USERS u
       join roles r on r.id = u.role_id
     where u.username = #{username}
+  </select>
+
+  <select id="getByEmail" resultMap="userResultMap">
+    select
+    <include refid="userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.role.RoleRepository.roleResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value="r_"/>
+    </include>
+    from USERS u
+    join roles r on r.id = u.role_id
+    where u.email = #{email}
   </select>
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.user.User">
