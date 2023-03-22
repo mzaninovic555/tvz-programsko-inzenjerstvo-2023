@@ -40,7 +40,8 @@ const Navbar = () => {
     <div className="flex justify-content-center flex-wrap">
       {/* <Image src={image as string}/> */}
       <div>
-        <h1 className="mt-0 mb-1 color-primary">{appName}</h1>
+        <h1 style={{cursor: 'pointer'}} onClick={() => navigate('/')}
+          className="mt-0 mb-1 color-primary">{appName}</h1>
       </div>
     </div>
   );
@@ -56,6 +57,11 @@ const Navbar = () => {
       icon: 'pi pi-cog',
       url: '/settings',
       command: (e: MenuItemCommandEvent) => navigateToUrl(e, '/settings')
+    },
+    {
+      label: 'Wishlist',
+      icon: 'pi pi-list',
+      url: '/wishlist'
     },
     {label: 'Logout', icon: 'pi pi-sign-out', command: logOut}
   ];
