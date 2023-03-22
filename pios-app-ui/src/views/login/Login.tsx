@@ -1,7 +1,6 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import AuthAutoRedirect from '../../common/auth/AuthAutoRedirect';
 import {Card} from 'primereact/card';
-import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
 import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import {login} from './LoginService';
@@ -11,6 +10,7 @@ import useAuthContext from '../../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
 import {loginSuccessMessage} from '../../common/messages/LocalMessages';
 import useToastContext from '../../context/ToastContext';
+import FormInputText from '../../components/FormInputText';
 
 const Login = () => {
   const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
@@ -65,16 +65,14 @@ const Login = () => {
   };
 
   return (<AuthAutoRedirect loggedInToHome={true}>
-    <Card title="Login" className="w-4 m-auto card-content-no-bottom-margin">
+    <Card title="Login" style={{maxWidth: '500px'}} className="m-auto card-content-no-bottom-margin">
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit} className="flex flex-column m-auto">
-        <InputText placeholder="Username" className="mb-1" value={usernameInput.value} autoComplete="username"
-          onChange={(e) => dispatchUsername({type: 'change', value: e.target.value})}/>
-        <small className="p-error block mb-1">{usernameInput.error}</small>
-        <InputText placeholder="Password" value={passwordInput.value} autoComplete="current-password"
-                   onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
-        <small className="p-error block mb-1">{passwordInput.error}</small>
-        <Button className="mt-2" type="submit" label="Login" loading={requesting}/>
+        <FormInputText className="mb-1" value={usernameInput.value} name="Username" required inputClassName="w-full"
+          error={usernameInput.error} onChange={(e) => dispatchUsername({type: 'change', value: e})}/>
+        <FormInputText value={passwordInput.value} required type="password" name="Password" inputClassName="w-full"
+          error={passwordInput.error} onChange={(e) => dispatchPassword({type: 'change', value: e})}/>
+        <Button type="submit" label="Login" loading={requesting}/>
         <Button label="Don't have an account? Register now" link onClick={() => navigate('/register')}/>
       </form>
     </Card>

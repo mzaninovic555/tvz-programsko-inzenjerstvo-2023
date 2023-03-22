@@ -1,6 +1,7 @@
 package hr.tvz.pios.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.BasicResponse;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
@@ -76,9 +77,6 @@ public class SecurityConfig {
 
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-    http.csrf().disable().cors().disable();
-    http.headers().frameOptions().disable();
-
     http.exceptionHandling()
         .accessDeniedHandler(
             (req, response, e) ->
@@ -87,6 +85,8 @@ public class SecurityConfig {
             ((req, response, a) ->
                 sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")));
 
+    http.cors().and().csrf().disable();
+    http.headers().frameOptions().disable();
     return http.build();
   }
 
@@ -94,6 +94,6 @@ public class SecurityConfig {
       throws IOException {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(status);
-    mapper.writeValue(response.getOutputStream(), new BasicResponse(message));
+    mapper.writeValue(response.getOutputStream(), new BasicResponse(Message.error(message)));
   }
 }

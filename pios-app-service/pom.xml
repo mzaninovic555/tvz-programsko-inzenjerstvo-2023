@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>hr.tvz.pios</groupId>
+      <artifactId>pios-app-ui-dist</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-rest</artifactId>
     </dependency>
