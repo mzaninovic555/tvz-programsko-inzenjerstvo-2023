@@ -36,6 +36,7 @@ public class SecurityConfig {
   // ovdje dodati URL koje ne treba autentificirati
   public static final String[] UNAUTHENTICATED_URLS = {
     "/api/v1/login",
+    "/api/v1/register",
   };
 
   @Autowired

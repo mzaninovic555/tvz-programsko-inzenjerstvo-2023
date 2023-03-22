@@ -21,13 +21,11 @@ public class EmailService {
   private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
   @Autowired
+  SpringTemplateEngine templateEngine;
+  @Autowired
   PiosProperties piosProperties;
   @Autowired
   JavaMailSender mailSender;
-  @Autowired
-  SpringTemplateEngine templateEngine;
-
-
 
   public void generirajActivationEmail(User newUser, String activationToken) {
     String subject = "TVZ PcPartPicker - Registracija";
