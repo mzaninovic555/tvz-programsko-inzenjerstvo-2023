@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="hr">
+  <head>
+    <title th:remove="all"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+      * {
+        margin: 0 auto;
+      }
+      body {
+        width: 60vw;
+      }
+    </style>
+  </head>
+  <body>
+    <article style="font-family: Bahnschrift, sans-serif; width: 100%;">
+      <div style="background-color: #004a61; color: white; padding: 1rem; border-radius: 10px;">
+        <h4 class="alert-heading" th:text="'Successful registration'"></h4>
+        <br>
+        <p style="margin-bottom: 0" th:text="
+          'Hi ' + ${user.getUsername()} + ', thanks for registering'"> </p>
+        <p style="margin-bottom: 0" th:text="'Use the following URL to activate your account: ' + ${activationURL}"></p>
+      </div>
+    </article>
+  </body>
+</html>
