@@ -1,7 +1,7 @@
 package hr.tvz.pios.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hr.tvz.pios.common.ErrorResponse;
+import hr.tvz.pios.common.exception.BasicResponse;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
 import hr.tvz.pios.modul.user.CustomOAuth2User;
@@ -94,6 +94,6 @@ public class SecurityConfig {
       throws IOException {
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.setStatus(status);
-    mapper.writeValue(response.getOutputStream(), new ErrorResponse(message));
+    mapper.writeValue(response.getOutputStream(), new BasicResponse(message));
   }
 }

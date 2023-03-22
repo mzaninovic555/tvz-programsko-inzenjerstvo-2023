@@ -18,7 +18,7 @@
     "google"
   ],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["dist/"],
+  "ignorePatterns": ["dist/", "target/"],
   "parserOptions": {
     "project": ["./tsconfig.json"],
     "ecmaFeatures": {
