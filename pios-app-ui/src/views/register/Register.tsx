@@ -64,7 +64,7 @@ const Register = () => {
   };
 
   return (<AuthAutoRedirect loggedInToHome={true}>
-    <Card title="Register" className="w-4 m-auto card-content-no-bottom-margin">
+    <Card title="Register" style={{maxWidth: '500px'}} className="m-auto card-content-no-bottom-margin">
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit} className="flex flex-column m-auto">
         <InputText className="mb-1" placeholder="Email" value={emailInput.value} autoComplete="email"
