@@ -16,12 +16,12 @@ public class TestController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN')")
   public BasicResponse getAdmin(UserAuthentication auth) {
-    return new BasicResponse("security works!");
+    return new BasicResponse(Message.info("security works!"));
   }
 
   @GetMapping("/user")
   @PreAuthorize("hasAnyRole('USER')")
   public BasicResponse getUser(UserAuthentication auth) {
-    return new BasicResponse("security works!");
+    return new BasicResponse(Message.info("security works!"));
   }
 }

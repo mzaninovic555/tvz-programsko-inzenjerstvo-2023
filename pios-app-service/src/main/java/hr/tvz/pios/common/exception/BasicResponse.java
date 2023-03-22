@@ -13,8 +13,4 @@ public record BasicResponse(List<Message> messages) {
   public BasicResponse(Message... messages) {
     this(Arrays.asList(messages));
   }
-
-  public BasicResponse(String message) {
-    this(List.of(Message.info(message)));
-  }
 }
