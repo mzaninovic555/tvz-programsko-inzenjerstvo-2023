@@ -20,7 +20,7 @@ public class UserSettingsService {
       "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*"
           + "@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
 
-  private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+  private final BCryptPasswordEncoder bcryptPasswordEncoder = new BCryptPasswordEncoder();
   private final UserRepository userRepository;
 
   public UserSettingsService(UserRepository userRepository) {
@@ -87,11 +87,11 @@ public class UserSettingsService {
           Message.error("Passwords must match", "newPasswordRepeat"));
     }
 
-    if (!bCryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
+    if (!bcryptPasswordEncoder.matches(oldPassword, user.getPassword())) {
       throw PiosException.badRequest(Message.error("Incorrect password", "oldPassword"));
     }
 
-    return bCryptPasswordEncoder.encode(newPassword);
+    return bcryptPasswordEncoder.encode(newPassword);
   }
 
   private String getNewEmail(User user, String email) {
