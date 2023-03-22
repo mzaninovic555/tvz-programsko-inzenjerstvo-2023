@@ -72,9 +72,9 @@ const Login = () => {
           onChange={(e) => dispatchUsername({type: 'change', value: e.target.value})}/>
         <small className="p-error block mb-1">{usernameInput.error}</small>
         <InputText placeholder="Password" value={passwordInput.value} autoComplete="current-password"
-          onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
+                   onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
         <small className="p-error block mb-1">{passwordInput.error}</small>
-        <Button type="submit" label="Login" loading={requesting}/>
+        <Button className="mt-2" type="submit" label="Login" loading={requesting}/>
         <Button label="Don't have an account? Register now" link onClick={() => navigate('/register')}/>
       </form>
     </Card>
