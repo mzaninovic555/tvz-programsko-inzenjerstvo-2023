@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.register;
 
 import hr.tvz.pios.common.Message;
+import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.PiosProperties;
 import hr.tvz.pios.mail.EmailService;
 import hr.tvz.pios.modul.role.Role;
@@ -14,7 +15,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,15 +38,13 @@ public class RegisterService {
    * @param request {@link RegisterRequest}
    * @return {@link ResponseEntity}
    */
-  public ResponseEntity<RegisterResponse> register(RegisterRequest request) {
+  public RegisterResponse register(RegisterRequest request) {
     if (userRepository.isUsernameTaken(request.username())) {
-      return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(new RegisterResponse(Message.error("Username is already in use", "username")));
+      throw PiosException.conflict(Message.error("Username is already in use", "username"));
     }
 
     if (userRepository.isEmailTaken(request.email())) {
-      return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(new RegisterResponse(Message.error("Email is already in use", "email")));
+      throw PiosException.conflict(Message.error("Email is already in use", "email"));
     }
     Role role = roleRepository.getByName(hr.tvz.pios.common.Role.ROLE_USER.name()).get();
     User newUser = User.builder()
@@ -63,8 +61,7 @@ public class RegisterService {
     String activationURL = piosProperties.frontendUrl() + "/activate?" + activationToken;
     emailService.generirajActivationEmail(newUser, activationURL);
 
-    return ResponseEntity.ok()
-        .body(new RegisterResponse(Message.info(ActivationResult.ACTIVATION_REQUIRED.getType())));
+    return new RegisterResponse(Message.info(ActivationResult.ACTIVATION_REQUIRED.getType()));
   }
 
   /**
@@ -72,24 +69,21 @@ public class RegisterService {
    * @param request {@link ActivateRequest}
    * @return {@link ResponseEntity}
    */
-  public ResponseEntity<RegisterResponse> activateUser(ActivateRequest request) {
+  public RegisterResponse activateUser(ActivateRequest request) {
     var pairUsernameTimestamp = decodeUsernameTimestamp(request.activationToken());
     Optional<User> userToActivate = userRepository.getByUsername(pairUsernameTimestamp.getLeft());
 
     if (userToActivate.isPresent() && userToActivate.get().getIsActivated()) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new RegisterResponse(Message.error(ActivationResult.ALREADY_ACTIVATED.getType())));
+      throw PiosException.badRequest(Message.error(ActivationResult.ALREADY_ACTIVATED.getType()));
     }
 
     if (userToActivate.isPresent()
         && userToActivate.get().getCreationDate().toLocalDate()
               .equals(pairUsernameTimestamp.getRight().toLocalDate())) {
       userRepository.updateIsActivatedById(userToActivate.get().getId(), Boolean.TRUE);
-      return ResponseEntity.ok()
-          .body(new RegisterResponse(Message.info(ActivationResult.ACTIVATION_SUCCESS.getType())));
+      return new RegisterResponse(Message.info(ActivationResult.ACTIVATION_SUCCESS.getType()));
     }
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(new RegisterResponse(Message.error(ActivationResult.ACTIVATION_ERROR.getType())));
+    return new RegisterResponse(Message.error(ActivationResult.ACTIVATION_ERROR.getType()));
   }
 
   /**
