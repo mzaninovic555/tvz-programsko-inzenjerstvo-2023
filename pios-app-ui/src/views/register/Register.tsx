@@ -1,22 +1,22 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import AuthAutoRedirect from '../../common/auth/AuthAutoRedirect';
-import InputReducer, {emptyState, reducer} from "../../common/hooks/Reducer";
-import {Messages} from "primereact/messages";
-import useToastContext from "../../context/ToastContext";
-import {apiToMessages} from "../../common/messages/messageHelper";
-import {Card} from "primereact/card";
-import {InputText} from "primereact/inputtext";
-import {Button} from "primereact/button";
-import {InputTextarea} from "primereact/inputtextarea";
-import {register} from "../../views/register/RegisterService";
-import {useNavigate} from "react-router-dom";
+import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
+import {Messages} from 'primereact/messages';
+import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
+import {Card} from 'primereact/card';
+import {InputText} from 'primereact/inputtext';
+import {Button} from 'primereact/button';
+import {InputTextarea} from 'primereact/inputtextarea';
+import {register} from '../../views/register/RegisterService';
+import {useNavigate} from 'react-router-dom';
+import {AxiosError} from 'axios/index';
+import BasicResponse from '~/common/messages/BasicResponse';
 
 const Register = () => {
-
   const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
-      'Username should be between 3 and 20 characters' : '';
+    'Username should be between 3 and 20 characters' : '';
   const passwordValidator = (s?: string) => !s ? 'Password is required' : s.length < 8 || s.length > 20 ?
-      'Password should be between 8 and 20 characters' : '';
+    'Password should be between 8 and 20 characters' : '';
   const emailValidator = (s?: string) => !s ? 'Email is required' : '';
   const descriptionValidator = (s?: string) => !s ? '' : s.length > 250 ? 'Description should be maximum 250 characters' : '';
 
@@ -48,18 +48,23 @@ const Register = () => {
     void doRegister();
   }, [submitted]);
 
+  const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
+    const msgs = error.response?.data?.messages ?? [];
+    showMessagesWithoutReference(msgs, messages);
+  };
+
   const doRegister = async () => {
     messages.current?.clear();
     setRequesting(true);
     const response = await register(emailInput.value, usernameInput.value, passwordInput.value, descriptionInput.value)
-                          .catch(console.error);
+      .catch(handleRequestFailure);
     setRequesting(false);
 
     if (!response) {
       return;
     }
 
-    navigate("/login?" + response.message?.content)
+    navigate('/login?' + (response.message?.content || ''));
   };
 
   return (<AuthAutoRedirect loggedInToHome={true}>
@@ -67,16 +72,16 @@ const Register = () => {
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit} className="flex flex-column m-auto">
         <InputText className="mb-1" placeholder="Email" value={emailInput.value} autoComplete="email"
-                   onChange={(e) => dispatchEmail({type: 'change', value: e.target.value})} type="email"/>
+          onChange={(e) => dispatchEmail({type: 'change', value: e.target.value})} type="email"/>
         <small className="p-error block mb-1">{emailInput.error}</small>
         <InputText placeholder="Username" className="mb-1" value={usernameInput.value} autoComplete="username"
-                   onChange={(e) => dispatchUsername({type: 'change', value: e.target.value})}/>
+          onChange={(e) => dispatchUsername({type: 'change', value: e.target.value})}/>
         <small className="p-error block mb-1">{usernameInput.error}</small>
         <InputText className="mb-1" placeholder="Password" value={passwordInput.value} autoComplete="current-password"
-                   onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
+          onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
         <small className="p-error block mb-1">{passwordInput.error}</small>
         <InputTextarea placeholder="Description" value={descriptionInput.value} autoComplete="current-password" rows={5}
-                       onChange={(e) => dispatchDescription({type: 'change', value: e.target.value})} />
+          onChange={(e) => dispatchDescription({type: 'change', value: e.target.value})} />
         <small className="p-error block mb-1">{descriptionInput.error}</small>
         <Button className="mt-2" type="submit" label="Register" loading={requesting}/>
       </form>

@@ -5,13 +5,19 @@ import {Button} from 'primereact/button';
 import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import {login} from './LoginService';
 import {Messages} from 'primereact/messages';
-import {apiToMessages, apiToToast} from '../../common/messages/messageHelper';
+import {
+  apiToMessages,
+  apiToToast,
+  showMessagesWithoutReference
+} from '../../common/messages/messageHelper';
 import useAuthContext from '../../context/AuthContext';
 import {useNavigate} from 'react-router-dom';
 import {loginSuccessMessage} from '../../common/messages/LocalMessages';
 import useToastContext from '../../context/ToastContext';
 import FormInputText from '../../components/FormInputText';
-import ActivationResult from "../../views/activate/ActivationResult";
+import ActivationResult from '../../views/activate/ActivationResult';
+import {AxiosError} from 'axios';
+import BasicResponse from '~/common/messages/BasicResponse';
 
 const Login = () => {
   const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
@@ -42,49 +48,54 @@ const Login = () => {
   useEffect(() => {
     if (search) {
       switch (search) {
-        case ActivationResult.ACTIVATION_REQUIRED:
-          messages.current?.show({
-            detail: "Check your email for the activation link",
-            severity: 'info',
-            sticky: true
-          });
-          break;
-        case ActivationResult.ALREADY_ACTIVATED:
-          messages.current?.show({
-            detail: "User is already activated",
-            severity: 'warn',
-            sticky: true
-          });
-          break;
-        case ActivationResult.ACTIVATION_SUCCESS:
-          messages.current?.show({
-            detail: "Account is successfully activated",
-            severity: 'success',
-            sticky: true
-          });
-          break;
-        case ActivationResult.ACTIVATION_ERROR:
-          messages.current?.show({
-            detail: "An error happened during activation",
-            severity: 'error',
-            sticky: true
-          });
-          break;
+      case ActivationResult.ACTIVATION_REQUIRED:
+        messages.current?.show({
+          detail: 'Check your email for the activation link',
+          severity: 'info',
+          sticky: true
+        });
+        break;
+      case ActivationResult.ALREADY_ACTIVATED:
+        messages.current?.show({
+          detail: 'User is already activated',
+          severity: 'warn',
+          sticky: true
+        });
+        break;
+      case ActivationResult.ACTIVATION_SUCCESS:
+        messages.current?.show({
+          detail: 'Account is successfully activated',
+          severity: 'success',
+          sticky: true
+        });
+        break;
+      case ActivationResult.ACTIVATION_ERROR:
+        messages.current?.show({
+          detail: 'An error happened during activation',
+          severity: 'error',
+          sticky: true
+        });
+        break;
       }
     }
 
     if (!submitted || usernameInput.error || passwordInput.error) {
       return;
     }
+
     setSubmitted(false);
     void doLogin();
   }, [submitted]);
 
+  const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
+    const msgs = error.response?.data?.messages ?? [];
+    showMessagesWithoutReference(msgs, messages);
+  };
+
   const doLogin = async () => {
     messages.current?.clear();
     setRequesting(true);
-    // TODO error handling
-    const response = await login(usernameInput.value, passwordInput.value).catch(console.error);
+    const response = await login(usernameInput.value, passwordInput.value).catch(handleRequestFailure);
     setRequesting(false);
 
     if (!response) {
