@@ -10,6 +10,9 @@
       body {
         width: 60vw;
       }
+      a {
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -19,7 +22,7 @@
         <br>
         <p style="margin-bottom: 0" th:text="
           'Hi ' + ${user.getUsername()} + ', thanks for registering'"> </p>
-        <p style="margin-bottom: 0" th:text="'Use the following URL to activate your account: ' + ${activationURL}"></p>
+        <a th:href="${activationURL}" th:text="'Use the following URL to activate your account'"></a>
       </div>
     </article>
   </body>

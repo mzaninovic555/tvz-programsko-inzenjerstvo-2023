@@ -27,9 +27,8 @@ public class EmailService {
   @Autowired
   JavaMailSender mailSender;
 
-  public void generirajActivationEmail(User newUser, String activationToken) {
+  public void generirajActivationEmail(User newUser, String activationURL) {
     String subject = "TVZ PcPartPicker - Registracija";
-    String activationURL = piosProperties.frontendUrl() + "/" + activationToken;
 
     Context context = new Context();
     context.setVariable("user", newUser);
