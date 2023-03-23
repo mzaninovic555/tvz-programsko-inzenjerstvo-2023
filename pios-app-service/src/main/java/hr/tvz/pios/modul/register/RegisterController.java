@@ -24,7 +24,7 @@ public class RegisterController {
     return registerService.register(request);
   }
 
-  @GetMapping("/activate")
+  @PostMapping("/activate")
   public ResponseEntity<RegisterResponse> activate(@RequestBody @Valid ActivateRequest request) {
     return registerService.activateUser(request);
   }

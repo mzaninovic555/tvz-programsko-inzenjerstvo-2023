@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.register;
 
 import hr.tvz.pios.common.Message;
+import hr.tvz.pios.config.PiosProperties;
 import hr.tvz.pios.mail.EmailService;
 import hr.tvz.pios.modul.role.Role;
 import hr.tvz.pios.modul.role.RoleRepository;
@@ -24,10 +25,11 @@ public class RegisterService {
   private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
   @Autowired
+  PiosProperties piosProperties;
+  @Autowired
   UserRepository userRepository;
   @Autowired
   RoleRepository roleRepository;
-
   @Autowired
   EmailService emailService;
 
@@ -58,9 +60,11 @@ public class RegisterService {
     userRepository.insert(newUser);
 
     String activationToken = generateActivationToken(newUser);
-    emailService.generirajActivationEmail(newUser, activationToken);
+    String activationURL = piosProperties.frontendUrl() + "/activate?" + activationToken;
+    emailService.generirajActivationEmail(newUser, activationURL);
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok()
+        .body(new RegisterResponse(Message.info(ActivationResult.ACTIVATION_REQUIRED.getType())));
   }
 
   /**
@@ -71,12 +75,21 @@ public class RegisterService {
   public ResponseEntity<RegisterResponse> activateUser(ActivateRequest request) {
     var pairUsernameTimestamp = decodeUsernameTimestamp(request.activationToken());
     Optional<User> userToActivate = userRepository.getByUsername(pairUsernameTimestamp.getLeft());
-    if (userToActivate.isPresent() && userToActivate.get().getCreationDate().equals(pairUsernameTimestamp.getRight())) {
+
+    if (userToActivate.isPresent() && userToActivate.get().getIsActivated()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(new RegisterResponse(Message.error(ActivationResult.ALREADY_ACTIVATED.getType())));
+    }
+
+    if (userToActivate.isPresent()
+        && userToActivate.get().getCreationDate().toLocalDate()
+              .equals(pairUsernameTimestamp.getRight().toLocalDate())) {
       userRepository.updateIsActivatedById(userToActivate.get().getId(), Boolean.TRUE);
-      return ResponseEntity.ok().build();
+      return ResponseEntity.ok()
+          .body(new RegisterResponse(Message.info(ActivationResult.ACTIVATION_SUCCESS.getType())));
     }
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(new RegisterResponse(Message.error("Error during activation")));
+        .body(new RegisterResponse(Message.error(ActivationResult.ACTIVATION_ERROR.getType())));
   }
 
   /**
@@ -85,8 +98,9 @@ public class RegisterService {
    * @return par username timestamp
    */
   private Pair<String, LocalDateTime> decodeUsernameTimestamp(String activationToken) {
-    Base64.getDecoder().decode(activationToken.getBytes(StandardCharsets.UTF_8));
-    String [] usernameTimestamp = StringUtils.splitByWholeSeparator(activationToken, "_");
+    byte[] decodedBytes = Base64.getDecoder().decode(activationToken.getBytes(StandardCharsets.UTF_8));
+    String decodedToken = new String(decodedBytes);
+    String [] usernameTimestamp = StringUtils.splitByWholeSeparator(decodedToken, "_");
     return Pair.of(usernameTimestamp[0], LocalDateTime.parse(usernameTimestamp[1]));
   }
 

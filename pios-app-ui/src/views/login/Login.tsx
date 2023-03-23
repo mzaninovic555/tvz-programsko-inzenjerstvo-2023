@@ -11,12 +11,15 @@ import {useNavigate} from 'react-router-dom';
 import {loginSuccessMessage} from '../../common/messages/LocalMessages';
 import useToastContext from '../../context/ToastContext';
 import FormInputText from '../../components/FormInputText';
+import ActivationResult from "../../views/activate/ActivationResult";
 
 const Login = () => {
   const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
     'Username should be between 3 and 20 characters' : '';
   const passwordValidator = (s?: string) => !s ? 'Password is required' : s.length < 8 || s.length > 100 ?
-    'Username should be between 3 and 20 characters' : '';
+    'Password should be between 8 and 100 characters' : '';
+
+  const search = window.location.search.substring(1);
 
   const [usernameInput, dispatchUsername] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: usernameValidator});
   const [passwordInput, dispatchPassword] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: passwordValidator});
@@ -37,6 +40,39 @@ const Login = () => {
   };
 
   useEffect(() => {
+    if (search) {
+      switch (search) {
+        case ActivationResult.ACTIVATION_REQUIRED:
+          messages.current?.show({
+            detail: "Check your email for the activation link",
+            severity: 'info',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ALREADY_ACTIVATED:
+          messages.current?.show({
+            detail: "User is already activated",
+            severity: 'warn',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ACTIVATION_SUCCESS:
+          messages.current?.show({
+            detail: "Account is successfully activated",
+            severity: 'success',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ACTIVATION_ERROR:
+          messages.current?.show({
+            detail: "An error happened during activation",
+            severity: 'error',
+            sticky: true
+          });
+          break;
+      }
+    }
+
     if (!submitted || usernameInput.error || passwordInput.error) {
       return;
     }

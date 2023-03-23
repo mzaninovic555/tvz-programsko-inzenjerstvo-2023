@@ -9,6 +9,7 @@ import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import {register} from "../../views/register/RegisterService";
+import {useNavigate} from "react-router-dom";
 
 const Register = () => {
 
@@ -24,11 +25,11 @@ const Register = () => {
   const [emailInput, dispatchEmail] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: emailValidator});
   const [descriptionInput, dispatchDescription] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: descriptionValidator});
 
+  const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [requesting, setRequesting] = useState(false);
 
   const messages = useRef<Messages>(null);
-  const {toast} = useToastContext();
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,9 +59,7 @@ const Register = () => {
       return;
     }
 
-    if (response.message) {
-      messages.current?.show(apiToMessages(response.message));
-    }
+    navigate("/login?" + response.message?.content)
   };
 
   return (<AuthAutoRedirect loggedInToHome={true}>
