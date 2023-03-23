@@ -36,6 +36,11 @@ public class LoginService {
           .body(new LoginResponse(null, Message.error("Invalid username/password")));
     }
 
+    if (!userOptional.get().getIsActivated()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(new LoginResponse(null, Message.error("User isn't activated yet")));
+    }
+
     String token = jwtService.createJwtToken(userOptional.get());
     return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(token, null));
   }
