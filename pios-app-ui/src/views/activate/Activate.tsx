@@ -8,19 +8,17 @@ const Activate = () => {
   const navigate = useNavigate();
   const token = window.location.search.substring(1);
 
-
   useEffect(() => {
     if (!token) {
       return;
     }
     void doActivate();
-  });
+  }, []);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     if (!error.response?.data.messages.length) {
       return;
     }
-
     navigate('/login?' + error.response?.data.messages[0].content);
   };
 

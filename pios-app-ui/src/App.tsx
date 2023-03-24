@@ -23,7 +23,7 @@ function App() {
             <Navbar/>
             <div className="container">
               <Routes>
-                <Route path="/activate" element={<Activate />} />
+                <Route path="/activate" element={<Activate/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/builds" element={<Builds/>}/>
