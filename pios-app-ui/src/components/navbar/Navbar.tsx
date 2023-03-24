@@ -61,7 +61,8 @@ const Navbar = () => {
     {
       label: 'Wishlist',
       icon: 'pi pi-list',
-      url: '/wishlist'
+      url: '/wishlist',
+      command: (e: MenuItemCommandEvent) => navigateToUrl(e, '/wishlist')
     },
     {label: 'Logout', icon: 'pi pi-sign-out', command: logOut}
   ];

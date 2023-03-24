@@ -12,7 +12,7 @@ import Wishlist from './views/wishlist/Wishlist';
 import UserSettings from './views/user-settings/UserSettings';
 import AuthWrapper from './common/auth/AuthWrapper';
 import ComponentSearch from './views/component-search/ComponentSearch';
-import Activate from "./views/activate/Activate";
+import Activate from './views/activate/Activate';
 
 function App() {
   return (

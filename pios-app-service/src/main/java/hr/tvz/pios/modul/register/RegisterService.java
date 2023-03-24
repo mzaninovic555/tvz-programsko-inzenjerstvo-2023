@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.register;
 
+import static hr.tvz.pios.modul.user.settings.UserSettingsService.EMAIL_REGEX;
 import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.PiosProperties;
@@ -40,6 +41,10 @@ public class RegisterService {
   public RegisterResponse register(RegisterRequest request) {
     if (userRepository.isUsernameTaken(request.username())) {
       throw PiosException.conflict(Message.error("Username is already in use", "username"));
+    }
+
+    if (!request.email().matches(EMAIL_REGEX)) {
+      throw PiosException.badRequest(Message.error("Invalid email format", "email"));
     }
 
     if (userRepository.isEmailTaken(request.email())) {

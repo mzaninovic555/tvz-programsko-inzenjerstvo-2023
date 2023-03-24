@@ -107,7 +107,7 @@ public class UserSettingsService {
       throw PiosException.badRequest(Message.error("Invalid email format", "email"));
     }
 
-    if (userRepository.getByEmail(email).isPresent()) {
+    if (userRepository.isEmailTaken(email)) {
       throw PiosException.badRequest(
           Message.error("This email address is already in use", "email"));
     }
