@@ -18,7 +18,7 @@ import {formatDate} from '../../common/dateHelper';
 
 const UserSettings = () => {
   const emailValidator = (s?: string) => !s ? undefined : s.length > 100 ? 'Email has to be less than 100 characters long' : undefined;
-  const bioValidator = (s?: string) => !s ? undefined : s.length > 200 ? 'Bio has to be less than 200 characters long' : undefined;
+  const descValidator = (s?: string) => !s ? undefined : s.length > 200 ? 'Description has to be less than 200 characters long' : undefined;
   const passwordValidator = (req: boolean, s?: string) => !s && req ? 'This field is required' :
     req && ((s?.length || 0) > 100 || (s?.length || 0) < 8) ? 'Password should be between 8 and 100 characters' : undefined;
 
@@ -30,7 +30,7 @@ const UserSettings = () => {
   const [username, setUsername] = useState('');
   const [creationDate, setCreationDate] = useState<Date>();
   const [emailInput, dispatchEmail] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: emailValidator});
-  const [bioInput, dispatchBio] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: bioValidator});
+  const [descriptionInput, dispatchDescription] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: descValidator});
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
@@ -85,8 +85,8 @@ const UserSettings = () => {
       case 'email':
         dispatchEmail({type: 'changeError', error: msg.content});
         break;
-      case 'bio':
-        dispatchBio({type: 'changeError', error: msg.content});
+      case 'description':
+        dispatchDescription({type: 'changeError', error: msg.content});
         break;
       case 'oldPassword':
       case 'newPassword':
@@ -108,7 +108,7 @@ const UserSettings = () => {
     messages.current?.clear();
 
     const response = await updateSettings({
-      description: bioInput.value,
+      description: descriptionInput.value,
       email: emailInput.value || null,
       oldPassword: oldPassword || null,
       newPassword: newPassword || null,
@@ -131,7 +131,7 @@ const UserSettings = () => {
 
     setUsername(settings.username);
     dispatchEmail({type: 'change', value: settings.email || ''});
-    dispatchBio({type: 'change', value: settings.description || ''});
+    dispatchDescription({type: 'change', value: settings.description || ''});
     setOldPassword('');
     setNewPassword('');
     setNewPasswordRepeat('');
@@ -153,8 +153,8 @@ const UserSettings = () => {
         </div>
         <FormInputText inputClassName="w-full" name="Email" value={emailInput.value} maxLength={100}
           onChange={(v) => dispatchEmail({type: 'change', value: v})} type="email" error={emailInput.error}/>
-        <FormTextarea name="Bio" value={bioInput.value} maxLength={200} error={bioInput.error} rows={7}
-          onChange={(e) => dispatchBio({type: 'change', value: e})} inputClassName="w-full"/>
+        <FormTextarea name="Description" value={descriptionInput.value} maxLength={200} error={descriptionInput.error} rows={7}
+          onChange={(e) => dispatchDescription({type: 'change', value: e})} inputClassName="w-full"/>
         <hr className="my-4"/>
         <FormInputText inputClassName="w-full" name="Old Password" value={oldPassword} type="password"
           error={passwordErrors[0]} onChange={setOldPassword} maxLength={100} required={anyPasswordPresent}/>

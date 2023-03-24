@@ -8,6 +8,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository {
 
+  /**
+   * Postoji li korisnik sa korisničkim imenom.
+   * @return {@link Boolean}
+   */
+  Boolean isUsernameTaken(String username);
+
+  /**
+   * Postoji li korisnik sa email adresom.
+   * @return {@link Boolean}
+   */
+  Boolean isEmailTaken(String email);
+
   Optional<User> getById(Long id);
 
   Optional<User> getByUsername(String username);
@@ -17,6 +29,8 @@ public interface UserRepository {
   void insert(User user);
 
   Integer updateById(User user);
+
+  Integer updateIsActivatedById(Long id, Boolean isActivated);
 
   Integer deleteById(Long id);
 }

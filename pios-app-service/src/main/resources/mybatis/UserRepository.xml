@@ -26,6 +26,26 @@
   </sql>
 
   <!-- SELECT -->
+  <select id="isUsernameTaken" resultType="Boolean">
+    select
+      case
+        when count(*) > 0 then 1
+        else 0
+      end
+    from users u
+    where u.username = #{username}
+  </select>
+
+  <select id="isEmailTaken" resultType="Boolean">
+    select
+      case
+        when count(*) > 0 then 1
+        else 0
+        end
+    from users u
+    where u.email = #{email}
+  </select>
+
   <select id="getById" resultMap="userResultMap">
     select
     <include refid="userResultMapColumns">
@@ -68,7 +88,7 @@
     </include>
     from USERS u
     join roles r on r.id = u.role_id
-    where u.email = #{email,jdbcType=VARCHAR}
+    where u.email = #{email}
   </select>
 
   <insert id="insert" parameterType="hr.tvz.pios.modul.user.User">
@@ -93,14 +113,19 @@
 
   <update id="updateById" parameterType="hr.tvz.pios.modul.user.User">
     update USERS
-    set id = #{id},
-        username = #{username},
+    set username = #{username},
         password = #{password},
         email = #{email},
         description = #{description},
         creation_date = #{creationDate},
         is_activated = #{isActivated},
         role_id = #{role.id}
+    where id = #{id}
+  </update>
+
+  <update id="updateIsActivatedById">
+    update USERS
+    set is_activated = #{isActivated}
     where id = #{id}
   </update>
 
