@@ -11,8 +11,8 @@ import jakarta.validation.constraints.Size;
  * @param description {@link String}
  */
 public record RegisterRequest(
-    @NotEmpty String email,
+    @NotEmpty @Size(max = 100) String email,
     @NotEmpty @Size(min = 3, max = 20) String username,
     @NotEmpty @Size(min = 8, max = 100) String password,
-    String description
+    @Size(max = 200) String description
 ) { }
