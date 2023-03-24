@@ -15,7 +15,7 @@ import {useNavigate} from 'react-router-dom';
 import {loginSuccessMessage} from '../../common/messages/LocalMessages';
 import useToastContext from '../../context/ToastContext';
 import FormInputText from '../../components/FormInputText';
-import ActivationResult from '../../views/activate/ActivationResult';
+import ActivationResult from '../activate/ActivationResult';
 import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 
@@ -79,11 +79,15 @@ const Login = () => {
       }
     }
 
-    if (!submitted || usernameInput.error || passwordInput.error) {
+    if (!submitted) {
+      return;
+    }
+    setSubmitted(false);
+
+    if (usernameInput.error || passwordInput.error) {
       return;
     }
 
-    setSubmitted(false);
     void doLogin();
   }, [submitted]);
 

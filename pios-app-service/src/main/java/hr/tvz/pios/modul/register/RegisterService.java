@@ -15,7 +15,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +35,7 @@ public class RegisterService {
   /**
    * Vrši registraciju korisnika uz provjeru o postojećem email i username.
    * @param request {@link RegisterRequest}
-   * @return {@link ResponseEntity}
+   * @return {@link RegisterResponse}
    */
   public RegisterResponse register(RegisterRequest request) {
     if (userRepository.isUsernameTaken(request.username())) {
@@ -67,7 +66,7 @@ public class RegisterService {
   /**
    * Aktivira registriranog korisnika po username i timestampu kreiranja.
    * @param request {@link ActivateRequest}
-   * @return {@link ResponseEntity}
+   * @return {@link RegisterResponse}
    */
   public RegisterResponse activateUser(ActivateRequest request) {
     var pairUsernameTimestamp = decodeUsernameTimestamp(request.activationToken());

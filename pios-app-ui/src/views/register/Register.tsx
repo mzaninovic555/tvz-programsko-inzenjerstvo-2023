@@ -4,13 +4,13 @@ import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import {Messages} from 'primereact/messages';
 import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
 import {Card} from 'primereact/card';
-import {InputText} from 'primereact/inputtext';
 import {Button} from 'primereact/button';
-import {InputTextarea} from 'primereact/inputtextarea';
 import {register} from '../../views/register/RegisterService';
 import {useNavigate} from 'react-router-dom';
 import {AxiosError} from 'axios/index';
 import BasicResponse from '~/common/messages/BasicResponse';
+import FormInputText from '../../components/FormInputText';
+import FormTextarea from '../../components/FormTextarea';
 
 const Register = () => {
   const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
@@ -41,16 +41,41 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (!submitted || usernameInput.error || passwordInput.error || emailInput.error || descriptionInput.error) {
+    if (!submitted) {
       return;
     }
     setSubmitted(false);
+
+    if (usernameInput.error || passwordInput.error || emailInput.error || descriptionInput.error) {
+      return;
+    }
+
     void doRegister();
   }, [submitted]);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
     showMessagesWithoutReference(msgs, messages);
+
+    const ref = msgs.filter(((x) => x.reference));
+    ref.forEach((msg) => {
+      switch (msg.reference) {
+      case 'email':
+        dispatchEmail({type: 'changeError', error: msg.content});
+        break;
+      case 'username':
+        dispatchUsername({type: 'changeError', error: msg.content});
+        break;
+      case 'password':
+        dispatchPassword({type: 'changeError', error: msg.content});
+        break;
+      case 'description':
+        dispatchDescription({type: 'changeError', error: msg.content});
+        break;
+      default:
+        console.warn('Unknown reference', msg);
+      }
+    });
   };
 
   const doRegister = async () => {
@@ -71,19 +96,17 @@ const Register = () => {
     <Card title="Register" style={{maxWidth: '500px'}} className="m-auto card-content-no-bottom-margin">
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit} className="flex flex-column m-auto">
-        <InputText className="mb-1" placeholder="Email" value={emailInput.value} autoComplete="email"
-          onChange={(e) => dispatchEmail({type: 'change', value: e.target.value})} type="email"/>
-        <small className="p-error block mb-1">{emailInput.error}</small>
-        <InputText placeholder="Username" className="mb-1" value={usernameInput.value} autoComplete="username"
-          onChange={(e) => dispatchUsername({type: 'change', value: e.target.value})}/>
-        <small className="p-error block mb-1">{usernameInput.error}</small>
-        <InputText className="mb-1" placeholder="Password" value={passwordInput.value} autoComplete="current-password"
-          onChange={(e) => dispatchPassword({type: 'change', value: e.target.value})} type="password"/>
-        <small className="p-error block mb-1">{passwordInput.error}</small>
-        <InputTextarea placeholder="Description" value={descriptionInput.value} autoComplete="current-password" rows={5}
-          onChange={(e) => dispatchDescription({type: 'change', value: e.target.value})} />
-        <small className="p-error block mb-1">{descriptionInput.error}</small>
+        <FormInputText name="Email" value={emailInput.value} type="email" error={emailInput.error}
+          onChange={(e) => dispatchEmail({type: 'change', value: e})} required inputClassName="w-full"/>
+        <FormInputText name="Username" value={usernameInput.value} error={usernameInput.error}
+          onChange={(e) => dispatchUsername({type: 'change', value: e})} required inputClassName="w-full"/>
+        <FormInputText name="Password" type="password" value={passwordInput.value} error={passwordInput.error}
+          onChange={(e) => dispatchPassword({type: 'change', value: e})} required inputClassName="w-full"/>
+        <FormTextarea name="Description" value={descriptionInput.value} error={descriptionInput.error}
+          onChange={(e) => dispatchDescription({type: 'change', value: e})}
+          inputClassName="w-full" rows={5}/>
         <Button className="mt-2" type="submit" label="Register" loading={requesting}/>
+        <Button label="Already have an account? Login now" link onClick={() => navigate('/login')}/>
       </form>
     </Card>
   </AuthAutoRedirect>);
