@@ -9,14 +9,13 @@ import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 import {Messages} from 'primereact/messages';
 import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
+import classes from './Wishlist.module.css';
 
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState<WishlistEntry[]>([]);
   const messages = useRef<Messages>(null);
 
-  useEffect(() => {
-    void fetchWishlist();
-  }, []);
+  useEffect(() => void fetchWishlist(), []);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
@@ -84,8 +83,10 @@ const Wishlist = () => {
   const wishlistFilled = (
     <>
       <Messages ref={messages}/>
-      <DataView value={wishlist} itemTemplate={template}/>
-      <Button className="mt-1 p-button-danger" label="Clear wishlist" icon="pi pi-trash" onClick={clearWishlist}/>
+      <div className={classes['wishlist-wrapper']}>
+        <DataView value={wishlist} itemTemplate={template}/>
+      </div>
+      <Button className="mt-3 p-button-danger" label="Clear wishlist" icon="pi pi-trash" onClick={clearWishlist}/>
     </>
   );
 

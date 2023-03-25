@@ -1,0 +1,10 @@
+.wishlist-wrapper {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.wishlist-wrapper .p-dataview-content {
+  border-radius: 10px;
+}
+
