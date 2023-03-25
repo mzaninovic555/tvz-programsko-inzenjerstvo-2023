@@ -39,7 +39,7 @@ public class LoginService {
     }
 
     String token = jwtService.createJwtToken(userOptional.get());
-    return new LoginResponse(token, null);
+    return new LoginResponse(token);
   }
 
   private Boolean isMatchingPassword(String loginPassword, String userPassword) {
