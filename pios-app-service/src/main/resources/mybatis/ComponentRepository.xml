@@ -25,6 +25,20 @@
   </sql>
 
   <!-- SELECT -->
+  <select id="getAll" resultMap="componentResultMap">
+    select
+    <include refid="componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="m_"/>
+    </include>
+    from COMPONENTS c
+      join MANUFACTURERS m on c.manufacturer_id = m.id
+  </select>
+
   <select id="getById" resultMap="componentResultMap">
     select
     <include refid="componentResultMapColumns">
