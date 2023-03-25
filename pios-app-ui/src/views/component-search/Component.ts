@@ -7,6 +7,7 @@ interface Component {
   price: number;
   type: Type;
   data: string;
+  imageBase64: string | undefined;
   manufacturer: Manufacturer;
 }
 
