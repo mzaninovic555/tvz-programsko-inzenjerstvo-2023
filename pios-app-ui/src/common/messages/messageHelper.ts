@@ -29,14 +29,14 @@ export function apiToToast(message: Message): ToastMessage {
 
 export function messageTypeToSeverity(type: MessageType) {
   switch (type) {
-  case MessageType.ERROR:
-    return 'error';
-  case MessageType.INFO:
-    return 'info';
-  case MessageType.WARN:
-    return 'warn';
-  case MessageType.SUCCESS:
-    return 'success';
+    case MessageType.ERROR:
+      return 'error';
+    case MessageType.INFO:
+      return 'info';
+    case MessageType.WARN:
+      return 'warn';
+    case MessageType.SUCCESS:
+      return 'success';
   }
 }
 
