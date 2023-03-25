@@ -1,7 +1,7 @@
 package hr.tvz.pios.modul.login;
 
 /**
- * Rekord koji sadrži odgovor prilikom prijave.
+ * Rekord koji sadrži odgovor (token) prilikom prijave.
  *
  * @param token JWT token.
  */
