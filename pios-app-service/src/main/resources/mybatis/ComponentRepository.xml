@@ -30,7 +30,7 @@
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
@@ -43,8 +43,8 @@
     select
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
-      <property name="columnPrefix" value=""/>
-    </include>
+      <property name="columnPrefix" value="c_"/>
+    </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
@@ -59,7 +59,7 @@
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
