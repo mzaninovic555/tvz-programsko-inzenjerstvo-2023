@@ -20,10 +20,8 @@ import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 
 const Login = () => {
-  const usernameValidator = (s?: string) => !s ? 'Username is required' : s.length < 3 || s.length > 20 ?
-    'Username should be between 3 and 20 characters' : '';
-  const passwordValidator = (s?: string) => !s ? 'Password is required' : s.length < 8 || s.length > 100 ?
-    'Password should be between 8 and 100 characters' : '';
+  const usernameValidator = (s?: string) => '';
+  const passwordValidator = (s?: string) => '';
 
   const search = window.location.search.substring(1);
 
@@ -48,34 +46,34 @@ const Login = () => {
   useEffect(() => {
     if (search) {
       switch (search) {
-      case ActivationResult.ACTIVATION_REQUIRED:
-        messages.current?.show({
-          detail: 'Check your email for the activation link',
-          severity: 'info',
-          sticky: true
-        });
-        break;
-      case ActivationResult.ALREADY_ACTIVATED:
-        messages.current?.show({
-          detail: 'User is already activated',
-          severity: 'warn',
-          sticky: true
-        });
-        break;
-      case ActivationResult.ACTIVATION_SUCCESS:
-        messages.current?.show({
-          detail: 'Account is successfully activated',
-          severity: 'success',
-          sticky: true
-        });
-        break;
-      case ActivationResult.ACTIVATION_ERROR:
-        messages.current?.show({
-          detail: 'An error happened during activation',
-          severity: 'error',
-          sticky: true
-        });
-        break;
+        case ActivationResult.ACTIVATION_REQUIRED:
+          messages.current?.show({
+            detail: 'Check your email for the activation link',
+            severity: 'info',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ALREADY_ACTIVATED:
+          messages.current?.show({
+            detail: 'User is already activated',
+            severity: 'warn',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ACTIVATION_SUCCESS:
+          messages.current?.show({
+            detail: 'Account is successfully activated',
+            severity: 'success',
+            sticky: true
+          });
+          break;
+        case ActivationResult.ACTIVATION_ERROR:
+          messages.current?.show({
+            detail: 'An error happened during activation',
+            severity: 'error',
+            sticky: true
+          });
+          break;
       }
     }
 
@@ -94,6 +92,20 @@ const Login = () => {
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
     showMessagesWithoutReference(msgs, messages);
+
+    const ref = msgs.filter(((x) => x.reference));
+    ref.forEach((msg) => {
+      switch (msg.reference) {
+        case 'username':
+          dispatchUsername({type: 'changeError', error: msg.content});
+          break;
+        case 'password':
+          dispatchPassword({type: 'changeError', error: msg.content});
+          break;
+        default:
+          console.warn('Unknown reference', msg);
+      }
+    });
   };
 
   const doLogin = async () => {

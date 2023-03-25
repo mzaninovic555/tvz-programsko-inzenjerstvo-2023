@@ -1,4 +1,4 @@
-import Message from "~/common/messages/Message";
+import Message from '~/common/messages/Message';
 
 interface RegisterResponse {
   message?: Message;

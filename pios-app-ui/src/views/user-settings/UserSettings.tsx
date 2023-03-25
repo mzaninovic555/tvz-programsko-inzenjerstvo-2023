@@ -82,24 +82,24 @@ const UserSettings = () => {
     const ref = msgs.filter(((x) => x.reference));
     ref.forEach((msg) => {
       switch (msg.reference) {
-      case 'email':
-        dispatchEmail({type: 'changeError', error: msg.content});
-        break;
-      case 'description':
-        dispatchDescription({type: 'changeError', error: msg.content});
-        break;
-      case 'oldPassword':
-      case 'newPassword':
-      case 'newPasswordRepeat':
-        setPasswordErrors((prev) => {
-          const i = ['oldPassword', 'newPassword', 'newPasswordRepeat'].findIndex(((x) => x == msg.reference));
-          const copy = prev.slice();
-          copy[i] = msg.content;
-          return copy;
-        });
-        break;
-      default:
-        console.warn('Unknown reference', msg);
+        case 'email':
+          dispatchEmail({type: 'changeError', error: msg.content});
+          break;
+        case 'description':
+          dispatchDescription({type: 'changeError', error: msg.content});
+          break;
+        case 'oldPassword':
+        case 'newPassword':
+        case 'newPasswordRepeat':
+          setPasswordErrors((prev) => {
+            const i = ['oldPassword', 'newPassword', 'newPasswordRepeat'].findIndex(((x) => x == msg.reference));
+            const copy = prev.slice();
+            copy[i] = msg.content;
+            return copy;
+          });
+          break;
+        default:
+          console.warn('Unknown reference', msg);
       }
     });
   };
