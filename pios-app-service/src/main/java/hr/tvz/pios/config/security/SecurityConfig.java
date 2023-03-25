@@ -38,6 +38,7 @@ public class SecurityConfig {
     "/api/v1/login",
     "/api/v1/register",
     "/api/v1/activate",
+    "/api/v1/component",
   };
 
   @Autowired
