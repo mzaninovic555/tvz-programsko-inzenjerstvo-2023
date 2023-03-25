@@ -60,20 +60,20 @@ const Register = () => {
     const ref = msgs.filter(((x) => x.reference));
     ref.forEach((msg) => {
       switch (msg.reference) {
-      case 'email':
-        dispatchEmail({type: 'changeError', error: msg.content});
-        break;
-      case 'username':
-        dispatchUsername({type: 'changeError', error: msg.content});
-        break;
-      case 'password':
-        dispatchPassword({type: 'changeError', error: msg.content});
-        break;
-      case 'description':
-        dispatchDescription({type: 'changeError', error: msg.content});
-        break;
-      default:
-        console.warn('Unknown reference', msg);
+        case 'email':
+          dispatchEmail({type: 'changeError', error: msg.content});
+          break;
+        case 'username':
+          dispatchUsername({type: 'changeError', error: msg.content});
+          break;
+        case 'password':
+          dispatchPassword({type: 'changeError', error: msg.content});
+          break;
+        case 'description':
+          dispatchDescription({type: 'changeError', error: msg.content});
+          break;
+        default:
+          console.warn('Unknown reference', msg);
       }
     });
   };
