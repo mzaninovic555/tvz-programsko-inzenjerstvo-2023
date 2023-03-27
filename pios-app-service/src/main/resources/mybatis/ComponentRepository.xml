@@ -20,7 +20,7 @@
     ${alias}price               ${columnPrefix}price,
     ${alias}type                ${columnPrefix}type,
     ${alias}data                ${columnPrefix}data,
-    ${alias}imageBase64         ${columnPrefix}image_base64,
+    ${alias}image_base64         ${columnPrefix}imageBase64,
     ${alias}manufacturer_id     ${columnPrefix}manufacturer_id
   </sql>
 

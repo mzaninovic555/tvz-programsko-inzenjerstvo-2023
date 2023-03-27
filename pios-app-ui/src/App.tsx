@@ -9,8 +9,10 @@ import Register from './views/register/Register';
 import Navbar from './components/navbar/Navbar';
 import Builds from './views/builds/Builds';
 import Wishlist from './views/wishlist/Wishlist';
-import Settings from './views/settings/Settings';
+import UserSettings from './views/user-settings/UserSettings';
 import AuthWrapper from './common/auth/AuthWrapper';
+import ComponentSearch from './views/component-search/ComponentSearch';
+import Activate from './views/activate/Activate';
 
 function App() {
   return (
@@ -21,11 +23,13 @@ function App() {
             <Navbar/>
             <div className="container">
               <Routes>
+                <Route path="/activate" element={<Activate/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/builds" element={<Builds/>}/>
                 <Route path="/wishlist" element={<Wishlist/>}/>
-                <Route path="/settings" element={<Settings/>}/>
+                <Route path="/settings" element={<UserSettings/>}/>
+                <Route path="/component-search" element={<ComponentSearch/>}/>
                 <Route path="/" element={<Homepage/>}/>
                 <Route path="*" element={<Navigate to="/"/>}/>
               </Routes>

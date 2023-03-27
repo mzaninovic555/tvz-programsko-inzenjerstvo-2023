@@ -1,7 +1,8 @@
-import {MessagesMessage} from 'primereact/messages';
+import {Messages, MessagesMessage} from 'primereact/messages';
 import MessageType from './MessageType';
 import Message from '~/common/messages/Message';
 import {ToastMessage} from 'primereact/toast';
+import {RefObject} from 'react';
 
 const TIMEOUT_SECONDS = 3_000;
 
@@ -28,13 +29,20 @@ export function apiToToast(message: Message): ToastMessage {
 
 export function messageTypeToSeverity(type: MessageType) {
   switch (type) {
-  case MessageType.ERROR:
-    return 'error';
-  case MessageType.INFO:
-    return 'info';
-  case MessageType.WARN:
-    return 'warn';
-  case MessageType.SUCCESS:
-    return 'success';
+    case MessageType.ERROR:
+      return 'error';
+    case MessageType.INFO:
+      return 'info';
+    case MessageType.WARN:
+      return 'warn';
+    case MessageType.SUCCESS:
+      return 'success';
   }
+}
+
+export function showMessagesWithoutReference(msg: Message[], messages: RefObject<Messages>) {
+  if (!msg.length) {
+    return;
+  }
+  messages.current?.show(msg.filter((x) => !x.reference).map(apiToMessages));
 }

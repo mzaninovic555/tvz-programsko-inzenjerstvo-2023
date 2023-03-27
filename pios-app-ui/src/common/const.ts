@@ -12,9 +12,9 @@ export const menuItems: MenuItem[] = [
     url: '/builds'
   },
   {
-    label: 'Wishlist',
-    icon: 'pi pi-list',
-    url: '/wishlist'
+    label: 'Component Search',
+    icon: 'pi pi-search',
+    url: '/component-search'
   }
 ];
 

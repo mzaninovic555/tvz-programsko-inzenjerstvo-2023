@@ -18,7 +18,7 @@
     "google"
   ],
   "parser": "@typescript-eslint/parser",
-  "ignorePatterns": ["dist/"],
+  "ignorePatterns": ["dist/", "target/"],
   "parserOptions": {
     "project": ["./tsconfig.json"],
     "ecmaFeatures": {
@@ -36,7 +36,7 @@
     "max-len": ["error", {"code": 150}],
     "linebreak-style": "off",
     "comma-dangle": "off",
-    "indent": ["error", 2],
+    "indent": ["error", 2, {"SwitchCase": 1}],
     "require-jsdoc": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/ban-ts-comment": "off"

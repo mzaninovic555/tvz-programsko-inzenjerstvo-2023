@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.modul.wishlist.WishlistRepository">
+  <resultMap id="wishlistEntryResultMap" type="hr.tvz.pios.modul.wishlist.WishlistEntry">
+    <id     property="id"             column="id" />
+    <result property="userId"         column="user_id" />
+    <result property="creationDate"   column="creation_date" />
+    <association property="component"      javaType="hr.tvz.pios.modul.component.Component"
+      resultMap="hr.tvz.pios.modul.component.ComponentRepository.componentResultMap"
+      columnPrefix="c_"/>
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="wishlistEntryResultMapColumns">
+    ${alias}id               ${columnPrefix}id,
+    ${alias}user_id          ${columnPrefix}user_id,
+    ${alias}creation_date    ${columnPrefix}creation_date
+  </sql>
+
+  <select id="getById" resultMap="wishlistEntryResultMap">
+    select
+    <include refid="wishlistEntryResultMapColumns">
+      <property name="alias" value="w."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>
+    from WISHLIST w
+    join COMPONENTS c on w.component_id = c.id
+    where w.id = #{id}
+  </select>
+
+  <select id="getAllForUser" resultMap="wishlistEntryResultMap">
+    select
+    <include refid="wishlistEntryResultMapColumns">
+      <property name="alias" value="w."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>
+    from WISHLIST w
+         join COMPONENTS c on w.component_id = c.id
+    where w.user_id = #{userId}
+  </select>
+
+  <insert id="addToUserWishlist" parameterType="Long" keyProperty="id" useGeneratedKeys="true">
+    insert into WISHLIST (
+      user_id,
+      component_id
+    ) values (
+               #{userId},
+               #{componentId}
+             )
+  </insert>
+
+  <delete id="removeComponentFromWishlist">
+    delete from WISHLIST
+    where user_id = #{userId}
+      and id = #{id}
+  </delete>
+
+  <delete id="clearUserWishlist">
+    delete from WISHLIST
+    where user_id = #{userId}
+  </delete>
+</mapper>
