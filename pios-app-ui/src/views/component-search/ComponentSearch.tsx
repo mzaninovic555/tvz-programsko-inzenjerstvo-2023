@@ -18,14 +18,16 @@ import {Dropdown} from 'primereact/dropdown';
 import Type from '../../views/component-search/Type';
 import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
+import {normalize} from '../../common/dateHelper';
 
 const ComponentSearch = () => {
   const [components, setComponents] = useState<Component[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
 
-  const [componentSearch, debouncedComponentSearch, setComponentSearch] = useDebounce('', 500);
+  const [componentSearch, debouncedComponentSearch, setComponentSearch] =
+    useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
   const [componentType, setComponentType] = useState('');
-  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
 
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
@@ -99,19 +101,19 @@ const ComponentSearch = () => {
 
   const header = () => {
     return <>
-      <div className={'flex align-items-center'}>
+      <div className={'flex align-items-center flex-wrap'}>
         <span className="p-input-icon-right mr-2">
           <i className="pi pi-search"/>
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
             placeholder="Search"/>
         </span>
-        <Dropdown className="mr-2" value={componentType} onChange={(e) => setComponentType(e.target.value)}
+        <Dropdown className="mr-2" value={componentType} onChange={(e) => setComponentType(e.target.value as string)}
           options={Object.values(Type)} placeholder="Choose a type">
         </Dropdown>
-        <div className="flex-1 flex-nowrap align-items-center">
-          <Slider className="max-w-10rem" value={priceRange} onChange={(e) => setPriceRange(e.value)} range />
-          <Tag severity="info" value={priceRange[0]} />
-          <Tag severity="info" value={priceRange[1]} />
+        <div className="flex align-items-center flex-row w-full w-15rem">
+          <Tag severity="info" value={normalize(priceRange[0])} />
+          <Slider range value={priceRange} onChange={(e) => setPriceRange(e.value as [number, number])} className="w-full mx-3" />
+          <Tag severity="info" value={normalize(priceRange[1])} />
         </div>
       </div>
     </>;
