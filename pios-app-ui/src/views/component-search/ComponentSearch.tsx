@@ -27,15 +27,30 @@ const ComponentSearch = () => {
     useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
   const [componentType, setComponentType] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([1, 5000]);
+  const [priceRangeDebounced, setPriceRangeDebounced] = useState<[number, number]>(priceRange);
+  const [rangeTimeout, setRangeTimeout] = useState<number>();
 
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
 
+  useEffect(() => {
+    if (rangeTimeout) {
+      clearTimeout(rangeTimeout);
+    }
+
+    const newVal = setTimeout(() => {
+      setPriceRangeDebounced(priceRange);
+      setRangeTimeout(undefined);
+    }, 400);
+
+    // @ts-ignore
+    setRangeTimeout(newVal);
+  }, [priceRange]);
 
   useEffect(() => {
     void fetchComponents();
     void fetchWishlist();
-  }, [debouncedComponentSearch, componentType, priceRange]);
+  }, [debouncedComponentSearch, componentType, priceRangeDebounced]);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
@@ -44,7 +59,7 @@ const ComponentSearch = () => {
 
   const fetchComponents = async () => {
     messages.current?.clear();
-    const componentList = await getComponents(debouncedComponentSearch, componentType, priceRange)
+    const componentList = await getComponents(debouncedComponentSearch, componentType, priceRangeDebounced)
       .catch(handleRequestFailure);
     if (!componentList) {
       return;
@@ -98,21 +113,16 @@ const ComponentSearch = () => {
     return <ComponentTemplate product={product} button={wishlistButton}/>;
   };
 
-  const componentList = (
-    <>
-      <Messages ref={messages} />
-      <div className={classes['wishlist-wrapper']}>
-        <DataView value={components} itemTemplate={template} header={header()} paginator rows={10} />
-      </div>
-    </>
-  );
-
   return (
     <Card title="Search components">
-      {components.length < 1 && <p className="text-center">
-        <i className="pi pi-info-circle"/> No components found
-      </p>}
-      {components.length > 0 && componentList}
+      <Messages ref={messages} />
+      <div className={classes['wishlist-wrapper']}>
+        {header()}
+        {components.length < 1 && <p className="mt-6 text-center">
+          <i className="pi pi-info-circle"/> No components found
+        </p>}
+        {components.length > 0 && <DataView value={components} itemTemplate={template} paginator rows={10}/>}
+      </div>
     </Card>);
 };
 
