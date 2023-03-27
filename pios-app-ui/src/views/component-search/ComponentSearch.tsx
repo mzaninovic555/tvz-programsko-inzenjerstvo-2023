@@ -8,7 +8,6 @@ import {Messages} from 'primereact/messages';
 import {DataView} from 'primereact/dataview';
 import {Card} from 'primereact/card';
 import classes from '../../views/wishlist/Wishlist.module.css';
-import {Rating} from 'primereact/rating';
 import {Button} from 'primereact/button';
 import useAuthContext from '../../context/AuthContext';
 import {addComponentToWishlist, getUserWishlist} from '../../views/wishlist/WishlistService';
@@ -18,7 +17,7 @@ import {Dropdown} from 'primereact/dropdown';
 import Type from '../../views/component-search/Type';
 import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
-import {normalize} from '../../common/dateHelper';
+import ComponentTemplate from './ComponentTemplate';
 
 const ComponentSearch = () => {
   const [components, setComponents] = useState<Component[]>([]);
@@ -27,7 +26,7 @@ const ComponentSearch = () => {
   const [componentSearch, debouncedComponentSearch, setComponentSearch] =
     useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
   const [componentType, setComponentType] = useState('');
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([1, 5000]);
 
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
@@ -69,36 +68,6 @@ const ComponentSearch = () => {
     }).catch(handleRequestFailure);
   };
 
-  const template= (component: Component) => {
-    const product = component;
-    return (
-      <div className="col-12">
-        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-          <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
-            src={product.imageBase64 ? `data:image/jpeg;base64,${product.imageBase64}` : `/unknown.jpg`} alt={product.name} />
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div className="text-2xl font-bold text-900">{product.name}</div>
-              <Rating value={4.5} readOnly cancel={false}></Rating>
-              <div className="flex align-items-center gap-3">
-                <span className="flex align-items-center gap-2">
-                  <i className="pi pi-tag"></i>
-                  <span className="font-semibold">{product.type}</span>
-                </span>
-              </div>
-            </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${product.price}</span>
-              <Button icon="pi pi-file-export" className="p-button-rounded"
-                disabled={!auth.auth.authenticated || wishlist.includes(component.id)}
-                onClick={() => addToWishlist(product.id)}></Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const header = () => {
     return <>
       <div className={'flex align-items-center flex-wrap'}>
@@ -111,12 +80,22 @@ const ComponentSearch = () => {
           options={Object.values(Type)} placeholder="Choose a type">
         </Dropdown>
         <div className="flex align-items-center flex-row w-full w-15rem">
-          <Tag severity="info" value={normalize(priceRange[0])} />
-          <Slider range value={priceRange} onChange={(e) => setPriceRange(e.value as [number, number])} className="w-full mx-3" />
-          <Tag severity="info" value={normalize(priceRange[1])} />
+          <Tag severity="info" value={priceRange[0]} />
+          <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
+            onChange={(e) => setPriceRange(e.value as [number, number])}/>
+          <Tag severity="info" value={priceRange[1]} />
         </div>
       </div>
     </>;
+  };
+
+  const template = (product: Component) => {
+    const wishlistButton = (
+      <Button icon="pi pi-plus" label="Wishlist"
+        disabled={!auth.auth.authenticated || wishlist.includes(product.id)}
+        onClick={() => addToWishlist(product.id)}/>
+    );
+    return <ComponentTemplate product={product} button={wishlistButton}/>;
   };
 
   const componentList = (

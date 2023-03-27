@@ -10,6 +10,8 @@ import BasicResponse from '~/common/messages/BasicResponse';
 import {Messages} from 'primereact/messages';
 import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
 import classes from './Wishlist.module.css';
+import ComponentTemplate from '../component-search/ComponentTemplate';
+import {formatDate} from '../../common/dateHelper';
 
 const Wishlist = () => {
   const [wishlist, setWishlist] = useState<WishlistEntry[]>([]);
@@ -57,27 +59,11 @@ const Wishlist = () => {
   };
 
   const template = (d: WishlistEntry) => {
-    const product = d.component;
-    return (<div className="col-12">
-      <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-        <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-          <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-            <div className="text-2xl font-bold text-900">{product.name}</div>
-            {/* <Rating value={product.rating} readOnly cancel={false}></Rating>*/}
-            <div className="flex align-items-center gap-3">
-              <span className="flex align-items-center gap-2">
-                <i className="pi pi-tag"/>
-                <span className="font-semibold">{product.type}</span>
-              </span>
-            </div>
-          </div>
-          <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-            <span className="text-2xl font-semibold w-full text-center">{product.price}€</span>
-            <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => deleteItem(d.id)}/>
-          </div>
-        </div>
-      </div>
-    </div>);
+    const addedAt = (<span>Added at {formatDate(d.addedAt)}</span>);
+    const wishlistButton = (
+      <Button icon="pi pi-trash" className="p-button-danger" onClick={() => deleteItem(d.id)}/>
+    );
+    return <ComponentTemplate product={d.component} button={wishlistButton} additionalData={addedAt}/>;
   };
 
   const wishlistFilled = (
