@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Component from '../../views/component-search/Component';
-import {getAllComponents} from '../../views/component-search/ComponentService';
+import {getComponents} from '../../views/component-search/ComponentService';
 import {AxiosError} from 'axios';
 import BasicResponse from '../../common/messages/BasicResponse';
 import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
@@ -12,17 +12,29 @@ import {Rating} from 'primereact/rating';
 import {Button} from 'primereact/button';
 import useAuthContext from '../../context/AuthContext';
 import {addComponentToWishlist, getUserWishlist} from '../../views/wishlist/WishlistService';
+import {InputText} from 'primereact/inputtext';
+import {useDebounce} from 'primereact/hooks';
+import {Dropdown} from 'primereact/dropdown';
+import Type from '../../views/component-search/Type';
+import {Slider} from 'primereact/slider';
+import {Tag} from 'primereact/tag';
 
 const ComponentSearch = () => {
   const [components, setComponents] = useState<Component[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+
+  const [componentSearch, debouncedComponentSearch, setComponentSearch] = useDebounce('', 500);
+  const [componentType, setComponentType] = useState('');
+  const [priceRange, setPriceRange] = useState([0, 100]);
+
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
+
 
   useEffect(() => {
     void fetchComponents();
     void fetchWishlist();
-  }, []);
+  }, [debouncedComponentSearch, componentType, priceRange]);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
@@ -31,7 +43,8 @@ const ComponentSearch = () => {
 
   const fetchComponents = async () => {
     messages.current?.clear();
-    const componentList = await getAllComponents().catch(handleRequestFailure);
+    const componentList = await getComponents(debouncedComponentSearch, componentType, priceRange)
+      .catch(handleRequestFailure);
     if (!componentList) {
       return;
     }
@@ -44,7 +57,7 @@ const ComponentSearch = () => {
     if (!list) {
       return;
     }
-    setWishlist(list.map(w => w.component.id));
+    setWishlist(list.map((w) => w.component.id));
   };
 
   const addToWishlist = (componentId: number) => {
@@ -84,11 +97,31 @@ const ComponentSearch = () => {
     );
   };
 
+  const header = () => {
+    return <>
+      <div className={'flex align-items-center'}>
+        <span className="p-input-icon-right mr-2">
+          <i className="pi pi-search"/>
+          <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
+            placeholder="Search"/>
+        </span>
+        <Dropdown className="mr-2" value={componentType} onChange={(e) => setComponentType(e.target.value)}
+          options={Object.values(Type)} placeholder="Choose a type">
+        </Dropdown>
+        <div className="flex-1 flex-nowrap align-items-center">
+          <Slider className="max-w-10rem" value={priceRange} onChange={(e) => setPriceRange(e.value)} range />
+          <Tag severity="info" value={priceRange[0]} />
+          <Tag severity="info" value={priceRange[1]} />
+        </div>
+      </div>
+    </>;
+  };
+
   const componentList = (
     <>
       <Messages ref={messages} />
       <div className={classes['wishlist-wrapper']}>
-        <DataView value={components} itemTemplate={template} paginator rows={10}/>
+        <DataView value={components} itemTemplate={template} header={header()} paginator rows={10} />
       </div>
     </>
   );
