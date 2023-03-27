@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.component;
 
 import hr.tvz.pios.common.Message;
+import hr.tvz.pios.common.Type;
 import hr.tvz.pios.common.exception.PiosException;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +17,10 @@ public class ComponentService {
   @Autowired
   ComponentRepository componentRepository;
 
-  public List<ComponentSearchResponse> getAll() {
-    List<Component> components = componentRepository.getAll();
+  public List<ComponentSearchResponse> getAllFiltered(String name, String type, Integer minPrice, Integer maxPrice) {
+    Type componentType = type == null || type.isBlank() ? null : Type.valueOf(type);
+    List<Component> components = componentRepository.getAllFiltered(
+        name, componentType, minPrice, maxPrice);
     return components.stream().map(ComponentSearchResponse::new).toList();
   }
 
