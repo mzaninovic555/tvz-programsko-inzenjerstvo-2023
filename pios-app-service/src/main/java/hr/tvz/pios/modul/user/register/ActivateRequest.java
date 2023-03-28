@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 /**
  * Record koji predstavlja HTTP request za aktivaciju korisnika.

@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 import static hr.tvz.pios.modul.user.settings.UserSettingsService.EMAIL_REGEX;
 import hr.tvz.pios.common.Message;

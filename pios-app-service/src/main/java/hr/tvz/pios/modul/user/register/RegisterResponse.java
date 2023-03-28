@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 import hr.tvz.pios.common.Message;
 

@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
