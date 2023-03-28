@@ -1,7 +1,9 @@
 package hr.tvz.pios.modul.user;
 
+import hr.tvz.pios.common.AccountType;
 import hr.tvz.pios.config.security.jwt.JwtService;
 import hr.tvz.pios.modul.role.Role;
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ public class UserService {
       newUser.setEmail(email);
       newUser.setRole(new Role(2L, "ROLE_USER"));
       newUser.setIsActivated(true);
+      newUser.setCreationDate(LocalDateTime.now());
+      newUser.setAccountType(AccountType.GITHUB);
 
       userRepository.insert(newUser);
 

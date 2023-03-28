@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.user;
 
+import hr.tvz.pios.common.AccountType;
 import hr.tvz.pios.modul.role.Role;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,6 @@ public class User {
   Boolean isActivated;
 
   Role role;
+
+  AccountType accountType;
 }
