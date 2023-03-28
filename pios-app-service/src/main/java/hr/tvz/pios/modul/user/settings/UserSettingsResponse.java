@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.user.settings;
 
-import hr.tvz.pios.common.AccountType;import hr.tvz.pios.modul.user.User;
+import hr.tvz.pios.common.AccountType;
+import hr.tvz.pios.modul.user.User;
 import java.time.LocalDateTime;
 
 /**
