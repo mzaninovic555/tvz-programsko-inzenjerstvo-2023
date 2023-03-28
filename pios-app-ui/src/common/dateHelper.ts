@@ -2,6 +2,7 @@ export const formatDate = (date?: Date) => {
   if (!date) {
     return 'N/A';
   }
+  date = new Date(date);
   return `${date.getFullYear()}-${normalize(date.getMonth() + 1)}-${normalize(date.getDate())}`;
 };
 

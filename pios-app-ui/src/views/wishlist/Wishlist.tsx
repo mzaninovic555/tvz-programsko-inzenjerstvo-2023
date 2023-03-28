@@ -63,12 +63,11 @@ const Wishlist = () => {
     const wishlistButton = (
       <Button icon="pi pi-trash" className="p-button-danger" onClick={() => deleteItem(d.id)}/>
     );
-    return <ComponentTemplate product={d.component} button={wishlistButton} additionalData={addedAt}/>;
+    return <ComponentTemplate component={d.component} button={wishlistButton} additionalData={addedAt}/>;
   };
 
   const wishlistFilled = (
     <>
-      <Messages ref={messages}/>
       <div className={classes['wishlist-wrapper']}>
         <DataView value={wishlist} itemTemplate={template}/>
       </div>
@@ -78,6 +77,7 @@ const Wishlist = () => {
 
   return (<AuthAutoRedirect loggedInToHome={false} customLocation="/wishlist">
     <Card title="Wishlist">
+      <Messages ref={messages}/>
       {wishlist.length < 1 && <p className="text-center">
         <i className="pi pi-info-circle"/> Your wishlist is empty
       </p>}

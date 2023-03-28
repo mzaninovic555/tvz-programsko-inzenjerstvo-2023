@@ -9,5 +9,8 @@ public enum Type {
   RAM,
   HDD,
   SSD,
-  PSU
+  PSU,
+  MOTHERBOARD,
+  CASE,
+  COOLER
 }
