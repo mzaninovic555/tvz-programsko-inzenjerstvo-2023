@@ -40,7 +40,6 @@ public class JwtService {
   public String createJwtToken(User user) {
     Instant expiration = Instant.now().plusSeconds(jwtValiditySeconds);
     String authority = user.getRole().getRole();
-    // TODO multiple roles
     Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 
     return Jwts.builder()
