@@ -127,6 +127,10 @@ const Login = () => {
     }
   };
 
+  const navigateToGithub = () => {
+    window.location.href = (process.env.BACKEND_URL || '') + '/oauth2/authorization/github';
+  };
+
   return (<AuthAutoRedirect loggedInToHome={true}>
     <Card title="Login" style={{maxWidth: '500px'}} className="m-auto card-content-no-bottom-margin">
       <Messages ref={messages}/>
@@ -135,8 +139,12 @@ const Login = () => {
           error={usernameInput.error} onChange={(e) => dispatchUsername({type: 'change', value: e})}/>
         <FormInputText value={passwordInput.value} required type="password" name="Password" inputClassName="w-full"
           error={passwordInput.error} onChange={(e) => dispatchPassword({type: 'change', value: e})}/>
-        <Button type="submit" label="Login" loading={requesting}/>
-        <Button label="Don't have an account? Register now" link onClick={() => navigate('/register')}/>
+        <Button className="mb-1" type="submit" label="Login" loading={requesting}/>
+        <hr className="w-full"/>
+        <Button icon="pi pi-github" label="Login with Github" type="button" onClick={navigateToGithub}
+          style={{background: '#24292d', borderColor: '#24292d'}}/>
+        <Button className="pb-0" label="Don't have an account? Register now" link
+          onClick={() => navigate('/register')}/>
       </form>
     </Card>
   </AuthAutoRedirect>);

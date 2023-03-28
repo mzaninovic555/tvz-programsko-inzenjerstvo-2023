@@ -3,11 +3,13 @@ package hr.tvz.pios.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.BasicResponse;
+import hr.tvz.pios.config.PiosProperties;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
 import hr.tvz.pios.modul.user.CustomOAuth2User;
 import hr.tvz.pios.modul.user.CustomOAuth2UserService;
 import hr.tvz.pios.modul.user.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +28,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
   private final PiosJwtDecoder piosJwtDecoder;
   private final PiosAuthConverter piosAuthConverter;
+  private final PiosProperties piosProperties;
+
   private final ObjectMapper mapper = new ObjectMapper();
 
-  public SecurityConfig(PiosJwtDecoder piosJwtDecoder, PiosAuthConverter piosAuthConverter) {
+  public SecurityConfig(PiosJwtDecoder piosJwtDecoder, PiosAuthConverter piosAuthConverter,
+      PiosProperties piosProperties) {
     this.piosJwtDecoder = piosJwtDecoder;
     this.piosAuthConverter = piosAuthConverter;
+    this.piosProperties = piosProperties;
   }
 
   // ovdje dodati URL koje ne treba autentificirati
@@ -50,28 +56,34 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests()
-            .requestMatchers(UNAUTHENTICATED_URLS)
-            .permitAll()
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-            .permitAll()
-            .requestMatchers("/api/**")
-            .authenticated()
-            .anyRequest()
-            .permitAll()
-            .and()
-            .oauth2Login()
-            .loginPage("/oauth2/authorization/github")
-            .userInfoEndpoint()
-            .userService(oauthUserService)
-            .and()
-            .successHandler((request, response, authentication) -> {
-              CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
+        .requestMatchers(UNAUTHENTICATED_URLS)
+        .permitAll()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+        .permitAll()
+        .requestMatchers("/api/**")
+        .authenticated()
+        .anyRequest()
+        .permitAll()
+        .and()
+        .oauth2Login()
+        .loginPage("/oauth2/authorization/github")
+        .userInfoEndpoint()
+        .userService(oauthUserService)
+        .and()
+        .successHandler((request, response, authentication) -> {
+          CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
 
-              userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
-              //redirect nakon logina sa oauth2
-              response.sendRedirect("/");
-            });
-    //TODO dodati redirect na frontend i jwt token za oauth2 usera
+          String jwt = userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
+          if (piosProperties.frontendUrl() != null && piosProperties.frontendUrl()
+              .contains("localhost")) {
+            response.sendRedirect(piosProperties.frontendUrl() + "?jwt=" + jwt);
+          } else {
+            Cookie cookie = new Cookie("temp-jwt-token", jwt);
+            cookie.setPath("/");
+            response.addCookie(cookie);
+            response.sendRedirect(piosProperties.frontendUrl());
+          }
+        });
 
     http.oauth2ResourceServer()
         .jwt()

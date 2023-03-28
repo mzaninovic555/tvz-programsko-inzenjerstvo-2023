@@ -1,18 +1,20 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {JSXChildrenProps} from '~/@types';
 import {AuthContext} from '../../context/AuthContext';
-import ParsedJwt from '~/common/auth/ParsedJwt';
 import AuthenticationInfo from '~/common/auth/AuthenticationInfo';
 import api from '../api';
 import {validateToken} from '../../views/login/LoginService';
 import useToastContext from '../../context/ToastContext';
 import {tokenExpiredMessage} from '../../common/messages/LocalMessages';
 import {apiToToast} from '../../common/messages/messageHelper';
+import {extractTokenData, initTokenToStorage, prepareReturnValueFromParsed} from './AuthUtils';
 
 const AuthWrapper = (props: JSXChildrenProps) => {
   const {toast} = useToastContext();
   const updateTimer = useRef(null);
   const [token, setToken] = useState<string | undefined | null>(() => {
+    initTokenToStorage();
+
     const fetched = localStorage.getItem('token');
     if (fetched) {
       api.defaults.headers.common['Authorization'] = `Bearer ${fetched}`;
@@ -77,30 +79,6 @@ const AuthWrapper = (props: JSXChildrenProps) => {
       {props.children}
     </AuthContext.Provider>
   );
-};
-
-const extractTokenData = (token?: string): ParsedJwt | null => {
-  let parsed: ParsedJwt | null = null;
-  try {
-    parsed = JSON.parse(atob(token?.split('.')[1] || '')) as ParsedJwt;
-  } catch (e) {
-    console.warn('Invalid JWT JSON');
-  }
-  return parsed;
-};
-
-const prepareReturnValueFromParsed = (parsed: ParsedJwt): AuthenticationInfo => {
-  const exp = new Date(parsed.exp * 1000);
-  if (isNaN(exp.getTime()) || !parsed.sub || !parsed.roles) {
-    return {authenticated: false};
-  }
-  return {
-    authenticated: true, info: {
-      expire: exp,
-      role: parsed.roles,
-      username: parsed.sub
-    }
-  };
 };
 
 export default AuthWrapper;

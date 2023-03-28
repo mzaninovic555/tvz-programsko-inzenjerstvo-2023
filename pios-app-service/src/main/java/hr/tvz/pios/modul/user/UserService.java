@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.user;
 
+import hr.tvz.pios.config.security.jwt.JwtService;
 import hr.tvz.pios.modul.role.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,13 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
-  public void processOAuthPostLogin(String username, String email) {
+  @Autowired
+  private JwtService jwtService;
+
+  public String processOAuthPostLogin(String username, String email) {
     Optional<User> existUser = userRepository.getByUsername(username);
+
+    User finalUser = existUser.orElse(null);
 
     if (existUser.isEmpty()) {
       User newUser = new User();
@@ -23,7 +29,10 @@ public class UserService {
       newUser.setIsActivated(true);
 
       userRepository.insert(newUser);
+
+      finalUser = newUser;
     }
 
+    return jwtService.createJwtToken(finalUser);
   }
 }
