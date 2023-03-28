@@ -13,6 +13,7 @@ import BasicResponse from '~/common/messages/BasicResponse';
 import {Messages} from 'primereact/messages';
 import {formatDate} from '../../common/dateHelper';
 import AccountType from './AccountType';
+import Spinner from '../../components/Spinner';
 
 const UserSettings = () => {
   const emailValidator = (s?: string) => !s ? undefined : s.length > 100 ? 'Email has to be less than 100 characters long' : undefined;
@@ -25,6 +26,7 @@ const UserSettings = () => {
   const [submitted, setSubmitted] = useState(false);
   const [anyPasswordPresent, setAnyPasswordPresent] = useState(false);
 
+  const [requesting, setRequesting] = useState(false);
   const [username, setUsername] = useState('');
   const [creationDate, setCreationDate] = useState<Date>();
   const [emailInput, dispatchEmail] = useReducer<InputReducer<string>>(reducer, {...emptyState, validator: emailValidator});
@@ -106,6 +108,7 @@ const UserSettings = () => {
   const runUpdateSettings = async () => {
     messages.current?.clear();
 
+    setRequesting(true);
     const response = await updateSettings({
       description: descriptionInput.value,
       email: emailInput.value || null,
@@ -113,6 +116,7 @@ const UserSettings = () => {
       newPassword: newPassword || null,
       newPasswordRepeat: newPasswordRepeat || null
     }).catch(updateFailHandler);
+    setRequesting(false);
 
     if (!response) {
       return;
@@ -151,35 +155,41 @@ const UserSettings = () => {
   );
 
   return (<AuthAutoRedirect loggedInToHome={false} customLocation="/login">
-    <Card title={title}>
-      <Messages ref={messages}/>
-      <form onSubmit={onFormSubmit}>
-        <div className="flex">
-          <FormInputText className="w-6 pr-1" inputClassName="w-full" name="Username" value={username} disabled/>
-          <FormInputText className="w-6 pl-1" inputClassName="w-full" name="Created at" value={formatDate(creationDate)} disabled/>
-        </div>
-        {accountType && accountType == AccountType.LOCAL &&
-        <FormInputText inputClassName="w-full" name="Email" value={emailInput.value} maxLength={100}
-          onChange={(v) => dispatchEmail({type: 'change', value: v})} type="email"
-          error={emailInput.error} disabled={accountType && accountType != AccountType.LOCAL}/>}
-        <FormTextarea name="Description" value={descriptionInput.value} maxLength={200} error={descriptionInput.error} rows={7}
-          onChange={(e) => dispatchDescription({type: 'change', value: e})} inputClassName="w-full"/>
-        {accountType && accountType == AccountType.LOCAL && <hr className="my-4"/>}
-        {accountType && accountType == AccountType.LOCAL &&
-        <FormInputText inputClassName="w-full" name="Old Password" value={oldPassword} type="password"
-          error={passwordErrors[0]} onChange={setOldPassword} maxLength={100}
-          disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
-        {accountType && accountType == AccountType.LOCAL &&
-        <FormInputText inputClassName="w-full" name="New Password" value={newPassword} type="password"
-          error={passwordErrors[1]} onChange={setNewPassword} maxLength={100}
-          disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
-        {accountType && accountType == AccountType.LOCAL &&
-        <FormInputText inputClassName="w-full" name="Repeat New Password" value={newPasswordRepeat}
-          error={passwordErrors[2]} type="password" maxLength={100} required={anyPasswordPresent}
-          onChange={setNewPasswordRepeat} disabled={accountType && accountType != AccountType.LOCAL}/>}
-        <Button className="w-2" type="submit" label="Save" icon="pi pi-save"/>
-      </form>
-    </Card>
+    <>
+      {!username && <Spinner text="Loading user settings..."/>}
+      {username &&
+          <Card title={title}>
+            <Messages ref={messages}/>
+            <form onSubmit={onFormSubmit}>
+              <div className="flex">
+                <FormInputText className="w-6 pr-1" inputClassName="w-full" name="Username" value={username} disabled/>
+                <FormInputText className="w-6 pl-1" inputClassName="w-full" name="Created at" value={formatDate(creationDate)} disabled/>
+              </div>
+              {accountType && accountType == AccountType.LOCAL &&
+                  <FormInputText inputClassName="w-full" name="Email" value={emailInput.value} maxLength={100}
+                    onChange={(v) => dispatchEmail({type: 'change', value: v})} type="email"
+                    error={emailInput.error} disabled={accountType && accountType != AccountType.LOCAL}/>}
+              <FormTextarea name="Description" value={descriptionInput.value} maxLength={200}
+                error={descriptionInput.error} rows={7} inputClassName="w-full"
+                onChange={(e) => dispatchDescription({type: 'change', value: e})} />
+              {accountType && accountType == AccountType.LOCAL && <hr className="my-4"/>}
+              {accountType && accountType == AccountType.LOCAL &&
+                  <FormInputText inputClassName="w-full" name="Old Password" value={oldPassword}
+                    error={passwordErrors[0]} onChange={setOldPassword} maxLength={100} type="password"
+                    disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
+              {accountType && accountType == AccountType.LOCAL &&
+                  <FormInputText inputClassName="w-full" name="New Password" value={newPassword}
+                    error={passwordErrors[1]} onChange={setNewPassword} maxLength={100} type="password"
+                    disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
+              {accountType && accountType == AccountType.LOCAL &&
+                  <FormInputText inputClassName="w-full" name="Repeat New Password" maxLength={100}
+                    error={passwordErrors[2]} type="password" required={anyPasswordPresent}
+                    onChange={setNewPasswordRepeat} value={newPasswordRepeat}
+                    disabled={accountType && accountType != AccountType.LOCAL}/>}
+              <Button loading={requesting} className="w-2" type="submit" label="Save" icon="pi pi-save"/>
+            </form>
+          </Card>}
+    </>
   </AuthAutoRedirect>);
 };
 

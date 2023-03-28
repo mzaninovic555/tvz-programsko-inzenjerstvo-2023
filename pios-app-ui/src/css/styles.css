@@ -100,7 +100,6 @@
   justify-content: end;
 }
 
-/* Custom spinner TODO */
 .pios-loading-spinner {
   width: 100%;
   display: flex;
