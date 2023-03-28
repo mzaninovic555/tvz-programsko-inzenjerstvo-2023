@@ -74,8 +74,8 @@ public class SecurityConfig {
           CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
 
           String jwt = userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
-          if (piosProperties.frontendUrl() != null && piosProperties.frontendUrl()
-              .contains("localhost")) {
+          if (piosProperties.frontendUrl() != null
+              && piosProperties.frontendUrl().contains("localhost")) {
             response.sendRedirect(piosProperties.frontendUrl() + "?jwt=" + jwt);
           } else {
             Cookie cookie = new Cookie("temp-jwt-token", jwt);
