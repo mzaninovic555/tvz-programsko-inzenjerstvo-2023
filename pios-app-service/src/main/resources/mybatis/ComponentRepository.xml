@@ -20,17 +20,42 @@
     ${alias}price               ${columnPrefix}price,
     ${alias}type                ${columnPrefix}type,
     ${alias}data                ${columnPrefix}data,
-    ${alias}image_base64         ${columnPrefix}imageBase64,
+    ${alias}image_base64        ${columnPrefix}image_base64,
     ${alias}manufacturer_id     ${columnPrefix}manufacturer_id
   </sql>
 
   <!-- SELECT -->
-  <select id="getById" resultMap="componentResultMap">
+  <select id="getAllFiltered" resultMap="componentResultMap">
     select
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="m_"/>
     </include>
+    from COMPONENTS c
+      join MANUFACTURERS m on c.manufacturer_id = m.id
+    <where>
+      <if test="name != null and name != ''">
+        and c.name like concat('%', #{name}, '%')
+      </if>
+      <if test="type != null">
+        and c.type = #{type}
+      </if>
+      <if test="minPrice != null and maxPrice != ''">
+        and c.price between #{minPrice} and #{maxPrice}
+      </if>
+    </where>
+  </select>
+
+  <select id="getById" resultMap="componentResultMap">
+    select
+    <include refid="componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>
@@ -45,7 +70,7 @@
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>
       <property name="columnPrefix" value="m_"/>

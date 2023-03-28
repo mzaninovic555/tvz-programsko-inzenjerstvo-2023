@@ -18,7 +18,7 @@ const AuthAutoRedirect = (props: JSXChildrenProps & {loggedInToHome: boolean, cu
 
   if (!auth.authenticated && !props.loggedInToHome) {
     console.debug(`Navigating to ${targetLocation} because user is not logged in`);
-    return <Navigate to={{pathname: targetLocation, search: 'next=' + next}} replace={true}/>;
+    return <Navigate to={{pathname: '/login', search: 'next=' + next}} replace={true}/>;
   }
 
   return (<>{props.children}</>);

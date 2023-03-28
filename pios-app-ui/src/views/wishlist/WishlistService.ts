@@ -13,6 +13,7 @@ export async function getUserWishlist(): Promise<WishlistEntry[]> {
       name: 'Intel nešt',
       type: Type.HDD,
       price: 5,
+      imageBase64: undefined,
       manufacturer: {name: 'Intel', id: 1},
       data: ''
     }
@@ -25,11 +26,17 @@ export async function getUserWishlist(): Promise<WishlistEntry[]> {
       name: 'Intel nešt',
       type: Type.HDD,
       price: 5,
+      imageBase64: undefined,
       manufacturer: {name: 'Intel', id: 1},
       data: ''
     }
   }];
   const response = await api.get<WishlistEntry[]>('/v1/wishlist');
+  return response.data;
+}
+
+export async function addComponentToWishlist(componentId: number): Promise<BasicResponse> {
+  const response = await api.post<BasicResponse>(`/v1/wishlist/add`, {componentId});
   return response.data;
 }
 
