@@ -36,6 +36,7 @@ public class RegisterService {
 
   /**
    * Vrši registraciju korisnika uz provjeru o postojećem email i username.
+   *
    * @param request {@link RegisterRequest}
    * @return {@link RegisterResponse}
    */
@@ -52,16 +53,15 @@ public class RegisterService {
       throw PiosException.conflict(Message.error("Email is already in use", "email"));
     }
     Role role = roleRepository.getByName(hr.tvz.pios.common.Role.ROLE_USER.name()).get();
-    User newUser =
-        User.builder()
-            .username(request.username())
-            .password(encoder.encode(request.password()))
-            .email(request.email())
-            .isActivated(Boolean.FALSE)
-            .creationDate(LocalDateTime.now())
-            .role(role)
-            .accountType(AccountType.LOCAL)
-            .build();
+    User newUser =  User.builder()
+        .username(request.username())
+        .password(encoder.encode(request.password()))
+        .email(request.email())
+        .isActivated(Boolean.FALSE)
+        .creationDate(LocalDateTime.now())
+        .role(role)
+        .accountType(AccountType.LOCAL)
+        .build();
     userRepository.insert(newUser);
 
     String activationToken = generateActivationToken(newUser);
@@ -73,6 +73,7 @@ public class RegisterService {
 
   /**
    * Aktivira registriranog korisnika po username i timestampu kreiranja.
+   *
    * @param request {@link ActivateRequest}
    * @return {@link RegisterResponse}
    */
@@ -95,22 +96,26 @@ public class RegisterService {
 
   /**
    * Dekodira token u par String LocalDateTime.
+   *
    * @param activationToken {@link String}
    * @return par username timestamp
    */
   private Pair<String, LocalDateTime> decodeUsernameTimestamp(String activationToken) {
-    byte[] decodedBytes = Base64.getDecoder().decode(activationToken.getBytes(StandardCharsets.UTF_8));
+    byte[] decodedBytes =
+        Base64.getDecoder().decode(activationToken.getBytes(StandardCharsets.UTF_8));
     String decodedToken = new String(decodedBytes);
-    String [] usernameTimestamp = StringUtils.splitByWholeSeparator(decodedToken, "_");
+    String[] usernameTimestamp = StringUtils.splitByWholeSeparator(decodedToken, "_");
     return Pair.of(usernameTimestamp[0], LocalDateTime.parse(usernameTimestamp[1]));
   }
 
   /**
    * Generira aktivacijski URL za registraciju. <code>Username_timestamp </code> base64 enkodirano.
+   *
    * @return generirani link
    */
   private String generateActivationToken(User user) {
     String usernameCreationDate = user.getUsername() + "_" + user.getCreationDate();
-    return Base64.getEncoder().encodeToString(usernameCreationDate.getBytes(StandardCharsets.UTF_8));
+    return Base64.getEncoder()
+        .encodeToString(usernameCreationDate.getBytes(StandardCharsets.UTF_8));
   }
 }
