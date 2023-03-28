@@ -36,7 +36,6 @@ export async function getUserWishlist(): Promise<WishlistEntry[]> {
 }
 
 export async function addComponentToWishlist(componentId: number): Promise<BasicResponse> {
-  console.debug(componentId);
   const response = await api.post<BasicResponse>(`/v1/wishlist/add`, {componentId});
   return response.data;
 }

@@ -91,9 +91,9 @@ const ComponentSearch = () => {
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
             placeholder="Search"/>
         </span>
-        <Dropdown className="mr-2" value={componentType} onChange={(e) => setComponentType(e.target.value as string)}
-          options={Object.values(Type)} placeholder="Choose a type">
-        </Dropdown>
+        <Dropdown className="mr-2" value={componentType} options={Object.values(Type)}
+          placeholder="Choose a type"
+          onChange={(e) => setComponentType(e.target.value as string)}/>
         <div className="flex align-items-center flex-row w-full w-15rem">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
@@ -105,9 +105,10 @@ const ComponentSearch = () => {
   };
 
   const template = (product: Component) => {
+    const disabledText = !auth.auth.authenticated ? 'You need to log in to wishlist items' :
+      wishlist.includes(product.id) ? 'Item is already wishlisted' : undefined;
     const wishlistButton = (
-      <Button icon="pi pi-plus" label="Wishlist"
-        disabled={!auth.auth.authenticated || wishlist.includes(product.id)}
+      <Button icon="pi pi-plus" label="Wishlist" tooltip={disabledText} disabled={!!disabledText}
         onClick={() => addToWishlist(product.id)}/>
     );
     return <ComponentTemplate product={product} button={wishlistButton}/>;
