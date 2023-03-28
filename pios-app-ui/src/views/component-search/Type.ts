@@ -4,7 +4,10 @@ enum Type {
   RAM = 'RAM',
   HDD = 'HDD',
   SSD = 'SSD',
-  PSU = 'PSU'
+  PSU = 'PSU',
+  MOTHERBOARD = 'MOTHERBOARD',
+  CASE = 'CASE',
+  COOLER = 'COOLER'
 }
 
 export default Type;

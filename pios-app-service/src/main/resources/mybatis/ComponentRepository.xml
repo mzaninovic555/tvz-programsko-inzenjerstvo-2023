@@ -20,7 +20,7 @@
     ${alias}price               ${columnPrefix}price,
     ${alias}type                ${columnPrefix}type,
     ${alias}data                ${columnPrefix}data,
-    ${alias}image_base64        ${columnPrefix}image_base64,
+    ${alias}image_base64        ${columnPrefix}imageBase64,
     ${alias}manufacturer_id     ${columnPrefix}manufacturer_id
   </sql>
 
@@ -39,7 +39,7 @@
       join MANUFACTURERS m on c.manufacturer_id = m.id
     <where>
       <if test="name != null and name != ''">
-        and c.name like concat('%', #{name}, '%')
+        and lower(c.name) like concat('%', lower(#{name}), '%')
       </if>
       <if test="type != null">
         and c.type = #{type}
@@ -54,7 +54,7 @@
     select
     <include refid="componentResultMapColumns">
       <property name="alias" value="c."/>
-      <property name="columnPrefix" value="c_"/>
+      <property name="columnPrefix" value=""/>
     </include>,
     <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
       <property name="alias" value="m."/>

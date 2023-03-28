@@ -107,6 +107,8 @@
   align-items: center;
 }
 
+.pios-image > img { width: 100%; }
+
 .tbl-exp {
   transition: cubic-bezier(.17,.67,.83,.67) 0.2s;
   speak: none;

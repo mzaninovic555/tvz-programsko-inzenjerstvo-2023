@@ -73,7 +73,6 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
       HttpHeaders headers,
       HttpStatusCode status,
       WebRequest request) {
-    LOGGER.debug("MethodArgumentNotValidException", ex);
     final List<FieldError> errors = ex.getBindingResult().getFieldErrors();
     if (errors.isEmpty()) {
       return ResponseEntity.badRequest().body(new BasicResponse(Message.error("Bad request")));

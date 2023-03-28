@@ -26,9 +26,14 @@
     <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="c_m_"/>
     </include>
     from WISHLIST w
-    join COMPONENTS c on w.component_id = c.id
+         join COMPONENTS c on w.component_id = c.id
+         join MANUFACTURERS m on c.manufacturer_id = m.id
     where w.id = #{id}
   </select>
 
@@ -41,13 +46,18 @@
     <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="c_m_"/>
     </include>
     from WISHLIST w
          join COMPONENTS c on w.component_id = c.id
+         join MANUFACTURERS m on c.manufacturer_id = m.id
     where w.user_id = #{userId}
   </select>
 
-  <insert id="addToUserWishlist" parameterType="Long" keyProperty="id" useGeneratedKeys="true">
+  <insert id="addToUserWishlist" parameterType="Long">
     insert into WISHLIST (
       user_id,
       component_id

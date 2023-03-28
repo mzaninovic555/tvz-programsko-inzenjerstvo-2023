@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import Component from '../../views/component-search/Component';
 import {getComponents} from '../../views/component-search/ComponentService';
 import {AxiosError} from 'axios';
 import BasicResponse from '../../common/messages/BasicResponse';
@@ -18,9 +17,10 @@ import Type from '../../views/component-search/Type';
 import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
 import ComponentTemplate from './ComponentTemplate';
+import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
 
 const ComponentSearch = () => {
-  const [components, setComponents] = useState<Component[]>([]);
+  const [components, setComponents] = useState<ComponentSearchResponse[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
 
   const [componentSearch, debouncedComponentSearch, setComponentSearch] =
@@ -79,13 +79,14 @@ const ComponentSearch = () => {
   const addToWishlist = (componentId: number) => {
     messages.current?.clear();
     addComponentToWishlist(componentId).then((response) => {
+      setWishlist((prev) => [...prev, componentId]);
       showMessagesWithoutReference(response.messages, messages);
     }).catch(handleRequestFailure);
   };
 
   const header = () => {
     return <>
-      <div className={'flex align-items-center flex-wrap'}>
+      <div className="flex align-items-center flex-wrap mb-2">
         <span className="p-input-icon-right mr-2">
           <i className="pi pi-search"/>
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
@@ -104,14 +105,14 @@ const ComponentSearch = () => {
     </>;
   };
 
-  const template = (product: Component) => {
+  const template = (product: ComponentSearchResponse) => {
     const disabledText = !auth.auth.authenticated ? 'You need to log in to wishlist items' :
-      wishlist.includes(product.id) ? 'Item is already wishlisted' : undefined;
+      wishlist.includes(product.component.id) ? 'Item is already wishlisted' : undefined;
     const wishlistButton = (
       <Button icon="pi pi-plus" label="Wishlist" tooltip={disabledText} disabled={!!disabledText}
-        onClick={() => addToWishlist(product.id)}/>
+        onClick={() => addToWishlist(product.component.id)}/>
     );
-    return <ComponentTemplate product={product} button={wishlistButton}/>;
+    return <ComponentTemplate component={product.component} button={wishlistButton}/>;
   };
 
   return (
