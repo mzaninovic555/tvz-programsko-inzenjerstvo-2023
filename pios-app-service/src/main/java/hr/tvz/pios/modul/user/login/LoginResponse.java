@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.login;
+package hr.tvz.pios.modul.user.login;
 
 /**
  * Rekord koji sadrži odgovor (token) prilikom prijave.

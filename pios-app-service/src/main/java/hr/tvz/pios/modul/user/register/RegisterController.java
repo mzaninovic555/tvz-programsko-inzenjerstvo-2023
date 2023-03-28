@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

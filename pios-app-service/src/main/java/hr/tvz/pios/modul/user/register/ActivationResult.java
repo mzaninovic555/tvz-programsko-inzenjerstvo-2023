@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.register;
+package hr.tvz.pios.modul.user.register;
 
 /**
  * Enum vrijednosti za stanja aktivacije.
