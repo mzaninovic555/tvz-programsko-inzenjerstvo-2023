@@ -49,7 +49,9 @@ const ComponentSearch = () => {
 
   useEffect(() => {
     void fetchComponents();
-    void fetchWishlist();
+    if (auth.auth.authenticated) {
+      void fetchWishlist();
+    }
   }, [debouncedComponentSearch, componentType, priceRangeDebounced]);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
