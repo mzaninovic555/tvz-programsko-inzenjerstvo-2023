@@ -13,16 +13,31 @@
       a {
         color: white;
       }
+      .button {
+        display: inline-block;
+        font-weight: bold;
+        background-color: #01a4d5;
+        padding: 10px 15px;
+        margin: 10px 15px;
+        border-radius: 5px;
+      }
     </style>
   </head>
   <body>
     <article style="font-family: Bahnschrift, sans-serif; width: 100%;">
       <div style="background-color: #004a61; color: white; padding: 1rem; border-radius: 10px;">
-        <h4 class="alert-heading" th:text="'Successful registration'"></h4>
+        <h2 class="alert-heading" style="text-align: center" th:text="'Successful registration'"></h2>
         <br>
-        <p style="margin-bottom: 0" th:text="
-          'Hi ' + ${user.getUsername()} + ', thanks for registering'"> </p>
-        <a th:href="${activationURL}" th:text="'Use the following URL to activate your account'"></a>
+        <div style="text-align: center">
+          <h3 style="margin-bottom: 0" th:text="
+          'Hi ' + ${user.getUsername()} + ', thanks for registering!'"></h3>
+          <br/>
+          <p th:text="'To finish activating your account'"></p>
+          <a class="button" th:href="${activationURL}" th:text="'Click here'"></a>
+          <br/>
+          <p style="margin: 0.5rem 0" th:text="'Or'"></p>
+          <a th:href="${activationURL}" th:text="'Use this URL to activate your account'"></a>
+        </div>
       </div>
     </article>
   </body>

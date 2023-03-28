@@ -34,8 +34,6 @@ public class EmailService {
     context.setVariable("user", newUser);
     context.setVariable("activationURL", activationURL);
     String html = templateEngine.process("mail/registracija", context);
-
-    //TODO napraviti email template kak spada
     posaljiMail(newUser.getEmail(), subject, html);
   }
 
