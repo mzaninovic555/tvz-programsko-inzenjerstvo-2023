@@ -47,4 +47,11 @@ public class LoginService {
   private Boolean isMatchingPassword(String loginPassword, String userPassword) {
     return encoder.matches(loginPassword, userPassword);
   }
+
+  public BasicResponse validateToken(UserAuthentication auth) {
+    if (userRepository.getByUsername(auth.getUsername()).isPresent()) {
+      return new BasicResponse();
+    }
+    throw PiosException.badRequest(Message.error("User does not exist"));
+  }
 }

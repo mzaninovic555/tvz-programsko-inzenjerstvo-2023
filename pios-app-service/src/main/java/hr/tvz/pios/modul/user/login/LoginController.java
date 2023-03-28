@@ -23,4 +23,9 @@ public class LoginController {
   public LoginResponse login(@RequestBody @Valid LoginRequest data) {
     return loginService.login(data.username(), data.password());
   }
+
+  @GetMapping("/validate-token")
+  public BasicResponse validateToken(UserAuthentication auth) {
+    return loginService.validateToken(auth);
+  }
 }
