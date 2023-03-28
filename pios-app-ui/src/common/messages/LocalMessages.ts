@@ -10,3 +10,8 @@ export const loginSuccessMessage: Message = {
   type: MessageType.SUCCESS,
   content: 'Successfully logged in'
 };
+
+export const tokenExpiredMessage: Message = {
+  type: MessageType.WARN,
+  content: 'Session expired, please log in again'
+};

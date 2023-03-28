@@ -1,11 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {JSXChildrenProps} from '~/@types';
 import {AuthContext} from '../../context/AuthContext';
 import ParsedJwt from '~/common/auth/ParsedJwt';
 import AuthenticationInfo from '~/common/auth/AuthenticationInfo';
 import api from '../api';
+import {validateToken} from '../../views/login/LoginService';
+import useToastContext from '../../context/ToastContext';
+import {tokenExpiredMessage} from '../../common/messages/LocalMessages';
+import {apiToToast} from '../../common/messages/messageHelper';
 
 const AuthWrapper = (props: JSXChildrenProps) => {
+  const {toast} = useToastContext();
+  const updateTimer = useRef(null);
   const [token, setToken] = useState<string | undefined | null>(() => {
     const fetched = localStorage.getItem('token');
     if (fetched) {
@@ -28,7 +34,30 @@ const AuthWrapper = (props: JSXChildrenProps) => {
 
   const [cachedAuth, setCachedAuth] = useState<AuthenticationInfo>(computeAuth());
 
-  // TODO token expiration handling?
+  useEffect(() => {
+    // @ts-ignore
+    updateTimer.current = setInterval(() => checkToken(), 5 * 6e4);
+
+    return () => {
+      if (updateTimer.current) {
+        clearInterval(updateTimer.current);
+      }
+    };
+  }, [token]);
+
+  const checkToken = () => {
+    if (!token) {
+      return;
+    }
+
+    validateToken().catch(() => {
+      console.error('Token not valid, clearing session');
+      setTokenIntercept(undefined);
+      toast.current?.show(apiToToast(tokenExpiredMessage));
+    });
+  };
+
+  useEffect(checkToken, []);
 
   const setTokenIntercept = (token?: string) => {
     if (!token) {
