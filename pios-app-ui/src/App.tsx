@@ -17,8 +17,8 @@ import Activate from './views/activate/Activate';
 function App() {
   return (
     <ErrorBoundary>
-      <AuthWrapper>
-        <ToastWrapper>
+      <ToastWrapper>
+        <AuthWrapper>
           <BrowserRouter>
             <Navbar/>
             <div className="container">
@@ -36,8 +36,8 @@ function App() {
             </div>
           </BrowserRouter>
           <ConfirmDialog/>
-        </ToastWrapper>
-      </AuthWrapper>
+        </AuthWrapper>
+      </ToastWrapper>
     </ErrorBoundary>
   );
 }

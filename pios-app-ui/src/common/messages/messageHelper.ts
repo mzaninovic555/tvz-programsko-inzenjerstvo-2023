@@ -11,8 +11,8 @@ export function apiToMessages(message: Message): MessagesMessage {
   return {
     detail: message.content,
     severity: type,
-    sticky: message.type == MessageType.ERROR,
-    life: message.type == MessageType.ERROR ? undefined : TIMEOUT_SECONDS
+    sticky: message.type == MessageType.ERROR || message.type == MessageType.WARN,
+    life: message.type == MessageType.ERROR || message.type == MessageType.WARN ? undefined : TIMEOUT_SECONDS
   };
 }
 
@@ -20,11 +20,18 @@ export function apiToToast(message: Message): ToastMessage {
   const type = messageTypeToSeverity(message.type);
   return {
     detail: message.content,
-    summary: type.charAt(0).toUpperCase() + type.substr(1),
+    summary: messageTypeToSummary(message.type),
     severity: type,
-    sticky: message.type == MessageType.ERROR,
-    life: message.type == MessageType.ERROR ? undefined : TIMEOUT_SECONDS
+    sticky: message.type == MessageType.ERROR || message.type == MessageType.WARN,
+    life: message.type == MessageType.ERROR || message.type == MessageType.WARN ? undefined : TIMEOUT_SECONDS
   };
+}
+
+export function messageTypeToSummary(type: MessageType) {
+  if (type == MessageType.WARN) {
+    return 'Warning';
+  }
+  return type.charAt(0).toUpperCase() + type.substring(1);
 }
 
 export function messageTypeToSeverity(type: MessageType) {
