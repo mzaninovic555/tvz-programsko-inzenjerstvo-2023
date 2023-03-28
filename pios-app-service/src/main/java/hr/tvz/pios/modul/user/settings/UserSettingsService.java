@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.user.settings;
 
+import hr.tvz.pios.common.AccountType;
 import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.modul.user.User;
@@ -47,10 +48,10 @@ public class UserSettingsService {
     String password =
         getNewPassword(u, req.oldPassword(), req.newPassword(), req.newPasswordRepeat());
 
-    if (newEmail != null) {
+    if (newEmail != null && u.getAccountType() == AccountType.LOCAL) {
       u.setEmail(newEmail);
     }
-    if (password != null) {
+    if (password != null && u.getAccountType() == AccountType.LOCAL) {
       u.setPassword(password);
     }
     if (req.description() != null) {

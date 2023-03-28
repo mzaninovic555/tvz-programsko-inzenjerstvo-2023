@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.user.register;
 
 import static hr.tvz.pios.modul.user.settings.UserSettingsService.EMAIL_REGEX;
+import hr.tvz.pios.common.AccountType;
 import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.PiosProperties;
@@ -51,14 +52,16 @@ public class RegisterService {
       throw PiosException.conflict(Message.error("Email is already in use", "email"));
     }
     Role role = roleRepository.getByName(hr.tvz.pios.common.Role.ROLE_USER.name()).get();
-    User newUser = User.builder()
-        .username(request.username())
-        .password(encoder.encode(request.password()))
-        .email(request.email())
-        .isActivated(Boolean.FALSE)
-        .creationDate(LocalDateTime.now())
-        .role(role)
-        .build();
+    User newUser =
+        User.builder()
+            .username(request.username())
+            .password(encoder.encode(request.password()))
+            .email(request.email())
+            .isActivated(Boolean.FALSE)
+            .creationDate(LocalDateTime.now())
+            .role(role)
+            .accountType(AccountType.LOCAL)
+            .build();
     userRepository.insert(newUser);
 
     String activationToken = generateActivationToken(newUser);

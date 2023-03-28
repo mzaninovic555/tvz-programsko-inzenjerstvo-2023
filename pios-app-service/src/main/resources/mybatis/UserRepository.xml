@@ -9,6 +9,7 @@
     <result property="description"    column="description" />
     <result property="creationDate"   column="creation_date" />
     <result property="isActivated"    column="is_activated" />
+    <result property="accountType"    column="account_type" />
     <association property="role"      javaType="hr.tvz.pios.modul.role.Role"
                  resultMap="hr.tvz.pios.modul.role.RoleRepository.roleResultMap"
                  columnPrefix="r_"/>
@@ -22,7 +23,8 @@
     ${alias}email            ${columnPrefix}email,
     ${alias}description      ${columnPrefix}description,
     ${alias}creation_date    ${columnPrefix}creation_date,
-    ${alias}is_activated     ${columnPrefix}is_activated
+    ${alias}is_activated     ${columnPrefix}is_activated,
+    ${alias}account_type     ${columnPrefix}account_type
   </sql>
 
   <!-- SELECT -->
@@ -99,6 +101,7 @@
       description,
       creation_date,
       is_activated,
+      account_type,
       role_id
     ) values (
       #{username},
@@ -107,6 +110,7 @@
       #{description},
       #{creationDate},
       #{isActivated},
+      #{accountType},
       #{role.id}
     )
   </insert>
@@ -119,6 +123,7 @@
         description = #{description},
         creation_date = #{creationDate},
         is_activated = #{isActivated},
+        account_type = #{accountType},
         role_id = #{role.id}
     where id = #{id}
   </update>

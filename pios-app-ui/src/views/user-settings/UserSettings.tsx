@@ -7,14 +7,12 @@ import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import FormTextarea from '../../components/FormTextarea';
 import {Button} from 'primereact/button';
 import useToastContext from '../../context/ToastContext';
-import {
-  apiToToast,
-  showMessagesWithoutReference
-} from '../../common/messages/messageHelper';
+import {apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
 import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 import {Messages} from 'primereact/messages';
 import {formatDate} from '../../common/dateHelper';
+import AccountType from './AccountType';
 
 const UserSettings = () => {
   const emailValidator = (s?: string) => !s ? undefined : s.length > 100 ? 'Email has to be less than 100 characters long' : undefined;
@@ -35,6 +33,7 @@ const UserSettings = () => {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<(string | undefined)[]>(['', '', '']);
+  const [accountType, setAccountType] = useState<AccountType>();
 
   useEffect(() => void fetchSettings(), []);
 
@@ -135,6 +134,7 @@ const UserSettings = () => {
     setOldPassword('');
     setNewPassword('');
     setNewPasswordRepeat('');
+    setAccountType(settings.accountType);
     setCreationDate(new Date(settings.creationDate));
   };
 
@@ -143,26 +143,40 @@ const UserSettings = () => {
     setSubmitted(true);
   };
 
+  const title = (
+    <>
+      <i className={`pi pi-${accountType == AccountType.GITHUB ? 'github' : 'user'} mr-1`}/>
+      <span>User settings</span>
+    </>
+  );
+
   return (<AuthAutoRedirect loggedInToHome={false} customLocation="/login">
-    <Card title="User settings">
+    <Card title={title}>
       <Messages ref={messages}/>
       <form onSubmit={onFormSubmit}>
         <div className="flex">
           <FormInputText className="w-6 pr-1" inputClassName="w-full" name="Username" value={username} disabled/>
           <FormInputText className="w-6 pl-1" inputClassName="w-full" name="Created at" value={formatDate(creationDate)} disabled/>
         </div>
+        {accountType && accountType == AccountType.LOCAL &&
         <FormInputText inputClassName="w-full" name="Email" value={emailInput.value} maxLength={100}
-          onChange={(v) => dispatchEmail({type: 'change', value: v})} type="email" error={emailInput.error}/>
+          onChange={(v) => dispatchEmail({type: 'change', value: v})} type="email"
+          error={emailInput.error} disabled={accountType && accountType != AccountType.LOCAL}/>}
         <FormTextarea name="Description" value={descriptionInput.value} maxLength={200} error={descriptionInput.error} rows={7}
           onChange={(e) => dispatchDescription({type: 'change', value: e})} inputClassName="w-full"/>
-        <hr className="my-4"/>
+        {accountType && accountType == AccountType.LOCAL && <hr className="my-4"/>}
+        {accountType && accountType == AccountType.LOCAL &&
         <FormInputText inputClassName="w-full" name="Old Password" value={oldPassword} type="password"
-          error={passwordErrors[0]} onChange={setOldPassword} maxLength={100} required={anyPasswordPresent}/>
+          error={passwordErrors[0]} onChange={setOldPassword} maxLength={100}
+          disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
+        {accountType && accountType == AccountType.LOCAL &&
         <FormInputText inputClassName="w-full" name="New Password" value={newPassword} type="password"
-          error={passwordErrors[1]} onChange={setNewPassword} maxLength={100} required={anyPasswordPresent}/>
+          error={passwordErrors[1]} onChange={setNewPassword} maxLength={100}
+          disabled={accountType && accountType != AccountType.LOCAL} required={anyPasswordPresent}/>}
+        {accountType && accountType == AccountType.LOCAL &&
         <FormInputText inputClassName="w-full" name="Repeat New Password" value={newPasswordRepeat}
           error={passwordErrors[2]} type="password" maxLength={100} required={anyPasswordPresent}
-          onChange={setNewPasswordRepeat}/>
+          onChange={setNewPasswordRepeat} disabled={accountType && accountType != AccountType.LOCAL}/>}
         <Button className="w-2" type="submit" label="Save" icon="pi pi-save"/>
       </form>
     </Card>

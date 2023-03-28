@@ -6,5 +6,4 @@ package hr.tvz.pios.common;
 public enum AccountType {
   LOCAL,
   GITHUB
-  //TODO dodati kolonu i field
 }

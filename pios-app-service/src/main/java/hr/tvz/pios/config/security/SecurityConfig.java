@@ -26,19 +26,6 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 public class SecurityConfig {
-  private final PiosJwtDecoder piosJwtDecoder;
-  private final PiosAuthConverter piosAuthConverter;
-  private final PiosProperties piosProperties;
-
-  private final ObjectMapper mapper = new ObjectMapper();
-
-  public SecurityConfig(PiosJwtDecoder piosJwtDecoder, PiosAuthConverter piosAuthConverter,
-      PiosProperties piosProperties) {
-    this.piosJwtDecoder = piosJwtDecoder;
-    this.piosAuthConverter = piosAuthConverter;
-    this.piosProperties = piosProperties;
-  }
-
   // ovdje dodati URL koje ne treba autentificirati
   public static final String[] UNAUTHENTICATED_URLS = {
     "/api/v1/login",
@@ -47,11 +34,24 @@ public class SecurityConfig {
     "/api/v1/component",
   };
 
-  @Autowired
-  private CustomOAuth2UserService oauthUserService;
+  private final PiosJwtDecoder piosJwtDecoder;
+  private final PiosAuthConverter piosAuthConverter;
+  private final PiosProperties piosProperties;
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Autowired
+  private CustomOAuth2UserService oauthUserService;
+  @Autowired
   private UserService userService;
+
+  public SecurityConfig(
+      PiosJwtDecoder piosJwtDecoder,
+      PiosAuthConverter piosAuthConverter,
+      PiosProperties piosProperties) {
+    this.piosJwtDecoder = piosJwtDecoder;
+    this.piosAuthConverter = piosAuthConverter;
+    this.piosProperties = piosProperties;
+  }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
