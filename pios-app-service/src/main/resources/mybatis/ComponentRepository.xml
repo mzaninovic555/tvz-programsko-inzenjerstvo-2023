@@ -39,7 +39,7 @@
       join MANUFACTURERS m on c.manufacturer_id = m.id
     <where>
       <if test="name != null and name != ''">
-        and c.name = #{name}
+        and c.name like concat('%', #{name}, '%')
       </if>
       <if test="type != null">
         and c.type = #{type}
