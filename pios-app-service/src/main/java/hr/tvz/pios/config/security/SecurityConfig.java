@@ -81,7 +81,7 @@ public class SecurityConfig {
             Cookie cookie = new Cookie("temp-jwt-token", jwt);
             cookie.setPath("/");
             response.addCookie(cookie);
-            response.sendRedirect(piosProperties.frontendUrl());
+            response.sendRedirect(piosProperties.frontendUrl() + "/");
           }
         });
 
