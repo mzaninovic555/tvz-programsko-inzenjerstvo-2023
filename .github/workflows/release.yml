@@ -24,7 +24,7 @@ jobs:
 
       - name: Build
         run: |
-          mvn package -P ui -pl pios-app-ui -q
+          mvn package -P ui -pl pios-app-ui
           mvn package -q checkstyle:check
 
       - name: Create Release
