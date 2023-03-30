@@ -1,8 +1,15 @@
 import Component from '~/views/component-search/Component';
-import {Rating} from 'primereact/rating';
-import React from 'react';
+import {Rating, RatingChangeEvent} from 'primereact/rating';
+import React, {useEffect, useState} from 'react';
 import {Image} from 'primereact/image';
 import {Chip} from 'primereact/chip';
+import {createReview, removeReview} from './reviews/ReviewService';
+import useAuthContext from '../../context/AuthContext';
+import {Tooltip} from 'primereact/tooltip';
+import {AxiosError} from 'axios';
+import BasicResponse from '~/common/messages/BasicResponse';
+import useToastContext from '../../context/ToastContext';
+import {apiToToast} from '../../common/messages/messageHelper';
 
 interface ComponentTemplateProps {
   component: Component;
@@ -12,7 +19,70 @@ interface ComponentTemplateProps {
 
 const ComponentTemplate = (props: ComponentTemplateProps) => {
   const product = props.component;
-  // TODO rating
+  const [rating, setRating] = useState(product.rating);
+  const [ratingRounded, setRatingRounded] =
+    useState(product.rating == undefined ? undefined : Math.round(product.rating));
+  const [isReviewed, setIsReviewed] = useState(product.reviewed);
+  const [reviewCount, setReviewCount] = useState(product.reviewCount);
+  const {auth} = useAuthContext();
+  const {toast} = useToastContext();
+
+  const max = 5;
+
+  useEffect(() => {
+    setRating(product.rating);
+    setIsReviewed(product.reviewed);
+    setReviewCount(product.reviewCount);
+  }, [product]);
+
+  useEffect(() => {
+    setRatingRounded(rating == undefined ? undefined : Math.round(rating));
+  }, [rating]);
+
+  const readOnly = !auth.authenticated;
+
+  const setRatingIntercept = (event: RatingChangeEvent) => {
+    event.preventDefault();
+
+    if (event.value === null) {
+      void runRemoveReview();
+      return;
+    }
+
+    if (event.value === undefined) {
+      return;
+    }
+
+    void runCreateReview(event.value);
+  };
+
+  const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
+    if (!error.response?.data?.messages?.length) {
+      return;
+    }
+    toast.current?.show(error.response.data.messages.map(apiToToast));
+  };
+
+  const runCreateReview = async (rating: number) => {
+    const res = await createReview({rating: rating, componentId: product.id}).catch(handleRequestFailure);
+    if (!res) {
+      return;
+    }
+    setRating(res.newRating);
+    setReviewCount(res.newReviewCount);
+    setIsReviewed(true);
+  };
+
+  const runRemoveReview = async () => {
+    const res = await removeReview(product.id).catch(handleRequestFailure);
+    if (!res) {
+      return;
+    }
+    setRating(res.newRating);
+    setReviewCount(res.newReviewCount);
+    setIsReviewed(false);
+  };
+
   return (
     <div className="col-12 md:col-12 lg:col-12 xl:col-12 sm:col-12">
       <div className="flex flex-column sm:flex-column md:flex-row xl:flex-row xl:align-items-start p-3 gap-4">
@@ -22,7 +92,14 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
         <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
           <div className="flex flex-column align-items-center sm:align-items-start gap-3">
             <div className="text-2xl font-bold text-900">{product.name}</div>
-            <Rating value={4.5} readOnly cancel={false}></Rating>
+            <div className="flex align-items-start">
+              {readOnly && <Tooltip target={`#ratingComponent-${product.id}`}/>}
+              <div id={`ratingComponent-${product.id}`} data-pr-tooltip="You need to log in to review components" data-pr-position="top">
+                <Rating className="mr-2" value={ratingRounded} onChange={setRatingIntercept}
+                  disabled={readOnly} cancel={auth.authenticated && isReviewed} max={max}/>
+              </div>
+              <span>{rating == undefined ? '' : `${rating}/${max}`} ({reviewCount} review{reviewCount == 1 ? '' : 's'})</span>
+            </div>
             <div className="flex">
               <Chip label={product.manufacturer.name} className="mr-2"/>
               <div className="flex align-items-center gap-3">

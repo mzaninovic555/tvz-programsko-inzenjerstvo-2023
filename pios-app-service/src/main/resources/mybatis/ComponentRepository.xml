@@ -8,6 +8,8 @@
     <result property="type"              column="type" />
     <result property="data"              column="data" />
     <result property="imageBase64"       column="imageBase64" />
+    <result property="rating"            column="rating" />
+    <result property="reviewCount"       column="review_count" />
     <association property="manufacturer" javaType="hr.tvz.pios.modul.manufacturer.Manufacturer"
                  resultMap="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMap"
                  columnPrefix="m_"/>
@@ -21,7 +23,19 @@
     ${alias}type                ${columnPrefix}type,
     ${alias}data                ${columnPrefix}data,
     ${alias}image_base64        ${columnPrefix}imageBase64,
-    ${alias}manufacturer_id     ${columnPrefix}manufacturer_id
+    ${alias}manufacturer_id     ${columnPrefix}manufacturer_id,
+    (
+        SELECT ROUND(AVG(r.rating), 1)
+          FROM components c2
+               LEFT JOIN reviews r on ${alias}id = r.component_id
+         WHERE c2.id = ${alias}id
+         GROUP BY c2.id
+    ) ${columnPrefix}rating,
+    (
+        SELECT COUNT(*)
+          FROM reviews r2
+         WHERE r2.component_id = ${alias}id
+    ) ${columnPrefix}review_count
   </sql>
 
   <!-- SELECT -->
@@ -36,7 +50,7 @@
       <property name="columnPrefix" value="m_"/>
     </include>
     from COMPONENTS c
-      join MANUFACTURERS m on c.manufacturer_id = m.id
+         join MANUFACTURERS m on c.manufacturer_id = m.id
     <where>
       <if test="name != null and name != ''">
         and lower(c.name) like concat('%', lower(#{name}), '%')

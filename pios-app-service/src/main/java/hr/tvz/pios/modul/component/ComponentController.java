@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.component;
 
+import hr.tvz.pios.config.security.user.UserAuthentication;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,15 +21,16 @@ public class ComponentController {
 
   @GetMapping
   public List<ComponentSearchResponse> getComponents(
+      UserAuthentication auth,
       @RequestParam String name,
       @RequestParam String type,
       @RequestParam Integer minPrice,
       @RequestParam Integer maxPrice) {
-    return componentService.getAllFiltered(name, type, minPrice, maxPrice);
+    return componentService.getAllFiltered(auth, name, type, minPrice, maxPrice);
   }
 
   @GetMapping("/{id}")
-  public ComponentSearchResponse getById(@PathVariable Long id) {
-    return componentService.getById(id);
+  public ComponentSearchResponse getById(UserAuthentication auth, @PathVariable Long id) {
+    return componentService.getById(auth, id);
   }
 }

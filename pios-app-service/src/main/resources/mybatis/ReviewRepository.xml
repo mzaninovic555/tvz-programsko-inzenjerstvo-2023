@@ -4,19 +4,15 @@
   <resultMap id="reviewResultMap" type="hr.tvz.pios.modul.review.Review">
     <id     property="id"           column="id" />
     <result property="rating"       column="rating" />
-    <association property="post" javaType="hr.tvz.pios.modul.post.Post"
-                 resultMap="hr.tvz.pios.modul.post.PostRepository.postResultMap"
-                 columnPrefix="p_"/>
-    <association property="user" javaType="hr.tvz.pios.modul.user.User"
-                 resultMap="hr.tvz.pios.modul.user.UserRepository.userResultMap"
-                 columnPrefix="u_"/>
+    <result property="userId"       column="user_id" />
+    <result property="componentId"  column="component_id" />
   </resultMap>
 
   <!-- SQL -->
   <sql id="reviewResultMapColumns">
     ${alias}id               ${columnPrefix}id,
     ${alias}rating           ${columnPrefix}rating,
-    ${alias}post_id          ${columnPrefix}post_id,
+    ${alias}component_id     ${columnPrefix}component_id,
     ${alias}user_id          ${columnPrefix}user_id
   </sql>
 
@@ -27,31 +23,46 @@
       <property name="alias" value="r."/>
       <property name="columnPrefix" value=""/>
     </include>
-    <include refid="hr.tvz.pios.modul.post.PostRepository.postResultMapColumns">
-      <property name="alias" value="p."/>
-      <property name="columnPrefix" value="p_"/>
-    </include>
-    <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
-      <property name="alias" value="u."/>
-      <property name="columnPrefix" value="u_"/>
-    </include>
     from REVIEWS r
-      join posts p on p.id = r.post_id
+      join components c on c.id = r.component_id
       join users u on u.id = r.user_id
     where r.id = #{id}
   </select>
 
+  <select id="getByUserAndComponentId" resultMap="reviewResultMap">
+    select
+    <include refid="reviewResultMapColumns">
+      <property name="alias" value="r."/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from REVIEWS r
+   where r.component_id = #{componentId}
+     and r.user_id = #{userId}
+  </select>
+
+  <select id="getAllReviewedComponentsByUser" parameterType="Long" resultType="Long">
+    SELECT component_id
+      FROM reviews
+     WHERE user_id = #{userId}
+  </select>
+
+  <select id="getRatingForComponent" resultType="Double" parameterType="Long">
+    SELECT ROUND(AVG(r.rating), 1)
+      FROM components c
+           JOIN reviews r ON c.id = r.component_id
+     WHERE c.id = #{componentId}
+     GROUP BY c.id
+  </select>
+
   <insert id="insert" parameterType="hr.tvz.pios.modul.review.Review">
     insert into REVIEWS (
-      id,
       rating,
-      post_id,
+      component_id,
       user_id
     ) values (
-      #{id},
       #{rating},
-      #{post.id},
-      #{user.id}
+      #{componentId},
+      #{userId}
     )
   </insert>
 
@@ -59,13 +70,19 @@
     update REVIEWS
     set id = #{id},
         rating = #{rating},
-        post_id = #{post.id},
-        user_id = #{user.id}
+        component_id = #{componentId},
+        user_id = #{userId}
     where id = #{id}
   </update>
 
   <delete id="deleteById">
     delete from REVIEWS
     where id = #{id}
+  </delete>
+
+  <delete id="deleteByUserAndComponent" parameterType="Long">
+    DELETE FROM reviews
+     WHERE user_id = #{userId}
+       AND component_id = #{componentId}
   </delete>
 </mapper>
