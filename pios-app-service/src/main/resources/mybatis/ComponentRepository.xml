@@ -5,7 +5,7 @@
     <id     property="id"                column="id" />
     <result property="name"              column="name" />
     <result property="price"             column="price" />
-    <result property="type"              column="type" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
+    <result property="type"              column="type" />
     <result property="data"              column="data" />
     <result property="imageBase64"       column="imageBase64" />
     <association property="manufacturer" javaType="hr.tvz.pios.modul.manufacturer.Manufacturer"
