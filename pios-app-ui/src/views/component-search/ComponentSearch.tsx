@@ -18,6 +18,7 @@ import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
 import ComponentTemplate from './ComponentTemplate';
 import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
+import {Tooltip} from 'primereact/tooltip';
 
 const ComponentSearch = () => {
   const [components, setComponents] = useState<ComponentSearchResponse[]>([]);
@@ -111,8 +112,13 @@ const ComponentSearch = () => {
     const disabledText = !auth.auth.authenticated ? 'You need to log in to wishlist items' :
       wishlist.includes(product.component.id) ? 'Item is already wishlisted' : undefined;
     const wishlistButton = (
-      <Button icon="pi pi-plus" label="Wishlist" tooltip={disabledText} disabled={!!disabledText}
-        onClick={() => addToWishlist(product.component.id)}/>
+      <>
+        {disabledText && <Tooltip target={`#wishlist-button-${product.component.id}`}/>}
+        <div id={`wishlist-button-${product.component.id}`} data-pr-tooltip={disabledText} data-pr-position="top">
+          <Button icon="pi pi-plus" label="Wishlist" disabled={!!disabledText}
+            onClick={() => addToWishlist(product.component.id)}/>
+        </div>
+      </>
     );
     return <ComponentTemplate component={product.component} button={wishlistButton}/>;
   };

@@ -1,0 +1,14 @@
+ALTER TABLE REVIEWS
+    ALTER COLUMN rating TYPE smallint USING rating::smallint;
+
+ALTER TABLE REVIEWS
+    RENAME COLUMN post_id TO component_id;
+
+ALTER TABLE REVIEWS
+    DROP CONSTRAINT IF EXISTS reviews_post_id_fkey;
+
+ALTER TABLE REVIEWS
+    ADD FOREIGN KEY (component_id) references COMPONENTS (id);
+
+ALTER TABLE REVIEWS
+    ADD CONSTRAINT REVIEW_UNIQUE UNIQUE(user_id, component_id);

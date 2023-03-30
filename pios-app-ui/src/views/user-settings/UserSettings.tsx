@@ -127,7 +127,7 @@ const UserSettings = () => {
   };
 
   const fetchSettings = async () => {
-    const settings = await getUserSettings().catch(console.error);
+    const settings = await getUserSettings().catch(updateFailHandler);
     if (!settings) {
       return;
     }

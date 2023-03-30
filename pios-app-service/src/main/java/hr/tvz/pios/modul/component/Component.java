@@ -27,4 +27,10 @@ public class Component {
   String imageBase64;
 
   Manufacturer manufacturer;
+
+  Double rating;
+
+  Integer reviewCount;
+
+  Boolean reviewed;
 }

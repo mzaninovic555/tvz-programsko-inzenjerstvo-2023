@@ -9,6 +9,9 @@ interface Component {
   data: string;
   imageBase64: string | undefined;
   manufacturer: Manufacturer;
+  rating?: number;
+  reviewCount: number;
+  reviewed?: boolean;
 }
 
 export default Component;
