@@ -15,3 +15,8 @@ export const tokenExpiredMessage: Message = {
   type: MessageType.WARN,
   content: 'Session expired, please log in again'
 };
+
+export const userDeactivatedMessage: Message = {
+  type: MessageType.SUCCESS,
+  content: 'User successfully deactivated'
+};

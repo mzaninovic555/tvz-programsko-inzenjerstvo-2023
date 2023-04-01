@@ -1,19 +1,32 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import AuthAutoRedirect from '../../common/auth/AuthAutoRedirect';
 import {Card} from 'primereact/card';
-import {getUserSettings, updateSettings} from './UserSettingsService';
+import {
+  deactivateAccount,
+  getUserSettings,
+  updateSettings,
+  validatePassword
+} from './UserSettingsService';
 import FormInputText from '../../components/FormInputText';
 import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import FormTextarea from '../../components/FormTextarea';
 import {Button} from 'primereact/button';
 import useToastContext from '../../context/ToastContext';
-import {apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
+import {
+  apiToMessages,
+  apiToToast,
+  showMessagesWithoutReference
+} from '../../common/messages/messageHelper';
 import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 import {Messages} from 'primereact/messages';
 import {formatDate} from '../../common/dateHelper';
 import AccountType from './AccountType';
 import Spinner from '../../components/Spinner';
+import {Dialog} from 'primereact/dialog';
+import {useDebounce} from 'primereact/hooks';
+import useAuthContext from '../../context/AuthContext';
+import {userDeactivatedMessage} from '../../common/messages/LocalMessages';
 
 const UserSettings = () => {
   const emailValidator = (s?: string) => !s ? undefined : s.length > 100 ? 'Email has to be less than 100 characters long' : undefined;
@@ -26,6 +39,7 @@ const UserSettings = () => {
   const [submitted, setSubmitted] = useState(false);
   const [anyPasswordPresent, setAnyPasswordPresent] = useState(false);
 
+  const [activationVisible, setActivationVisible] = useState(false);
   const [requesting, setRequesting] = useState(false);
   const [username, setUsername] = useState('');
   const [creationDate, setCreationDate] = useState<Date>();
@@ -36,6 +50,12 @@ const UserSettings = () => {
   const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
   const [passwordErrors, setPasswordErrors] = useState<(string | undefined)[]>(['', '', '']);
   const [accountType, setAccountType] = useState<AccountType>();
+
+  const auth = useAuthContext();
+  const accountDeletionMessages = useRef<Messages>(null);
+  const [deactivateButtonEnabled, setDeactivateButtonEnabled] = useState(false);
+  const [deactivatePasswordConfirm, debouncedDeactivatePasswordConfirm, setDeactivatePasswordConfirm] =
+      useDebounce('', 200) as [string, string, React.Dispatch<React.SetStateAction<string>>];
 
   useEffect(() => void fetchSettings(), []);
 
@@ -75,6 +95,38 @@ const UserSettings = () => {
 
     void runUpdateSettings();
   }, [submitted]);
+
+  useEffect(() => {
+    if (!debouncedDeactivatePasswordConfirm || passwordValidator(true, debouncedDeactivatePasswordConfirm)) {
+      return;
+    }
+    void fetchValidatePassword();
+  }, [debouncedDeactivatePasswordConfirm]);
+
+  const fetchValidatePassword = async () => {
+    const result = await validatePassword(debouncedDeactivatePasswordConfirm).catch(handleValidateFailure);
+    if (!result) {
+      setDeactivateButtonEnabled(false);
+      return;
+    }
+    accountDeletionMessages.current?.clear();
+    setDeactivateButtonEnabled(true);
+  };
+
+  const handleValidateFailure = (error: AxiosError<BasicResponse>) => {
+    const msgs = error.response?.data?.messages ?? [];
+    accountDeletionMessages.current?.replace(msgs.map((x) => apiToMessages(x)));
+    setDeactivateButtonEnabled(false);
+  };
+
+  const fetchDeactivateAccount = async () => {
+    const result = await deactivateAccount(auth.auth.info?.username).catch(handleValidateFailure);
+    if (!result) {
+      return;
+    }
+    auth.setToken(undefined);
+    toast.current?.show(apiToToast(userDeactivatedMessage));
+  };
 
   const updateFailHandler = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
@@ -186,8 +238,23 @@ const UserSettings = () => {
                     error={passwordErrors[2]} type="password" required={anyPasswordPresent}
                     onChange={setNewPasswordRepeat} value={newPasswordRepeat}
                     disabled={accountType && accountType != AccountType.LOCAL}/>}
-              <Button loading={requesting} className="w-2" type="submit" label="Save" icon="pi pi-save"/>
+              <Button loading={requesting} className="w-9rem mr-3" type="submit" label="Save" icon="pi pi-save"/>
+              <Button className="w-9rem" type="button" label="Deactivate" icon="pi pi-trash"
+                severity="danger" onClick={() => setActivationVisible(true)} />
             </form>
+            <Dialog header="Account deactivation" visible={activationVisible} onHide={() => setActivationVisible(false)}>
+              <p className="p-0 mb-0">
+                Are you sure you want to deactivate your account?
+                THIS CANNOT BE UNDONE!
+              </p>
+              <form>
+                <Messages ref={accountDeletionMessages} />
+                <FormInputText className="mt-3" name={'Enter your password'} value={deactivatePasswordConfirm}
+                  onChange={setDeactivatePasswordConfirm} />
+                <Button className="w-9rem" type="button" label="Deactivate" icon="pi pi-trash"
+                  severity="danger" disabled={!deactivateButtonEnabled} onClick={fetchDeactivateAccount} />
+              </form>
+            </Dialog>
           </Card>}
     </>
   </AuthAutoRedirect>);
