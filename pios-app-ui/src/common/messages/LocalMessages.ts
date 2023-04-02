@@ -16,6 +16,11 @@ export const tokenExpiredMessage: Message = {
   content: 'Session expired, please log in again'
 };
 
+export const userDeactivatedMessage: Message = {
+  type: MessageType.SUCCESS,
+  content: 'User successfully deactivated'
+};
+
 export const linkCopiedSuccess: Message = {
   type: MessageType.SUCCESS,
   content: 'Link copied successfully!'

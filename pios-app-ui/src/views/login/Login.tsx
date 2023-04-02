@@ -69,6 +69,13 @@ const Login = () => {
             sticky: true
           });
           break;
+        case ActivationResult.DEACTIVATED_USER:
+          messages.current?.show({
+            detail: 'User has been deactivated',
+            severity: 'info',
+            sticky: true
+          });
+          break;
       }
     }
 

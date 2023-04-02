@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.user;
 
 import hr.tvz.pios.common.AccountType;
+import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.security.jwt.JwtService;
 import hr.tvz.pios.modul.role.Role;
 import java.time.LocalDateTime;
@@ -22,6 +23,10 @@ public class UserService {
     Optional<User> existUser = userRepository.getByUsername(username);
 
     User finalUser = existUser.orElse(null);
+
+    if (existUser.isPresent() && !existUser.get().isActive) {
+      throw PiosException.badRequest();
+    }
 
     if (existUser.isEmpty()) {
       User newUser = new User();
