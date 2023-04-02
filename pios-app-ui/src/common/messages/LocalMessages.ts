@@ -30,3 +30,8 @@ export const linkCopiedError: Message = {
   type: MessageType.ERROR,
   content: 'Failed to copy the link'
 };
+
+export const clearedFilters: Message = {
+  type: MessageType.SUCCESS,
+  content: 'Cleared filters'
+};
