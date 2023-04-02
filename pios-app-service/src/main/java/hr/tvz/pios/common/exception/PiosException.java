@@ -45,6 +45,14 @@ public class PiosException extends RuntimeException {
     return conflict(Arrays.asList(poruke));
   }
 
+  public static PiosException forbidden(List<Message> poruke) {
+    return new PiosException(HttpStatus.FORBIDDEN, poruke);
+  }
+
+  public static PiosException forbidden(Message... poruke) {
+    return conflict(Arrays.asList(poruke));
+  }
+
   public HttpStatus getStatus() {
     return status;
   }
