@@ -7,6 +7,7 @@
     <result property="description"      column="description" />
     <result property="link"             column="link" />
     <result property="isPublic"         column="is_public" />
+    <result property="finalized"        column="finalized" />
     <association property="user" javaType="hr.tvz.pios.modul.user.User"
                  resultMap="hr.tvz.pios.modul.user.UserRepository.userResultMap"
                  columnPrefix="u_" />
@@ -22,6 +23,7 @@
     ${alias}description        ${columnPrefix}description,
     ${alias}link               ${columnPrefix}link,
     ${alias}is_public          ${columnPrefix}is_public,
+    ${alias}finalized          ${columnPrefix}finalized,
     ${alias}user_id            ${columnPrefix}user_id
   </sql>
 
@@ -31,11 +33,11 @@
     <include refid="buildResultMapColumns">
       <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
       <property name="alias" value="u."/>
       <property name="columnPrefix" value="u_"/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
@@ -47,24 +49,52 @@
     where b.id = #{id}
   </select>
 
-  <select id="getByUserId" resultMap="buildResultMap">
+  <select id="getByLink" resultMap="buildResultMap">
     select
     <include refid="buildResultMapColumns">
       <property name="alias" value="b."/>
       <property name="columnPrefix" value=""/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
       <property name="alias" value="u."/>
       <property name="columnPrefix" value="u_"/>
-    </include>
+    </include>,
     <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
       <property name="alias" value="c."/>
       <property name="columnPrefix" value="c_"/>
     </include>
     from BUILDS b
-      join users u on u.id = b.user_id
-      join builds_components bc on b.id = bc.build_id
-      join components c on bc.component_id = c.id
+         left join users u on u.id = b.user_id
+         left join builds_components bc on b.id = bc.build_id
+         left join components c on bc.component_id = c.id
+    where b.link = #{link}
+  </select>
+
+  <select id="buildHasComponent" resultType="boolean" parameterType="Long">
+    SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+      FROM builds_components
+     WHERE component_id = #{componentId}
+       AND build_id = #{buildId}
+  </select>
+
+  <select id="getByUserId" resultMap="buildResultMap">
+    select
+    <include refid="buildResultMapColumns">
+      <property name="alias" value="b."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.user.UserRepository.userResultMapColumns">
+      <property name="alias" value="u."/>
+      <property name="columnPrefix" value="u_"/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.component.ComponentRepository.componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value="c_"/>
+    </include>
+    from BUILDS b
+         left join users u on u.id = b.user_id
+         left join builds_components bc on b.id = bc.build_id
+         left join components c on bc.component_id = c.id
     where user_id = #{userId}
   </select>
 
@@ -74,12 +104,14 @@
       description,
       link,
       is_public,
+      finalized,
       user_id
     ) values (
       #{title},
       #{description},
       #{link},
       #{isPublic},
+      #{finalized},
       #{user.id}
     )
   </insert>
@@ -101,12 +133,24 @@
         description = #{description},
         link = #{link},
         is_public = #{isPublic},
-        user_id = #{userId}
+        finalized = #{finalized},
+        user_id = #{user.id}
     where id = #{id}
   </update>
 
   <delete id="deleteById">
     delete from BUILDS
     where id = #{id}
+  </delete>
+
+  <insert id="addComponent" parameterType="Long">
+    INSERT INTO builds_components (component_id, build_id)
+    VALUES (#{componentId}, #{buildId})
+  </insert>
+
+  <delete id="removeComponent" parameterType="Long">
+    DELETE FROM builds_components
+     WHERE component_id = #{componentId}
+       AND build_id = #{buildId}
   </delete>
 </mapper>
