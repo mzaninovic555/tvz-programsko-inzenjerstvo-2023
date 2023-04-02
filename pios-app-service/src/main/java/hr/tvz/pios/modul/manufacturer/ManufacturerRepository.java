@@ -1,13 +1,19 @@
 package hr.tvz.pios.modul.manufacturer;
 
 import hr.tvz.pios.modul.post.Post;
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repozitorij za dohvat manufacturera.
+ */
 @Mapper
 @Repository
 public interface ManufacturerRepository {
+
+  List<Manufacturer> getAll();
 
   Optional<Post> getById(Long id);
 
