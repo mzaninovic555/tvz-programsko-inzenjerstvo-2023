@@ -15,6 +15,7 @@ interface ComponentTemplateProps {
   component: Component;
   button: JSX.Element;
   additionalData?: JSX.Element | JSX.Element[];
+  hideReviews?: boolean;
 }
 
 const ComponentTemplate = (props: ComponentTemplateProps) => {
@@ -92,14 +93,12 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
         <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
           <div className="flex flex-column align-items-center sm:align-items-start gap-3">
             <div className="text-2xl font-bold text-900">{product.name}</div>
-            <div className="flex align-items-start">
-              {readOnly && <Tooltip target={`#ratingComponent-${product.id}`}/>}
-              <div id={`ratingComponent-${product.id}`} data-pr-tooltip="You need to log in to review components" data-pr-position="top">
-                <Rating className="mr-2" value={ratingRounded} onChange={setRatingIntercept}
-                  disabled={readOnly} cancel={auth.authenticated && isReviewed} max={max}/>
-              </div>
+            {!props.hideReviews && <div className="flex align-items-start">
+              <Rating className="mr-2" value={ratingRounded} onChange={setRatingIntercept} disabled={readOnly} max={max}
+                tooltip={readOnly ? 'You need to log in to review components' : ''} cancel={auth.authenticated && isReviewed}
+                tooltipOptions={{position: 'top', showOnDisabled: true}}/>
               <span>{rating == undefined ? '' : `${rating}/${max}`} ({reviewCount} review{reviewCount == 1 ? '' : 's'})</span>
-            </div>
+            </div>}
             <div className="flex">
               <Chip label={product.manufacturer.name} className="mr-2"/>
               <div className="flex align-items-center gap-3">

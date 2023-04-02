@@ -18,15 +18,26 @@ import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
 import ComponentTemplate from './ComponentTemplate';
 import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
-import {Tooltip} from 'primereact/tooltip';
+import {useSearchParams} from 'react-router-dom';
+import Component from '~/views/component-search/Component';
 
-const ComponentSearch = () => {
+interface ComponentSearchProps {
+  type?: Type;
+  modalMode?: boolean;
+  onComponentSelected?: (component: Component) => void;
+}
+
+const ComponentSearch = (props: ComponentSearchProps) => {
   const [components, setComponents] = useState<ComponentSearchResponse[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+  const [params] = useSearchParams();
 
   const [componentSearch, debouncedComponentSearch, setComponentSearch] =
     useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
-  const [componentType, setComponentType] = useState('');
+  const [componentType, setComponentType] = useState(() => {
+    const wanted = params?.get('type') || props.type;
+    return wanted && wanted in Type ? wanted : '';
+  });
   const [priceRange, setPriceRange] = useState<[number, number]>([1, 5000]);
   const [priceRangeDebounced, setPriceRangeDebounced] = useState<[number, number]>(priceRange);
   const [rangeTimeout, setRangeTimeout] = useState<number>();
@@ -95,9 +106,10 @@ const ComponentSearch = () => {
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
             placeholder="Search"/>
         </span>
+        {!props.modalMode &&
         <Dropdown className="mr-2" value={componentType} options={Object.values(Type)}
           placeholder="Choose a type"
-          onChange={(e) => setComponentType(e.target.value as string)}/>
+          onChange={(e) => setComponentType(e.target.value as string)}/>}
         <div className="flex align-items-center flex-row w-full w-15rem">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
@@ -113,26 +125,39 @@ const ComponentSearch = () => {
       wishlist.includes(product.component.id) ? 'Item is already wishlisted' : undefined;
     const wishlistButton = (
       <>
-        {disabledText && <Tooltip target={`#wishlist-button-${product.component.id}`}/>}
-        <div id={`wishlist-button-${product.component.id}`} data-pr-tooltip={disabledText} data-pr-position="top">
-          <Button icon="pi pi-plus" label="Wishlist" disabled={!!disabledText}
-            onClick={() => addToWishlist(product.component.id)}/>
-        </div>
+        <Button icon="pi pi-plus" label="Wishlist" disabled={!!disabledText} tooltip={disabledText}
+          tooltipOptions={{position: 'top', showOnDisabled: true}} onClick={() => addToWishlist(product.component.id)}/>
       </>
     );
     return <ComponentTemplate component={product.component} button={wishlistButton}/>;
   };
 
+  const modalTemplate = (product: ComponentSearchResponse) => {
+    const button = (
+      <Button icon="pi pi-plus" label="Select" onClick={() => props.onComponentSelected?.(product.component)}/>
+    );
+    return <ComponentTemplate component={product.component} button={button} hideReviews/>;
+  };
+
+  const body = (<>
+    <Messages ref={messages} />
+    <div className={classes['wishlist-wrapper']}>
+      {header()}
+      {components.length < 1 && <p className="mt-6 text-center">
+        <i className="pi pi-info-circle"/> No components found
+      </p>}
+      {components.length > 0 && <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
+        paginator rows={10}/>}
+    </div>
+  </>);
+
+  if (props.modalMode) {
+    return body;
+  }
+
   return (
     <Card title="Search components">
-      <Messages ref={messages} />
-      <div className={classes['wishlist-wrapper']}>
-        {header()}
-        {components.length < 1 && <p className="mt-6 text-center">
-          <i className="pi pi-info-circle"/> No components found
-        </p>}
-        {components.length > 0 && <DataView value={components} itemTemplate={template} paginator rows={10}/>}
-      </div>
+      {body}
     </Card>);
 };
 
