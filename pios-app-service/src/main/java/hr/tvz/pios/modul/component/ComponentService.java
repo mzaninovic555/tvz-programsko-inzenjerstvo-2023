@@ -23,10 +23,10 @@ public class ComponentService {
   @Autowired UserRepository userRepository;
 
   public List<ComponentSearchResponse> getAllFiltered(
-      UserAuthentication auth, String name, String type, Integer minPrice, Integer maxPrice) {
+      UserAuthentication auth, String name, String type, String manufacturer, Integer minPrice, Integer maxPrice) {
     Type componentType = type == null || type.isBlank() ? null : Type.valueOf(type);
     List<Component> components =
-        componentRepository.getAllFiltered(name, componentType, minPrice, maxPrice);
+        componentRepository.getAllFiltered(name, componentType, manufacturer, minPrice, maxPrice);
 
     List<Long> reviewed = getReviewedByUser(auth);
     components.forEach(comp -> comp.setReviewed(reviewed.contains(comp.getId())));

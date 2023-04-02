@@ -24,9 +24,10 @@ public class ComponentController {
       UserAuthentication auth,
       @RequestParam String name,
       @RequestParam String type,
+      @RequestParam String manufacturer,
       @RequestParam Integer minPrice,
       @RequestParam Integer maxPrice) {
-    return componentService.getAllFiltered(auth, name, type, minPrice, maxPrice);
+    return componentService.getAllFiltered(auth, name, type, manufacturer, minPrice, maxPrice);
   }
 
   @GetMapping("/{id}")

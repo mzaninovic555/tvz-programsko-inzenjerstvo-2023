@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ComponentRepository {
 
-  List<Component> getAllFiltered(String name, Type type, Integer minPrice, Integer maxPrice);
+  List<Component> getAllFiltered(String name, Type type, String manufacturer, Integer minPrice, Integer maxPrice);
 
   Optional<Component> getById(Long id);
 

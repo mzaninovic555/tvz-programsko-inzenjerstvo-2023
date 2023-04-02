@@ -13,6 +13,14 @@
   </sql>
 
   <!-- SELECT -->
+  <select id="getAll" resultMap="ManufacturerResultMap">
+    select
+    <include refid="ManufacturerResultMapColumns">
+      <property name="alias" value=""/>
+      <property name="columnPrefix" value=""/>
+    </include>
+    from MANUFACTURERS
+  </select>
   <select id="getById" resultMap="ManufacturerResultMap">
     select
     <include refid="ManufacturerResultMapColumns">

@@ -1,8 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {getComponents} from '../../views/component-search/ComponentService';
+import {getComponents, getManufacturers} from '../../views/component-search/ComponentService';
 import {AxiosError} from 'axios';
 import BasicResponse from '../../common/messages/BasicResponse';
-import {showMessagesWithoutReference} from '../../common/messages/messageHelper';
+import {apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
 import {Messages} from 'primereact/messages';
 import {DataView} from 'primereact/dataview';
 import {Card} from 'primereact/card';
@@ -20,6 +20,9 @@ import ComponentTemplate from './ComponentTemplate';
 import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
 import {useSearchParams} from 'react-router-dom';
 import Component from '~/views/component-search/Component';
+import ManufacturerResponse from '~/views/component-search/ManufacturerResponse';
+import useToastContext from '../../context/ToastContext';
+import {clearedFilters} from '../../common/messages/LocalMessages';
 
 interface ComponentSearchProps {
   type?: Type;
@@ -30,20 +33,34 @@ interface ComponentSearchProps {
 const ComponentSearch = (props: ComponentSearchProps) => {
   const [components, setComponents] = useState<ComponentSearchResponse[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
+  const [manufacturers, setManufacturers] = useState<ManufacturerResponse[]>([]);
   const [params] = useSearchParams();
 
   const [componentSearch, debouncedComponentSearch, setComponentSearch] =
-    useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
+    useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string | undefined>>];
   const [componentType, setComponentType] = useState(() => {
     const wanted = params?.get('type') || props.type;
-    return wanted && wanted in Type ? wanted : '';
+    return wanted && wanted in Type ? wanted : undefined;
   });
+
+  const [manufacturerSearch, setManufacturerSearch] = useState<string>();
   const [priceRange, setPriceRange] = useState<[number, number]>([1, 5000]);
   const [priceRangeDebounced, setPriceRangeDebounced] = useState<[number, number]>(priceRange);
   const [rangeTimeout, setRangeTimeout] = useState<number>();
 
+  const {toast} = useToastContext();
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
+
+  const [sortKey, setSortKey] = useState<string>();
+  const [sortOrder, setSortOrder] = useState<0 | 1 | -1 | null | undefined>(0);
+  const [sortField, setSortField] = useState<string>();
+  const sortOptions = [
+    {label: 'Price High to Low', value: '!component.price'},
+    {label: 'Price Low to High', value: 'component.price'},
+    {label: 'Name A-Z', value: 'component.name'},
+    {label: 'Name Z-A', value: '!component.name'},
+  ];
 
   useEffect(() => {
     if (rangeTimeout) {
@@ -59,12 +76,14 @@ const ComponentSearch = (props: ComponentSearchProps) => {
     setRangeTimeout(newVal);
   }, [priceRange]);
 
+  useEffect(() => void fetchManufacturers(), []);
+
   useEffect(() => {
     void fetchComponents();
     if (auth.auth.authenticated) {
       void fetchWishlist();
     }
-  }, [debouncedComponentSearch, componentType, priceRangeDebounced]);
+  }, [debouncedComponentSearch, componentType, priceRangeDebounced, manufacturerSearch]);
 
   const handleRequestFailure = (error: AxiosError<BasicResponse>) => {
     const msgs = error.response?.data?.messages ?? [];
@@ -73,12 +92,23 @@ const ComponentSearch = (props: ComponentSearchProps) => {
 
   const fetchComponents = async () => {
     messages.current?.clear();
-    const componentList = await getComponents(debouncedComponentSearch, componentType, priceRangeDebounced)
-      .catch(handleRequestFailure);
+    const componentList = await getComponents(
+      debouncedComponentSearch,
+      priceRangeDebounced,
+      componentType,
+      manufacturerSearch).catch(handleRequestFailure);
     if (!componentList) {
       return;
     }
     setComponents(componentList);
+  };
+
+  const fetchManufacturers = async () => {
+    const manufacturerList = await getManufacturers().catch(handleRequestFailure);
+    if (!manufacturerList) {
+      return;
+    }
+    setManufacturers(manufacturerList);
   };
 
   const fetchWishlist = async () => {
@@ -88,6 +118,30 @@ const ComponentSearch = (props: ComponentSearchProps) => {
       return;
     }
     setWishlist(list.map((w) => w.component.id));
+  };
+
+  useEffect(() => {
+    if (!sortKey) {
+      setSortOrder(0);
+      setSortField(undefined);
+      return;
+    }
+
+    setSortOrder(sortKey.indexOf('!') === 0 ? -1 : 1);
+    setSortField(sortKey.replace('!', ''));
+  }, [sortKey]);
+
+  const clearFilters = () => {
+    setComponentSearch('');
+    if (!props.modalMode) {
+      setComponentType(undefined);
+    }
+    setPriceRange([1, 5000] as [number, number]);
+    setManufacturerSearch(undefined);
+    setSortKey(undefined);
+    setSortOrder(0);
+    setSortField(undefined);
+    toast.current?.show(apiToToast(clearedFilters));
   };
 
   const addToWishlist = (componentId: number) => {
@@ -101,21 +155,27 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const header = () => {
     return <>
       <div className="flex align-items-center flex-wrap mb-2">
-        <span className="p-input-icon-right mr-2">
+        <span className="p-input-icon-right mr-2 mb-1">
           <i className="pi pi-search"/>
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
             placeholder="Search"/>
         </span>
         {!props.modalMode &&
-        <Dropdown className="mr-2" value={componentType} options={Object.values(Type)}
-          placeholder="Choose a type"
-          onChange={(e) => setComponentType(e.target.value as string)}/>}
-        <div className="flex align-items-center flex-row w-full w-15rem">
+        <Dropdown className="mr-2 w-9rem mb-1" value={componentType} options={Object.values(Type)} showClear
+          placeholder="Type" onChange={(e) => setComponentType(e.target.value as string)}/>}
+        <Dropdown className="mr-2 w-12rem mb-1" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
+          placeholder="Manufacturer" showClear
+          onChange={(e) => setManufacturerSearch(e.target.value as string)}/>
+        <Dropdown className="mr-2 w-14rem mb-1" value={sortKey} options={sortOptions} placeholder="Sort" showClear
+          onChange={(e) => setSortKey(e.value)}/>
+        <div className="flex align-items-center flex-row w-full w-12rem mr-2 mb-1">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
             onChange={(e) => setPriceRange(e.value as [number, number])}/>
           <Tag severity="info" value={priceRange[1]} />
         </div>
+        <Button icon="pi pi-delete-left" label="Clear filters" onClick={clearFilters} className="mb-1"
+          disabled={!debouncedComponentSearch && !componentType && !priceRangeDebounced && !manufacturerSearch}/>
       </div>
     </>;
   };
@@ -146,8 +206,9 @@ const ComponentSearch = (props: ComponentSearchProps) => {
       {components.length < 1 && <p className="mt-6 text-center">
         <i className="pi pi-info-circle"/> No components found
       </p>}
-      {components.length > 0 && <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
-        paginator rows={10}/>}
+      {components.length > 0 &&
+      <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
+        paginator rows={10} sortField={sortField} sortOrder={sortOrder} />}
     </div>
   </>);
 

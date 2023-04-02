@@ -58,6 +58,9 @@
       <if test="type != null">
         and c.type = #{type}
       </if>
+      <if test="manufacturer != null and manufacturer != ''">
+        and m.name = #{manufacturer}
+      </if>
       <if test="minPrice != null and maxPrice != ''">
         and c.price between #{minPrice} and #{maxPrice}
       </if>
