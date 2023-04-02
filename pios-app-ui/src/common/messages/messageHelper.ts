@@ -31,7 +31,7 @@ export function messageTypeToSummary(type: MessageType) {
   if (type == MessageType.WARN) {
     return 'Warning';
   }
-  return type.charAt(0).toUpperCase() + type.substring(1);
+  return type.charAt(0).toUpperCase() + type.substring(1).toLowerCase();
 }
 
 export function messageTypeToSeverity(type: MessageType) {
