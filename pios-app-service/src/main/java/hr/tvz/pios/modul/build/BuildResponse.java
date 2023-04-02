@@ -2,7 +2,10 @@ package hr.tvz.pios.modul.build;
 
 import hr.tvz.pios.modul.component.Component;
 import java.util.List;
-/** Rekord za slanje buildova kod dohvaćanja. */
+
+/**
+ * Rekord za slanje buildova kod dohvaćanja.
+ */
 public record BuildResponse(
     String link,
     String title,
