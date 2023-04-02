@@ -24,7 +24,7 @@ public class Build {
 
   boolean isPublic = false;
 
-  boolean finalized = false;
+  boolean isFinalized = false;
 
   User user;
 

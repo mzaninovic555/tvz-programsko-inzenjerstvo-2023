@@ -11,7 +11,7 @@ public record BuildResponse(
     String title,
     String description,
     boolean isPublic,
-    boolean finalized,
+    boolean isFinalized,
     List<Component> components,
     String ownerUsername) {
   static BuildResponse fromBuild(Build build) {

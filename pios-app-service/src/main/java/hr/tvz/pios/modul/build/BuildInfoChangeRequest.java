@@ -8,5 +8,5 @@ public record BuildInfoChangeRequest(
     @NotBlank String link,
     @Size(max = 50) String title,
     @Size(max = 500) String description,
-    boolean finalized,
+    boolean isFinalized,
     boolean isPublic) {}

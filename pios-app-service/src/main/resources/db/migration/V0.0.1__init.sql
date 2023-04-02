@@ -29,7 +29,7 @@ create table BUILDS
   LINK        VARCHAR(255) not null,
   IS_PUBLIC   BOOLEAN      not null default false,
   USER_ID     BIGINT,
-  FINALIZED   BOOLEAN NOT NULL DEFAULT FALSE
+  IS_FINALIZED   BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 alter table BUILDS

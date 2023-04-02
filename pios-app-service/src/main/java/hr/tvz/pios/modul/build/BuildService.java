@@ -101,7 +101,7 @@ public class BuildService {
   public BuildChangeResponse editInfo(UserAuthentication auth, BuildInfoChangeRequest req) {
     Build build = validateRequest(auth, req.link());
 
-    build.setFinalized(req.finalized());
+    build.setFinalized(req.isFinalized());
     if (build.getUser() != null) {
       build.setPublic(req.isPublic());
     }

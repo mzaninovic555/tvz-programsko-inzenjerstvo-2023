@@ -2,7 +2,7 @@ interface BuildInfoChangeRequest {
   link: string;
   title?: string;
   description?: string;
-  finalized: boolean;
+  isFinalized: boolean;
   isPublic: boolean;
 }
 

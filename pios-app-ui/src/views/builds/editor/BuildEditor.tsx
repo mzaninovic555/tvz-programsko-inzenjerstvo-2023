@@ -34,7 +34,7 @@ const BuildEditor = () => {
   const {toast} = useToastContext();
   const messages = useRef<Messages>(null);
 
-  const canEdit = build?.finalized ? false : build?.ownerUsername ? build?.ownerUsername == auth.info?.username : true;
+  const canEdit = build?.isFinalized ? false : build?.ownerUsername ? build?.ownerUsername == auth.info?.username : true;
   // TODO implement
   const published = false;
 
@@ -97,7 +97,7 @@ const BuildEditor = () => {
   };
 
   const linkHeader = (<>
-    {!build.ownerUsername && !build.finalized &&
+    {!build.ownerUsername && !build.isFinalized &&
       <Message severity="warn" className="w-full mb-2"
         text="This build is not owned by any user, anyone with a link to it can edit it, finalize the build before sharing"/>}
     <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center">
@@ -173,7 +173,7 @@ const BuildEditor = () => {
         </div>
         <div className="col-4">
           <h3>Finalized</h3>
-          <span>{build.finalized ? 'Yes' : 'No'}</span>
+          <span>{build.isFinalized ? 'Yes' : 'No'}</span>
         </div>
         <div className="col-4">
           <h3>Public</h3>

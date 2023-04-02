@@ -5,7 +5,7 @@ interface BuildResponse {
   title?: string;
   description?: string;
   isPublic: boolean;
-  finalized: boolean;
+  isFinalized: boolean;
   components: Component[];
   ownerUsername?: string;
 }

@@ -28,7 +28,7 @@ const BuildEditDialog = (props: BuildEditDialog) => {
     useReducer<InputReducer<string>>(reducer, {...emptyState, validator: titleValidator});
   const [descInput, dispatchDesc] =
     useReducer<InputReducer<string>>(reducer, {...emptyState, validator: descValidator});
-  const [finalized, setFinalized] = useState(false);
+  const [isFinalized, setIsFinalized] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
 
   const [requesting, setRequesting] = useState(false);
@@ -45,7 +45,7 @@ const BuildEditDialog = (props: BuildEditDialog) => {
 
     dispatchTitle({type: 'change', value: props.build.title || ''});
     dispatchDesc({type: 'change', value: props.build.description || ''});
-    setFinalized(props.build.finalized);
+    setIsFinalized(props.build.isFinalized);
     setIsPublic(props.build.isPublic);
   }, [props.visible]);
 
@@ -82,7 +82,7 @@ const BuildEditDialog = (props: BuildEditDialog) => {
     setRequesting(true);
     const res = await changeBuildInfo({
       link: props.build.link,
-      finalized: finalized,
+      isFinalized: isFinalized,
       isPublic: isPublic,
       title: titleInput.value,
       description: descInput.value
@@ -113,8 +113,8 @@ const BuildEditDialog = (props: BuildEditDialog) => {
       <FormTextarea name="Description" value={descInput.value} onChange={(v) => dispatchDesc({type: 'change', value: v})}
         maxLength={500} error={descInput.error}/>
       <div className="field">
-        <label htmlFor="finalized" className="block font-bold">Finalized</label>
-        <InputSwitch inputId="finalized" checked={finalized} onChange={(e) => setFinalized(Boolean(e.value))}/>
+        <label htmlFor="isFinalized" className="block font-bold">Finalized</label>
+        <InputSwitch inputId="isFinalized" checked={isFinalized} onChange={(e) => setIsFinalized(Boolean(e.value))}/>
         {!props.build.ownerUsername && <>
           <br/>
           <small className="p-warning">Warning: Builds made by anonymous users cannot be edited after being finalized</small>

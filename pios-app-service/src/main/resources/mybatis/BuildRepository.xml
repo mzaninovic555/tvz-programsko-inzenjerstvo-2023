@@ -7,7 +7,7 @@
     <result property="description"      column="description" />
     <result property="link"             column="link" />
     <result property="isPublic"         column="is_public" />
-    <result property="finalized"        column="finalized" />
+    <result property="isFinalized"        column="is_finalized" />
     <association property="user" javaType="hr.tvz.pios.modul.user.User"
                  resultMap="hr.tvz.pios.modul.user.UserRepository.userResultMap"
                  columnPrefix="u_" />
@@ -23,7 +23,7 @@
     ${alias}description        ${columnPrefix}description,
     ${alias}link               ${columnPrefix}link,
     ${alias}is_public          ${columnPrefix}is_public,
-    ${alias}finalized          ${columnPrefix}finalized,
+    ${alias}is_finalized       ${columnPrefix}is_finalized,
     ${alias}user_id            ${columnPrefix}user_id
   </sql>
 
@@ -104,14 +104,14 @@
       description,
       link,
       is_public,
-      finalized,
+      is_finalized,
       user_id
     ) values (
       #{title},
       #{description},
       #{link},
       #{isPublic},
-      #{finalized},
+      #{isFinalized},
       #{user.id}
     )
   </insert>
@@ -133,7 +133,7 @@
         description = #{description},
         link = #{link},
         is_public = #{isPublic},
-        finalized = #{finalized},
+        is_finalized = #{isFinalized},
         user_id = #{user.id}
     where id = #{id}
   </update>
