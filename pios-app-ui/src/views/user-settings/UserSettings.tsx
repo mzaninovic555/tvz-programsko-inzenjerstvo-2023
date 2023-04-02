@@ -252,7 +252,7 @@ const UserSettings = () => {
                 <Messages ref={accountDeletionMessages} />
                 {accountType && accountType !== AccountType.GITHUB &&
                   <FormInputText className="mt-3" name={'Enter your password'} value={deactivatePasswordConfirm}
-                    onChange={setDeactivatePasswordConfirm} />}
+                    type="password" onChange={setDeactivatePasswordConfirm} />}
                 <Button className="w-9rem" type="button" label="Deactivate" icon="pi pi-trash"
                   severity="danger" disabled={!deactivateButtonEnabled && (accountType && accountType !== AccountType.GITHUB)}
                   onClick={fetchDeactivateAccount} />
