@@ -136,7 +136,9 @@ const ComponentSearch = (props: ComponentSearchProps) => {
 
   const clearFilters = () => {
     setComponentSearch('');
-    setComponentType('');
+    if (!props.modalMode) {
+      setComponentType('');
+    }
     setPriceRange([1, 5000] as [number, number]);
     setManufacturerSearch('');
     setSortKey('');
