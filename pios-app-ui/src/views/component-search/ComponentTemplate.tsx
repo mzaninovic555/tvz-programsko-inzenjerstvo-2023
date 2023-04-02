@@ -5,7 +5,6 @@ import {Image} from 'primereact/image';
 import {Chip} from 'primereact/chip';
 import {createReview, removeReview} from './reviews/ReviewService';
 import useAuthContext from '../../context/AuthContext';
-import {Tooltip} from 'primereact/tooltip';
 import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 import useToastContext from '../../context/ToastContext';
