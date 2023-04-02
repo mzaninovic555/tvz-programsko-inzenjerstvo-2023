@@ -20,8 +20,10 @@ public class LoginService {
 
   final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-  @Autowired JwtService jwtService;
-  @Autowired UserRepository userRepository;
+  @Autowired
+  JwtService jwtService;
+  @Autowired
+  UserRepository userRepository;
 
   /**
    * Provodi akciju logiranja u aplikaciju.
@@ -40,10 +42,20 @@ public class LoginService {
       throw PiosException.badRequest(Message.error("User isn't activated yet"));
     }
 
+    if (!userOptional.get().getIsActive()) {
+      throw PiosException.badRequest(Message.info("User has been deactivated"));
+    }
+
     String token = jwtService.createJwtToken(userOptional.get());
     return new LoginResponse(token);
   }
 
+  /**
+   * Provjerava podudaraju li se lozinke iz unosa forme i enkriptirana lozinka iz baze.
+   * @param loginPassword lozinka iz forme
+   * @param userPassword enkriptirana lozinka iz baze
+   * @return TRUE - podudaraju se
+   */
   private Boolean isMatchingPassword(String loginPassword, String userPassword) {
     return encoder.matches(loginPassword, userPassword);
   }
@@ -53,5 +65,43 @@ public class LoginService {
       return new BasicResponse();
     }
     throw PiosException.badRequest(Message.error("User does not exist"));
+  }
+
+  /**
+   * Validira lozinku iz forme i lozinku računa logiranog korisnika.
+   * @param auth logirani korisnik
+   * @param passwordToValidate lozinka iz forme
+   * @return {@link BasicResponse}
+   */
+  public BasicResponse validatePassword(UserAuthentication auth, String passwordToValidate) {
+    Optional<User> userOptional = userRepository.getByUsername(auth.getUsername());
+    if (userOptional.isEmpty()) {
+      throw PiosException.badRequest(Message.error("User doesn't exist"));
+    }
+
+    Boolean isPasswordMatch = isMatchingPassword(passwordToValidate, userOptional.get().getPassword());
+    if (isPasswordMatch) {
+      return new BasicResponse();
+    }
+    throw PiosException.badRequest(Message.error("Passwords don't match"));
+  }
+
+  /**
+   * Deaktivira traženi korisnički račun.
+   * @param auth logirani korisnik
+   * @param username korisničko ime koje deaktiviramo
+   * @return {@link BasicResponse}
+   */
+  public BasicResponse deactivateAccount(UserAuthentication auth, String username) {
+    if (!auth.getUsername().equals(username)) {
+      throw PiosException.badRequest(Message.error("Usernames don't match"));
+    }
+
+    Integer deactivated = userRepository.deactivateByUsername(username);
+    if (deactivated == 0) {
+      throw PiosException.notFound(Message.error("User not found"));
+    }
+
+    return new BasicResponse(Message.info("User successfully deactivated"));
   }
 }

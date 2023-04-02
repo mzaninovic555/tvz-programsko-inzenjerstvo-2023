@@ -10,6 +10,7 @@
     <result property="creationDate"   column="creation_date" />
     <result property="isActivated"    column="is_activated" />
     <result property="accountType"    column="account_type" />
+    <result property="isActive"       column="is_active" />
     <association property="role"      javaType="hr.tvz.pios.modul.role.Role"
                  resultMap="hr.tvz.pios.modul.role.RoleRepository.roleResultMap"
                  columnPrefix="r_"/>
@@ -24,7 +25,8 @@
     ${alias}description      ${columnPrefix}description,
     ${alias}creation_date    ${columnPrefix}creation_date,
     ${alias}is_activated     ${columnPrefix}is_activated,
-    ${alias}account_type     ${columnPrefix}account_type
+    ${alias}account_type     ${columnPrefix}account_type,
+    ${alias}is_active        ${columnPrefix}is_active
   </sql>
 
   <!-- SELECT -->
@@ -132,6 +134,12 @@
     update USERS
     set is_activated = #{isActivated}
     where id = #{id}
+  </update>
+
+  <update id="deactivateByUsername">
+    update USERS
+    set is_active = false
+    where username = #{username}
   </update>
 
   <delete id="deleteById">

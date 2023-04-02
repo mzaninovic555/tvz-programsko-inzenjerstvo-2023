@@ -28,6 +28,8 @@ public class User {
 
   Boolean isActivated;
 
+  Boolean isActive;
+
   Role role;
 
   AccountType accountType;

@@ -33,4 +33,6 @@ public interface UserRepository {
   Integer updateIsActivatedById(Long id, Boolean isActivated);
 
   Integer deleteById(Long id);
+
+  Integer deactivateByUsername(String username);
 }
