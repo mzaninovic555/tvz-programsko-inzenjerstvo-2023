@@ -1,0 +1,9 @@
+.card > div {
+  padding: 0 !important;
+}
+
+.card > div > div {
+  padding: 0.5rem 1rem !important;
+}
+
+.card h3 { margin: 0 0 5px; }

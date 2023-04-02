@@ -139,6 +139,8 @@
   </update>
 
   <delete id="deleteById">
+    delete from builds_components
+    where build_id = #{id};
     delete from BUILDS
     where id = #{id}
   </delete>

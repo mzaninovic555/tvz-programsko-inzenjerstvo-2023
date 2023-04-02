@@ -22,7 +22,7 @@ public interface BuildRepository {
 
   Integer updateById(Build build);
 
-  Integer deleteById(Long id);
+  void deleteById(Long id);
 
   Optional<Build> getByLink(String link);
 
