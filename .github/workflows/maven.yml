@@ -32,9 +32,3 @@ jobs:
       run: |
         mvn package -P ui -pl pios-app-ui
         mvn package -q checkstyle:check
-
-    - name: Upload Build as Artifact
-      uses: actions/upload-artifact@v3.1.2
-      with:
-        name: 'Build'
-        path: './pios-app-service/target/pios-app-service-*.jar'
