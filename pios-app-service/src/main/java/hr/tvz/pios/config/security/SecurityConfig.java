@@ -3,6 +3,7 @@ package hr.tvz.pios.config.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hr.tvz.pios.common.Message;
 import hr.tvz.pios.common.exception.BasicResponse;
+import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.PiosProperties;
 import hr.tvz.pios.config.security.jwt.PiosAuthConverter;
 import hr.tvz.pios.config.security.jwt.PiosJwtDecoder;
@@ -74,7 +75,14 @@ public class SecurityConfig {
         .successHandler((request, response, authentication) -> {
           CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
 
-          String jwt = userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
+          String jwt;
+          try {
+            jwt = userService.processOAuthPostLogin(oauthUser.getName(), oauthUser.getEmail());
+          } catch (PiosException e) {
+            response.sendRedirect(piosProperties.frontendUrl() + "/login?deactivated-user");
+            return;
+          }
+
           if (piosProperties.frontendUrl() != null
               && piosProperties.frontendUrl().contains("localhost")) {
             response.sendRedirect(piosProperties.frontendUrl() + "?jwt=" + jwt);

@@ -98,6 +98,7 @@ const UserSettings = () => {
 
   useEffect(() => {
     if (!debouncedDeactivatePasswordConfirm || passwordValidator(true, debouncedDeactivatePasswordConfirm)) {
+      setDeactivateButtonEnabled(false);
       return;
     }
     void fetchValidatePassword();
@@ -243,16 +244,18 @@ const UserSettings = () => {
                 severity="danger" onClick={() => setActivationVisible(true)} />
             </form>
             <Dialog header="Account deactivation" visible={activationVisible} onHide={() => setActivationVisible(false)}>
-              <p className="p-0 mb-0">
+              <p className="p-0 mt-0 mb-5 font-semibold">
                 Are you sure you want to deactivate your account?
                 THIS CANNOT BE UNDONE!
               </p>
               <form>
                 <Messages ref={accountDeletionMessages} />
-                <FormInputText className="mt-3" name={'Enter your password'} value={deactivatePasswordConfirm}
-                  onChange={setDeactivatePasswordConfirm} />
+                {accountType && accountType !== AccountType.GITHUB &&
+                  <FormInputText className="mt-3" name={'Enter your password'} value={deactivatePasswordConfirm}
+                    onChange={setDeactivatePasswordConfirm} />}
                 <Button className="w-9rem" type="button" label="Deactivate" icon="pi pi-trash"
-                  severity="danger" disabled={!deactivateButtonEnabled} onClick={fetchDeactivateAccount} />
+                  severity="danger" disabled={!deactivateButtonEnabled && (accountType && accountType !== AccountType.GITHUB)}
+                  onClick={fetchDeactivateAccount} />
               </form>
             </Dialog>
           </Card>}
