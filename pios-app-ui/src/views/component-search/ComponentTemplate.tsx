@@ -9,6 +9,7 @@ import {AxiosError} from 'axios';
 import BasicResponse from '~/common/messages/BasicResponse';
 import useToastContext from '../../context/ToastContext';
 import {apiToToast} from '../../common/messages/messageHelper';
+import {normalize} from '../../common/dateHelper';
 
 interface ComponentTemplateProps {
   component: Component;
@@ -110,7 +111,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
             {props.additionalData}
           </div>
           <div className="flex flex-column sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-            <span className="text-2xl font-semibold w-full text-center">{product.price}€</span>
+            <span className="text-2xl font-semibold w-full text-center">{normalize(product.price)}€</span>
             {props.button}
           </div>
         </div>

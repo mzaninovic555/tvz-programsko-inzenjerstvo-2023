@@ -15,3 +15,13 @@ export const tokenExpiredMessage: Message = {
   type: MessageType.WARN,
   content: 'Session expired, please log in again'
 };
+
+export const linkCopiedSuccess: Message = {
+  type: MessageType.SUCCESS,
+  content: 'Link copied successfully!'
+};
+
+export const linkCopiedError: Message = {
+  type: MessageType.ERROR,
+  content: 'Failed to copy the link'
+};

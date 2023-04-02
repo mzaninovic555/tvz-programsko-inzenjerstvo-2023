@@ -33,10 +33,12 @@ class ErrorBoundary extends React.Component<ErrorProps, ErrorState> {
     }
 
     const error = (<div style={{color: 'red'}}>
-      <h2 className="mb-2">
+      <h3 className="mb-2">
         {this.state.error instanceof Error ? this.state.error?.message : this.state.error.toString()}
-      </h2>
-      {this.state.error instanceof Error && <p style={{fontFamily: 'monospace', whiteSpace: 'pre', fontSize: 'small'}}>{this.state.error.stack}</p>}
+      </h3>
+      {this.state.error instanceof Error && <p style={{fontFamily: 'monospace', whiteSpace: 'pre', fontSize: 'xx-small'}}>
+        {this.state.error.stack}
+      </p>}
       <Button label="Copy error info" className="boundary-btn p-button-danger" icon="pi pi-copy" onClick={() => this.copyError()}/>
     </div>);
 
