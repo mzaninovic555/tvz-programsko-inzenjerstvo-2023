@@ -97,7 +97,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
               <Rating className="mr-2" value={ratingRounded} onChange={setRatingIntercept} disabled={readOnly} max={max}
                 tooltip={readOnly ? 'You need to log in to review components' : ''} cancel={auth.authenticated && isReviewed}
                 tooltipOptions={{position: 'top', showOnDisabled: true}}/>
-              <span>{rating == undefined ? '' : `${rating}/${max}`} ({reviewCount} review{reviewCount == 1 ? '' : 's'})</span>
+              <span>{rating == undefined ? '' : `${rating}/${max}`} ({reviewCount || 0} review{reviewCount == 1 ? '' : 's'})</span>
             </div>}
             <div className="flex">
               <Chip label={product.manufacturer.name} className="mr-2"/>

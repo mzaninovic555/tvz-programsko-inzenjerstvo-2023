@@ -88,7 +88,7 @@ const BuildEditor = () => {
     setSelectorType(undefined);
   };
 
-  const finalLink = `${(process.env.FRONTEND_URL || 'http://localhost:1234')}/builds/${build.link}`;
+  const finalLink = `${window.location.origin}/builds/${build.link}`;
 
   const copyLink = () => {
     navigator.clipboard.writeText(finalLink)

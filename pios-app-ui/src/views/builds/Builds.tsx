@@ -59,7 +59,7 @@ const Builds = () => {
   };
 
   const copyLink = (link: string) => {
-    const finalLink = `${(process.env.FRONTEND_URL || 'http://localhost:1234')}/builds/${link}`;
+    const finalLink = `${window.location.origin}/builds/${link}`;
 
     navigator.clipboard.writeText(finalLink)
       .then(() => toast.current?.show(apiToToast(linkCopiedSuccess)))
