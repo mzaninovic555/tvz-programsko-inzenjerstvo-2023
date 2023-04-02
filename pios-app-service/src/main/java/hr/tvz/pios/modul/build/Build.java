@@ -22,7 +22,9 @@ public class Build {
 
   String link;
 
-  Boolean isPublic;
+  boolean isPublic = false;
+
+  boolean finalized = false;
 
   User user;
 
