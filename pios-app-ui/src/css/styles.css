@@ -109,6 +109,19 @@
 
 .pios-image > img { width: 100%; }
 
+.pios-link:link, .pios-link:visited {
+  text-decoration: unset !important;
+  color: #6366f1
+}
+
+.pios-link:hover {
+  color: #8183f4
+}
+
+.pios-link:active {
+  color: #4649d8
+}
+
 .tbl-exp {
   transition: cubic-bezier(.17,.67,.83,.67) 0.2s;
   speak: none;
