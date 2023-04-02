@@ -13,7 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 
-/** Servis za buildove. */
+/**
+ * Servis za buildove.
+ */
 @Service
 public class BuildService {
   private final BuildRepository buildRepository;
@@ -35,7 +37,9 @@ public class BuildService {
       throw PiosException.badRequest(Message.error("User does not exist"));
     }
 
-    return buildRepository.getByUserId(user.get().getId()).stream().map(BuildResponse::fromBuild).toList();
+    return buildRepository.getByUserId(user.get().getId()).stream()
+        .map(BuildResponse::fromBuild)
+        .toList();
   }
 
   public BuildCreateResponse createBuild(UserAuthentication auth) {
