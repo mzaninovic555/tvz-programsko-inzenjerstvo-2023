@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  run:
+  remove-old-artifacts:
     runs-on: ubuntu-latest
-  
+
     steps:
-          - uses: kolpav/purge-artifacts-action@v1
-            with:
-              token: ${{ secrets.GITHUB_TOKEN }}
-              expire-in: 10 minutes
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
+      with:
+        age: 90 seconds
