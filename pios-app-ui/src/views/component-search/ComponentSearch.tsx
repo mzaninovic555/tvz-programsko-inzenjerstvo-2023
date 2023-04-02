@@ -130,13 +130,13 @@ const ComponentSearch = (props: ComponentSearchProps) => {
             placeholder="Search"/>
         </span>
         {!props.modalMode &&
-        <Dropdown className="mr-2" value={componentType} options={Object.values(Type)}
-          placeholder="Choose a type" showClear
+        <Dropdown className="mr-2 w-9rem" value={componentType} options={Object.values(Type)}
+          placeholder="Type..." showClear
           onChange={(e) => setComponentType(e.target.value as string)}/>}
-        <Dropdown className="mr-2" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
-          placeholder="Choose a manufacturer" showClear
+        <Dropdown className="mr-2 w-12rem" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
+          placeholder="Manufacturer..." showClear
           onChange={(e) => setManufacturerSearch(e.target.value as string)}/>
-        <div className="flex align-items-center flex-row w-full w-15rem mr-2">
+        <div className="flex align-items-center flex-row w-full w-12rem mr-2">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
             onChange={(e) => setPriceRange(e.value as [number, number])}/>
@@ -174,7 +174,8 @@ const ComponentSearch = (props: ComponentSearchProps) => {
       {components.length < 1 && <p className="mt-6 text-center">
         <i className="pi pi-info-circle"/> No components found
       </p>}
-      {components.length > 0 && <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
+      {components.length > 0 &&
+      <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
         paginator rows={10}/>}
     </div>
   </>);
