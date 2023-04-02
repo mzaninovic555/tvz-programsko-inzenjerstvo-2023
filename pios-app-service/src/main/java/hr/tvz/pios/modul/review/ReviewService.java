@@ -51,7 +51,10 @@ public class ReviewService {
       review.setUserId(user.get().getId());
 
       reviewRepository.insert(review);
-      component.get().setReviewCount(component.get().getReviewCount() + 1);
+      component
+          .get()
+          .setReviewCount(
+              component.get().getReviewCount() == null ? 1 : (component.get().getReviewCount() + 1));
     }
 
     Double newRating = reviewRepository.getRatingForComponent(component.get().getId());
