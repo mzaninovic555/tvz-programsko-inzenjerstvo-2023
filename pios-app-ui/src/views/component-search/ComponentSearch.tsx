@@ -51,6 +51,16 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
 
+  const [sortKey, setSortKey] = useState('');
+  const [sortOrder, setSortOrder] = useState<0 | 1 | -1 | null | undefined>(0);
+  const [sortField, setSortField] = useState('');
+  const sortOptions = [
+    {label: 'Price High to Low', value: '!component.price'},
+    {label: 'Price Low to High', value: 'component.price'},
+    {label: 'Name A-Z', value: 'component.name'},
+    {label: 'Name Z-A', value: '!component.name'},
+  ];
+
   useEffect(() => {
     if (rangeTimeout) {
       clearTimeout(rangeTimeout);
@@ -105,11 +115,33 @@ const ComponentSearch = (props: ComponentSearchProps) => {
     setWishlist(list.map((w) => w.component.id));
   };
 
+  const onSortChange = (e) => {
+    if (!e.value) {
+      setSortOrder(0);
+      setSortField('');
+      setSortKey('');
+      return;
+    }
+    const value = e.value;
+    if (value.indexOf('!') === 0) {
+      setSortOrder(-1);
+      setSortField(value.substring(1, value.length));
+      setSortKey(value);
+    } else {
+      setSortOrder(1);
+      setSortField(value);
+      setSortKey(value);
+    }
+  };
+
   const clearFilters = () => {
     setComponentSearch('');
     setComponentType('');
     setPriceRange([1, 5000] as [number, number]);
     setManufacturerSearch('');
+    setSortKey('');
+    setSortOrder(0);
+    setSortField('');
     toast.current?.show(apiToToast(clearedFilters));
   };
 
@@ -136,6 +168,8 @@ const ComponentSearch = (props: ComponentSearchProps) => {
         <Dropdown className="mr-2 w-12rem" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
           placeholder="Manufacturer..." showClear
           onChange={(e) => setManufacturerSearch(e.target.value as string)}/>
+        <Dropdown className="mr-2 w-14rem" value={sortKey} options={sortOptions} optionLabel="label"
+          placeholder="Sort" showClear onChange={onSortChange}/>
         <div className="flex align-items-center flex-row w-full w-12rem mr-2">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
@@ -176,7 +210,7 @@ const ComponentSearch = (props: ComponentSearchProps) => {
       </p>}
       {components.length > 0 &&
       <DataView value={components} itemTemplate={props.modalMode ? modalTemplate : template}
-        paginator rows={10}/>}
+        paginator rows={10} sortField={sortField} sortOrder={sortOrder} />}
     </div>
   </>);
 
