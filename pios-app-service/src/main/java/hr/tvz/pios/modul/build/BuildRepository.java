@@ -5,6 +5,9 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repozitorij za buildove.
+ */
 @Mapper
 @Repository
 public interface BuildRepository {
@@ -19,5 +22,13 @@ public interface BuildRepository {
 
   Integer updateById(Build build);
 
-  Integer deleteById(Long id);
+  void deleteById(Long id);
+
+  Optional<Build> getByLink(String link);
+
+  boolean buildHasComponent(Long buildId, Long componentId);
+
+  void addComponent(Long buildId, Long componentId);
+
+  void removeComponent(Long buildId, Long componentId);
 }

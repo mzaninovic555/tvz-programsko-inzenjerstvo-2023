@@ -6,7 +6,7 @@ import {showMessagesWithoutReference} from '../../common/messages/messageHelper'
 import {Card} from 'primereact/card';
 import {Button} from 'primereact/button';
 import {register} from '../../views/register/RegisterService';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {AxiosError} from 'axios/index';
 import BasicResponse from '~/common/messages/BasicResponse';
 import FormInputText from '../../components/FormInputText';
@@ -106,7 +106,7 @@ const Register = () => {
           onChange={(e) => dispatchDescription({type: 'change', value: e})}
           inputClassName="w-full" rows={5}/>
         <Button className="mt-2" type="submit" label="Register" loading={requesting}/>
-        <Button label="Already have an account? Login now" link onClick={() => navigate('/login')}/>
+        <Link className="pios-link text-center p-3 pb-0" to="/login">Already have an account? Login now</Link>
       </form>
     </Card>
   </AuthAutoRedirect>);

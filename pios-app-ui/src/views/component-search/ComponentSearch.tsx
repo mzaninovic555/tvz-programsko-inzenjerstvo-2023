@@ -141,7 +141,7 @@ const ComponentSearch = (props: ComponentSearchProps) => {
 
   const body = (<>
     <Messages ref={messages} />
-    <div className={classes['wishlist-wrapper']}>
+    <div className={!props.modalMode ? classes['wishlist-wrapper'] : ''}>
       {header()}
       {components.length < 1 && <p className="mt-6 text-center">
         <i className="pi pi-info-circle"/> No components found

@@ -5,13 +5,9 @@ import {Button} from 'primereact/button';
 import InputReducer, {emptyState, reducer} from '../../common/hooks/Reducer';
 import {login} from './LoginService';
 import {Messages} from 'primereact/messages';
-import {
-  apiToMessages,
-  apiToToast,
-  showMessagesWithoutReference
-} from '../../common/messages/messageHelper';
+import {apiToMessages, apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
 import useAuthContext from '../../context/AuthContext';
-import {useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {loginSuccessMessage} from '../../common/messages/LocalMessages';
 import useToastContext from '../../context/ToastContext';
 import FormInputText from '../../components/FormInputText';
@@ -33,7 +29,6 @@ const Login = () => {
 
   const messages = useRef<Messages>(null);
   const {setToken} = useAuthContext();
-  const navigate = useNavigate();
   const {toast} = useToastContext();
 
   const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -150,8 +145,7 @@ const Login = () => {
         <hr className="w-full"/>
         <Button icon="pi pi-github" label="Login with Github" type="button" onClick={navigateToGithub}
           style={{background: '#24292d', borderColor: '#24292d'}}/>
-        <Button className="pb-0" label="Don't have an account? Register now" link
-          onClick={() => navigate('/register')}/>
+        <Link className="pios-link text-center p-3 pb-0" to="/register">Don&apos;t have an account? Register now</Link>
       </form>
     </Card>
   </AuthAutoRedirect>);

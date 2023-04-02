@@ -20,3 +20,13 @@ export const userDeactivatedMessage: Message = {
   type: MessageType.SUCCESS,
   content: 'User successfully deactivated'
 };
+
+export const linkCopiedSuccess: Message = {
+  type: MessageType.SUCCESS,
+  content: 'Link copied successfully!'
+};
+
+export const linkCopiedError: Message = {
+  type: MessageType.ERROR,
+  content: 'Failed to copy the link'
+};

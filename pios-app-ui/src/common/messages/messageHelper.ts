@@ -51,5 +51,5 @@ export function showMessagesWithoutReference(msg: Message[], messages: RefObject
   if (!msg.length) {
     return;
   }
-  messages.current?.show(msg.filter((x) => !x.reference).map(apiToMessages));
+  messages.current?.replace(msg.filter((x) => !x.reference).map(apiToMessages));
 }

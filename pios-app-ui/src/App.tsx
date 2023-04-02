@@ -13,6 +13,7 @@ import UserSettings from './views/user-settings/UserSettings';
 import AuthWrapper from './common/auth/AuthWrapper';
 import ComponentSearch from './views/component-search/ComponentSearch';
 import Activate from './views/activate/Activate';
+import BuildEditor from './views/builds/editor/BuildEditor';
 
 function App() {
   return (
@@ -26,7 +27,10 @@ function App() {
                 <Route path="/activate" element={<Activate/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
-                <Route path="/builds" element={<Builds/>}/>
+                <Route path="/builds">
+                  <Route index element={<Builds/>}/>
+                  <Route path=":buildLink" element={<BuildEditor/>}/>
+                </Route>
                 <Route path="/wishlist" element={<Wishlist/>}/>
                 <Route path="/settings" element={<UserSettings/>}/>
                 <Route path="/component-search" element={<ComponentSearch/>}/>
