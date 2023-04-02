@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {getComponents, getManufactuers} from '../../views/component-search/ComponentService';
+import {getComponents, getManufacturers} from '../../views/component-search/ComponentService';
 import {AxiosError} from 'axios';
 import BasicResponse from '../../common/messages/BasicResponse';
 import {apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
@@ -37,12 +37,13 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const [params] = useSearchParams();
 
   const [componentSearch, debouncedComponentSearch, setComponentSearch] =
-    useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string>>];
+    useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string | undefined>>];
   const [componentType, setComponentType] = useState(() => {
     const wanted = params?.get('type') || props.type;
-    return wanted && wanted in Type ? wanted : '';
+    return wanted && wanted in Type ? wanted : undefined;
   });
-  const [manufacturerSearch, setManufacturerSearch] = useState('');
+
+  const [manufacturerSearch, setManufacturerSearch] = useState<string>();
   const [priceRange, setPriceRange] = useState<[number, number]>([1, 5000]);
   const [priceRangeDebounced, setPriceRangeDebounced] = useState<[number, number]>(priceRange);
   const [rangeTimeout, setRangeTimeout] = useState<number>();
@@ -51,9 +52,9 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const messages = useRef<Messages>(null);
   const auth = useAuthContext();
 
-  const [sortKey, setSortKey] = useState('');
+  const [sortKey, setSortKey] = useState<string>();
   const [sortOrder, setSortOrder] = useState<0 | 1 | -1 | null | undefined>(0);
-  const [sortField, setSortField] = useState('');
+  const [sortField, setSortField] = useState<string>();
   const sortOptions = [
     {label: 'Price High to Low', value: '!component.price'},
     {label: 'Price Low to High', value: 'component.price'},
@@ -75,9 +76,10 @@ const ComponentSearch = (props: ComponentSearchProps) => {
     setRangeTimeout(newVal);
   }, [priceRange]);
 
+  useEffect(() => void fetchManufacturers(), []);
+
   useEffect(() => {
     void fetchComponents();
-    void fetchManufacturers();
     if (auth.auth.authenticated) {
       void fetchWishlist();
     }
@@ -90,8 +92,11 @@ const ComponentSearch = (props: ComponentSearchProps) => {
 
   const fetchComponents = async () => {
     messages.current?.clear();
-    const componentList = await getComponents(debouncedComponentSearch, componentType, priceRangeDebounced, manufacturerSearch)
-      .catch(handleRequestFailure);
+    const componentList = await getComponents(
+      debouncedComponentSearch,
+      priceRangeDebounced,
+      componentType,
+      manufacturerSearch).catch(handleRequestFailure);
     if (!componentList) {
       return;
     }
@@ -99,7 +104,7 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   };
 
   const fetchManufacturers = async () => {
-    const manufacturerList = await getManufactuers().catch(handleRequestFailure);
+    const manufacturerList = await getManufacturers().catch(handleRequestFailure);
     if (!manufacturerList) {
       return;
     }
@@ -115,35 +120,27 @@ const ComponentSearch = (props: ComponentSearchProps) => {
     setWishlist(list.map((w) => w.component.id));
   };
 
-  const onSortChange = (e) => {
-    if (!e.value) {
+  useEffect(() => {
+    if (!sortKey) {
       setSortOrder(0);
-      setSortField('');
-      setSortKey('');
+      setSortField(undefined);
       return;
     }
-    const value = e.value;
-    if (value.indexOf('!') === 0) {
-      setSortOrder(-1);
-      setSortField(value.substring(1, value.length));
-      setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
-    }
-  };
+
+    setSortOrder(sortKey.indexOf('!') === 0 ? -1 : 1);
+    setSortField(sortKey.replace('!', ''));
+  }, [sortKey]);
 
   const clearFilters = () => {
     setComponentSearch('');
     if (!props.modalMode) {
-      setComponentType('');
+      setComponentType(undefined);
     }
     setPriceRange([1, 5000] as [number, number]);
-    setManufacturerSearch('');
-    setSortKey('');
+    setManufacturerSearch(undefined);
+    setSortKey(undefined);
     setSortOrder(0);
-    setSortField('');
+    setSortField(undefined);
     toast.current?.show(apiToToast(clearedFilters));
   };
 
@@ -158,27 +155,26 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const header = () => {
     return <>
       <div className="flex align-items-center flex-wrap mb-2">
-        <span className="p-input-icon-right mr-2">
+        <span className="p-input-icon-right mr-2 mb-1">
           <i className="pi pi-search"/>
           <InputText type="text" value={componentSearch} onChange={(e) => setComponentSearch(e.target.value)}
             placeholder="Search"/>
         </span>
         {!props.modalMode &&
-        <Dropdown className="mr-2 w-9rem" value={componentType} options={Object.values(Type)}
-          placeholder="Type..." showClear
-          onChange={(e) => setComponentType(e.target.value as string)}/>}
-        <Dropdown className="mr-2 w-12rem" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
-          placeholder="Manufacturer..." showClear
+        <Dropdown className="mr-2 w-9rem mb-1" value={componentType} options={Object.values(Type)} showClear
+          placeholder="Type" onChange={(e) => setComponentType(e.target.value as string)}/>}
+        <Dropdown className="mr-2 w-12rem mb-1" value={manufacturerSearch} options={manufacturers.map((m) => m.manufacturer.name)}
+          placeholder="Manufacturer" showClear
           onChange={(e) => setManufacturerSearch(e.target.value as string)}/>
-        <Dropdown className="mr-2 w-14rem" value={sortKey} options={sortOptions} optionLabel="label"
-          placeholder="Sort" showClear onChange={onSortChange}/>
-        <div className="flex align-items-center flex-row w-full w-12rem mr-2">
+        <Dropdown className="mr-2 w-14rem mb-1" value={sortKey} options={sortOptions} placeholder="Sort" showClear
+          onChange={(e) => setSortKey(e.value)}/>
+        <div className="flex align-items-center flex-row w-full w-12rem mr-2 mb-1">
           <Tag severity="info" value={priceRange[0]} />
           <Slider min={1} max={5000} range value={priceRange} className="w-full mx-3"
             onChange={(e) => setPriceRange(e.value as [number, number])}/>
           <Tag severity="info" value={priceRange[1]} />
         </div>
-        <Button icon="pi pi-delete-left" label="Clear filters" onClick={clearFilters}
+        <Button icon="pi pi-delete-left" label="Clear filters" onClick={clearFilters} className="mb-1"
           disabled={!debouncedComponentSearch && !componentType && !priceRangeDebounced && !manufacturerSearch}/>
       </div>
     </>;
