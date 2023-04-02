@@ -89,14 +89,16 @@ const Navbar = () => {
   );
 
   return (
-    <div className="card shadow-1 mb-3 p-menubar p-component flex-column border-noround-top">
-      <div className="container">
-        <div className="flex w-full justify-content-between align-items-center flex-wrap">
-          {header}
-          {authDiv}
-        </div>
-        <div className="w-full">
-          <Menubar model={items} className="border-none mt-0 pb-0 p-0"/>
+    <div className="container">
+      <div className="card shadow-1 mb-3 p-menubar p-component flex-column border-noround-top">
+        <div className="container">
+          <div className="flex w-full justify-content-between align-items-center flex-wrap">
+            {header}
+            {authDiv}
+          </div>
+          <div className="w-full">
+            <Menubar model={items} className="border-none mt-0 pb-0 p-0"/>
+          </div>
         </div>
       </div>
     </div>

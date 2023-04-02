@@ -32,7 +32,7 @@
          GROUP BY c2.id
     ) ${columnPrefix}rating,
     (
-        SELECT COUNT(*)
+        SELECT CASE WHEN COUNT(*) = 0 THEN NULL ELSE COUNT(*) END
           FROM reviews r2
          WHERE r2.component_id = ${alias}id
     ) ${columnPrefix}review_count

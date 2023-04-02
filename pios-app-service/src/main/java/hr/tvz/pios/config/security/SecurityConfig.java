@@ -67,6 +67,7 @@ public class SecurityConfig {
         .and()
         .oauth2Login()
         .loginPage("/oauth2/authorization/github")
+        .failureUrl(piosProperties.frontendUrl() + "/")
         .userInfoEndpoint()
         .userService(oauthUserService)
         .and()
