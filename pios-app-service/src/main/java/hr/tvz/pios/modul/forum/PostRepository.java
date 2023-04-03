@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.post;
+package hr.tvz.pios.modul.forum;
 
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hr.tvz.pios.modul.post.PostRepository">
-  <resultMap id="postResultMap" type="hr.tvz.pios.modul.post.Post">
+  <resultMap id="postResultMap" type="hr.tvz.pios.modul.forum.Post">
     <id     property="id"          column="id" />
     <result property="title"       column="title" />
     <result property="content"     column="content" />
@@ -25,7 +25,7 @@
     where id = #{id}
   </select>
 
-  <insert id="insert" parameterType="hr.tvz.pios.modul.post.Post">
+  <insert id="insert" parameterType="hr.tvz.pios.modul.forum.Post">
     insert into POSTS (
       title,
       content
@@ -35,7 +35,7 @@
     )
   </insert>
 
-  <update id="updateById" parameterType="hr.tvz.pios.modul.post.Post">
+  <update id="updateById" parameterType="hr.tvz.pios.modul.forum.Post">
     update POSTS
     set id = #{id},
         title = #{title},

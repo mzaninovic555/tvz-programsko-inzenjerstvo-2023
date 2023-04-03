@@ -1,4 +1,4 @@
-package hr.tvz.pios.modul.post;
+package hr.tvz.pios.modul.forum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
