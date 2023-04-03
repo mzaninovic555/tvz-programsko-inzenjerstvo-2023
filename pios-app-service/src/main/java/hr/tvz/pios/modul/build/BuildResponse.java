@@ -14,7 +14,7 @@ public record BuildResponse(
     boolean isFinalized,
     List<Component> components,
     String ownerUsername) {
-  static BuildResponse fromBuild(Build build) {
+  public static BuildResponse fromBuild(Build build) {
     return new BuildResponse(
         build.getLink(),
         build.getTitle(),

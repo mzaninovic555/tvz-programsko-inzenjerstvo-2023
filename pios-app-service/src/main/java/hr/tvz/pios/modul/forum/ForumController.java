@@ -1,8 +1,11 @@
 package hr.tvz.pios.modul.forum;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,7 +19,12 @@ public class ForumController {
   ForumService forumService;
 
   @GetMapping
-  public ForumResponse getAll() {
-    return forumService.getAll();
+  public List<Post> getAll(@RequestParam String title) {
+    return forumService.getAll(title);
+  }
+
+  @GetMapping("/{id}")
+  public ForumResponse getById(@PathVariable Long id) {
+    return forumService.getById(id);
   }
 }

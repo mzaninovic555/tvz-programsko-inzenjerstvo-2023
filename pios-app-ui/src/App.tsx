@@ -15,6 +15,7 @@ import ComponentSearch from './views/component-search/ComponentSearch';
 import Activate from './views/activate/Activate';
 import BuildEditor from './views/builds/editor/BuildEditor';
 import Forum from './views/forum/Forum';
+import ForumEntry from './views/forum/ForumEntry';
 
 function App() {
   return (
@@ -35,7 +36,10 @@ function App() {
                 <Route path="/wishlist" element={<Wishlist/>}/>
                 <Route path="/settings" element={<UserSettings/>}/>
                 <Route path="/component-search" element={<ComponentSearch/>}/>
-                <Route path="/forum" element={<Forum />} />
+                <Route path="/forum">
+                  <Route index element={<Forum />} />
+                  <Route path=":forumId" element={<ForumEntry />} />
+                </Route>
                 <Route path="/" element={<Homepage/>}/>
                 <Route path="*" element={<Navigate to="/"/>}/>
               </Routes>

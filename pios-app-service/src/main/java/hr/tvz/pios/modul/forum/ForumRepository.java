@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ForumRepository {
 
-  List<Post> getAllPosts();
+  List<Post> getAllPosts(String title);
 
   Optional<Post> getById(Long id);
 

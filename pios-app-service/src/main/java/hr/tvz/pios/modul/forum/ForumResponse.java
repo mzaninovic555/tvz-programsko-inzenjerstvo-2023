@@ -1,8 +1,8 @@
 package hr.tvz.pios.modul.forum;
 
-import java.util.List;
+import hr.tvz.pios.modul.build.BuildResponse;
 
 /**
  * Record koji predstavlja HTTP response za dohvat liste postova na forumu.
  */
-public record ForumResponse(List<Post> posts) { }
+public record ForumResponse(Post post, BuildResponse build) { }
