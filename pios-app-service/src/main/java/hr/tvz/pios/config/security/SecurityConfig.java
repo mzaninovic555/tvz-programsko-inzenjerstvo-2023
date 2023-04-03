@@ -38,6 +38,7 @@ public class SecurityConfig {
     "/api/v1/build/edit/info",
     "/api/v1/build/edit/component",
     "/api/v1/manufacturer",
+    "/api/v1/forum",
   };
 
   private final PiosJwtDecoder piosJwtDecoder;
