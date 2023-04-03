@@ -48,7 +48,7 @@ const ComponentSelectDialog = (props: ComponentSelectDialogProps) => {
 
   return (
     <Dialog header={`Select a ${props.type}`} onHide={() => hide(false)} visible={props.visible} resizable={false}
-      draggable={false} className="w-7">
+      draggable={false} style={{width: '90vw'}}>
       <Messages ref={messages}/>
       <ComponentSearch modalMode type={props.type} onComponentSelected={onComponentSelected}/>
     </Dialog>
