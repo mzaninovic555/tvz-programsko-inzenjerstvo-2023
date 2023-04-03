@@ -100,7 +100,7 @@ const BuildEditor = () => {
     {!build.ownerUsername && !build.isFinalized &&
       <Message severity="warn" className="w-full mb-2"
         text="This build is not owned by any user, anyone with a link to it can edit it, finalize the build before sharing"/>}
-    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center">
+    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center flex-wrap">
       <span>Shareable link: {finalLink}</span>
       <Button className="ml-1" icon="pi pi-copy" onClick={copyLink}/>
     </div>}/>
@@ -152,7 +152,7 @@ const BuildEditor = () => {
     }
     return (<>
       {matching.map((x) => <div key={x.id} className="flex align-items-center">
-        <Image className="pios-image w-1 mr-1 inline-block" alt={x.name} preview
+        <Image className="pios-image w-3rem mr-1 inline-block" alt={x.name} preview
           src={x.imageBase64 ? `data:image/jpeg;base64,${x.imageBase64}` : `/unknown.jpg`}/>
         {x.name}
       </div>)}

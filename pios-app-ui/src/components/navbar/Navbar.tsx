@@ -9,6 +9,7 @@ import useAuthContext from '../../context/AuthContext';
 import useToastContext from '../../context/ToastContext';
 import {apiToToast} from '../../common/messages/messageHelper';
 import {logoutSuccessMessage} from '../../common/messages/LocalMessages';
+import logo from '../../../static/logo.svg';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -37,10 +38,12 @@ const Navbar = () => {
   });
 
   const header = (
-    <div className="flex justify-content-center flex-wrap">
-      {/* <Image src={image as string}/> */}
+    <div className="flex justify-content-center flex-wrap align-items-center">
+      <div className="w-4rem mr-2">
+        <img src={logo as string} width="100%"/>
+      </div>
       <div>
-        <h1 style={{cursor: 'pointer'}} onClick={() => navigate('/')}
+        <h1 style={{cursor: 'pointer', fontSize: 'xxx-large'}} onClick={() => navigate('/')}
           className="mt-0 mb-1 color-primary">{appName}</h1>
       </div>
     </div>
@@ -89,7 +92,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="container">
+    <div>
       <div className="card shadow-1 mb-3 p-menubar p-component flex-column border-noround-top">
         <div className="container">
           <div className="flex w-full justify-content-between align-items-center flex-wrap">
