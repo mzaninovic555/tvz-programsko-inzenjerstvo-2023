@@ -37,7 +37,7 @@ alter table BUILDS
 
 create table POSTS
 (
-  ID      SERIAL primary key,
+  ID      INTEGER primary key,
   TITLE   VARCHAR(100) not null,
   CONTENT TEXT
 );
