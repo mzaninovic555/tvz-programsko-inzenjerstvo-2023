@@ -23,7 +23,7 @@ public class ForumController {
     return forumService.getAll(title);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/id/{id}")
   public ForumResponse getById(@PathVariable Long id) {
     return forumService.getById(id);
   }

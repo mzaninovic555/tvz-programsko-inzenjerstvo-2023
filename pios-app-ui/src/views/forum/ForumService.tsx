@@ -9,6 +9,6 @@ export async function getForumPosts(search: string): Promise<Post[]> {
 }
 
 export async function getForumPostById(id: string | undefined): Promise<ForumResponse> {
-  const response = await api.get<ForumResponse>(`/v1/forum/${id}`);
+  const response = await api.get<ForumResponse>(`/v1/forum/id/${id}`);
   return response.data;
 }
