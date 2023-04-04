@@ -102,7 +102,7 @@ const BuildEditor = () => {
         text="This build is not owned by any user, anyone with a link to it can edit it, finalize the build before sharing"/>}
     <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center">
       <span>Shareable link: {finalLink}</span>
-      <Button className="ml-1" icon="pi pi-copy" onClick={copyLink}/>
+      <Button className="ml-3" icon="pi pi-copy" onClick={copyLink}/>
     </div>}/>
   </>);
 
@@ -162,7 +162,7 @@ const BuildEditor = () => {
   const totalPrice = build.components.map((x) => x.price).reduce((a, b) => a + b, 0);
 
   return (<>
-    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build}/>
+    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build} published={published}/>
     <ComponentSelectDialog visible={selectorType != undefined} onHide={onSelectHide} type={selectorType} build={build}/>
     {linkHeader}
     <Card className={classes.card}>
@@ -185,11 +185,11 @@ const BuildEditor = () => {
         </div>
       </div>
     </Card>
-    {/*tooltip="TODO, must be finalized b4 publish" tooltipOptions={{position: 'top', showOnDisabled: true}}*/}
     <div className="flex flex-row align-items-end my-2 justify-content-end">
       {!published && auth.authenticated && build.ownerUsername == auth.info?.username &&
-        <Button label="Publish (WIP)" icon="pi pi-upload" className="p-button-success mr-1"
-          disabled={published || !auth.authenticated || build.ownerUsername != auth.info?.username}/>}
+        <Button label="Publish" icon="pi pi-upload" className="p-button-success mr-1"
+          disabled={published || !auth.authenticated || build.ownerUsername != auth.info?.username || !auth.authenticated || !build.isPublic}
+          tooltip="Build has to be public" tooltipOptions={{position: 'top', showOnDisabled: true}}/>}
       <Button label="Edit Build Info" icon="pi pi-file-edit" onClick={() => setShowEdit(true)}
         disabled={!canEdit && (!auth.authenticated || build.ownerUsername != auth.info?.username)}/>
     </div>
