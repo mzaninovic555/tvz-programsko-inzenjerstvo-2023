@@ -85,10 +85,10 @@ const Forum = () => {
     {posts && posts.length > 0 &&
       <DataTable value={posts} paginator rows={10} selectionMode="single"
         onSelectionChange={(e) => navigateToBuild(e.value)}>
-        <Column sortable header="Title" field={'title'}></Column>
-        <Column header="Author" field={'authorUsername'}></Column>
-        <Column sortable header="Price" body={priceBodyTemplate}></Column>
-        <Column sortable header="Creation Date" body={createdAtBodyTemplate}></Column>
+        <Column sortable header="Title" field={'title'} />
+        <Column header="Author" field={'authorUsername'} />
+        <Column sortField={'totalPrice'} sortable header="Price" body={priceBodyTemplate} />
+        <Column sortField={'createdAt'} sortable header="Creation Date" body={createdAtBodyTemplate} />
       </DataTable>}
   </>);
 
