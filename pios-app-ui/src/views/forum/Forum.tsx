@@ -17,6 +17,7 @@ import {useDebounce} from 'primereact/hooks';
 import {clearedFilters} from '../../common/messages/LocalMessages';
 import {ConfirmDialog} from 'primereact/confirmdialog';
 import useAuthContext from '../../context/AuthContext';
+import {normalize} from '../../common/dateHelper';
 
 const Forum = () => {
   const [posts, setPosts] = useState<Post[]>();
@@ -91,7 +92,7 @@ const Forum = () => {
   };
 
   const priceBodyTemplate = (post: Post) => {
-    return <span>{`${post.totalPrice}€`}</span>;
+    return <span>{normalize(post.totalPrice || 0)}€</span>;
   };
 
   const createdAtBodyTemplate = (post: Post) => {

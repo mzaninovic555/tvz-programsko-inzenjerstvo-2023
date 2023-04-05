@@ -69,7 +69,7 @@ const ForumEntry = () => {
           <h4 style={{color: '#6366f1'}} className={'mb-0 mt-1'}>BUILD</h4>
           <h1 className={'mb-1 mt-0'}>{post?.title}</h1>
           <h3 className={'mb-2 mt-0'}>by {post?.authorUsername}</h3>
-          <h4 style={{color: '#6366f1'}} className={'mb-2 mt-1'}>Total price: {post?.totalPrice}€</h4>
+          <h4 style={{color: '#6366f1'}} className={'mb-2 mt-1'}>Total price: {normalize(post?.totalPrice || 0)}€</h4>
         </div>
 
         <div style={{wordWrap: 'break-word'}} className={'m-2 mt-4 border-solid border-1 border-round p-2 border-300 surface-200'}>
