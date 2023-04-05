@@ -1,12 +1,15 @@
-package hr.tvz.pios.modul.post;
+package hr.tvz.pios.modul.forum;
 
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-public interface PostRepository {
+public interface ForumRepository {
+
+  List<Post> getAllPosts(String title);
 
   Optional<Post> getById(Long id);
 

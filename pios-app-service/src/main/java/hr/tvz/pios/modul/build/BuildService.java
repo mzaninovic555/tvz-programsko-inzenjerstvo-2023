@@ -6,6 +6,7 @@ import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.security.user.UserAuthentication;
 import hr.tvz.pios.modul.component.Component;
 import hr.tvz.pios.modul.component.ComponentRepository;
+import hr.tvz.pios.modul.forum.ForumRepository;
 import hr.tvz.pios.modul.user.User;
 import hr.tvz.pios.modul.user.UserRepository;
 import java.util.List;
@@ -21,14 +22,16 @@ public class BuildService {
   private final BuildRepository buildRepository;
   private final ComponentRepository componentRepository;
   private final UserRepository userRepository;
+  private final ForumRepository forumRepository;
 
   public BuildService(
       BuildRepository buildRepository,
       ComponentRepository componentRepository,
-      UserRepository userRepository) {
+      UserRepository userRepository, ForumRepository forumRepository) {
     this.buildRepository = buildRepository;
     this.componentRepository = componentRepository;
     this.userRepository = userRepository;
+    this.forumRepository = forumRepository;
   }
 
   public List<BuildResponse> getUserBuilds(UserAuthentication auth) {
@@ -93,13 +96,24 @@ public class BuildService {
           Message.error("You do not have permission to delete this build"));
     }
 
-    buildRepository.deleteById(build.get().getId());
+    try {
+      buildRepository.deleteById(build.get().getId());
+    } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+      throw PiosException.badRequest(
+          Message.warn("You can't delete this build because it has a forum post associated to it. Delete the post first"));
+    }
 
     return new BasicResponse(Message.success("Build deleted successfully"));
   }
 
   public BuildChangeResponse editInfo(UserAuthentication auth, BuildInfoChangeRequest req) {
     Build build = validateRequest(auth, req.link());
+
+    // ak ocemo mijenjat je li public, i postoji forum post, baci exception
+    if (req.isPublic() != build.isPublic && forumRepository.getById(build.getId()).isPresent()) {
+      throw PiosException.badRequest(
+          Message.error("You can't change build to private while it's associated with a forum post"));
+    }
 
     build.setFinalized(req.isFinalized());
     if (build.getUser() != null) {

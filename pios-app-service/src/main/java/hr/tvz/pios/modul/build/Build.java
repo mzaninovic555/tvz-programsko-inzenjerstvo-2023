@@ -26,6 +26,8 @@ public class Build {
 
   boolean isFinalized = false;
 
+  Boolean isPublished;
+
   User user;
 
   List<Component> components;
