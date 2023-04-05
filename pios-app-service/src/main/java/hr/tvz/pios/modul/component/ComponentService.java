@@ -22,8 +22,13 @@ public class ComponentService {
 
   @Autowired UserRepository userRepository;
 
-  public List<ComponentSearchResponse> getAllFiltered(
-      UserAuthentication auth, String name, String type, String manufacturer, Integer minPrice, Integer maxPrice) {
+  public List<ComponentResponse> getAllFiltered(
+      UserAuthentication auth,
+      String name,
+      String type,
+      String manufacturer,
+      Integer minPrice,
+      Integer maxPrice) {
     Type componentType = type == null || type.isBlank() ? null : Type.valueOf(type);
     List<Component> components =
         componentRepository.getAllFiltered(name, componentType, manufacturer, minPrice, maxPrice);
@@ -31,7 +36,7 @@ public class ComponentService {
     List<Long> reviewed = getReviewedByUser(auth);
     components.forEach(comp -> comp.setReviewed(reviewed.contains(comp.getId())));
 
-    return components.stream().map(ComponentSearchResponse::new).toList();
+    return components.stream().map(ComponentResponse::fromComponent).toList();
   }
 
   private List<Long> getReviewedByUser(UserAuthentication auth) {
@@ -47,7 +52,7 @@ public class ComponentService {
     return reviewRepository.getAllReviewedComponentsByUser(user.get().getId());
   }
 
-  public ComponentSearchResponse getById(UserAuthentication auth, Long id) {
+  public ComponentResponse getById(UserAuthentication auth, Long id) {
     Optional<Component> componentOptional = componentRepository.getById(id);
     if (componentOptional.isEmpty()) {
       throw PiosException.notFound(Message.error("Component not found"));
@@ -56,6 +61,10 @@ public class ComponentService {
     List<Long> reviewed = getReviewedByUser(auth);
     componentOptional.get().setReviewed(reviewed.contains(componentOptional.get().getId()));
 
-    return new ComponentSearchResponse(componentOptional.get());
+    return componentOptional.map(ComponentResponse::fromComponent).get();
+  }
+
+  public List<ComponentResponse> getTopRatedComponents() {
+    return componentRepository.getTopRated().stream().map(ComponentResponse::fromComponent).toList();
   }
 }
