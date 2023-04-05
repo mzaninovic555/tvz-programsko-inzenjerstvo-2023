@@ -35,8 +35,6 @@ const BuildEditor = () => {
   const messages = useRef<Messages>(null);
 
   const canEdit = build?.isFinalized ? false : build?.ownerUsername ? build?.ownerUsername == auth.info?.username : true;
-  // TODO implement
-  const published = false;
 
   const buildLink = params.buildLink || '';
   if (!buildLink) {
@@ -162,7 +160,7 @@ const BuildEditor = () => {
   const totalPrice = build.components.map((x) => x.price).reduce((a, b) => a + b, 0);
 
   return (<>
-    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build} published={published}/>
+    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build} published={build.isPublished}/>
     <ComponentSelectDialog visible={selectorType != undefined} onHide={onSelectHide} type={selectorType} build={build}/>
     {linkHeader}
     <Card className={classes.card}>
@@ -186,9 +184,9 @@ const BuildEditor = () => {
       </div>
     </Card>
     <div className="flex flex-row align-items-end my-2 justify-content-end">
-      {!published && auth.authenticated && build.ownerUsername == auth.info?.username &&
+      {!build.isPublished && auth.authenticated && build.ownerUsername == auth.info?.username &&
         <Button label="Publish" icon="pi pi-upload" className="p-button-success mr-1"
-          disabled={published || !auth.authenticated || build.ownerUsername != auth.info?.username || !auth.authenticated || !build.isPublic}
+          disabled={build.isPublished || !auth.authenticated || build.ownerUsername != auth.info?.username || !auth.authenticated || !build.isPublic}
           tooltip="Build has to be public" tooltipOptions={{position: 'top', showOnDisabled: true}}/>}
       <Button label="Edit Build Info" icon="pi pi-file-edit" onClick={() => setShowEdit(true)}
         disabled={!canEdit && (!auth.authenticated || build.ownerUsername != auth.info?.username)}/>

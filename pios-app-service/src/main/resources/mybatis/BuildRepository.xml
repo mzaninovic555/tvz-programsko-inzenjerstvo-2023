@@ -7,7 +7,8 @@
     <result property="description"      column="description" />
     <result property="link"             column="link" />
     <result property="isPublic"         column="is_public" />
-    <result property="isFinalized"        column="is_finalized" />
+    <result property="isFinalized"      column="is_finalized" />
+    <result property="isPublished"      column="is_published" />
     <association property="user" javaType="hr.tvz.pios.modul.user.User"
                  resultMap="hr.tvz.pios.modul.user.UserRepository.userResultMap"
                  columnPrefix="u_" />
@@ -24,7 +25,15 @@
     ${alias}link               ${columnPrefix}link,
     ${alias}is_public          ${columnPrefix}is_public,
     ${alias}is_finalized       ${columnPrefix}is_finalized,
-    ${alias}user_id            ${columnPrefix}user_id
+    ${alias}user_id            ${columnPrefix}user_id,
+    (
+      select
+        case
+          when count(*) = 0 then 0 else 1
+        end
+      from builds b2 join posts p2 on b2.id = p2.id
+      where b.id = b2.id
+    ) ${columnPrefix} is_published
   </sql>
 
   <!-- SELECT -->

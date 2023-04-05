@@ -8,6 +8,7 @@ interface BuildResponse {
   isFinalized: boolean;
   components: Component[];
   ownerUsername?: string;
+  isPublished: boolean;
 }
 
 export default BuildResponse;

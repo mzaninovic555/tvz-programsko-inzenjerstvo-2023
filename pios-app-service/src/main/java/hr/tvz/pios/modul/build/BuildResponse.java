@@ -10,8 +10,9 @@ public record BuildResponse(
     String link,
     String title,
     String description,
-    boolean isPublic,
-    boolean isFinalized,
+    Boolean isPublic,
+    Boolean isFinalized,
+    Boolean isPublished,
     List<Component> components,
     String ownerUsername) {
   public static BuildResponse fromBuild(Build build) {
@@ -21,6 +22,7 @@ public record BuildResponse(
         build.getDescription(),
         build.isPublic(),
         build.isFinalized(),
+        build.getIsPublished(),
         build.getComponents(),
         build.getUser() == null ? null : build.getUser().getUsername());
   }
