@@ -22,6 +22,6 @@ export async function createForumPost(request: ForumPostCreateRequest): Promise<
 }
 
 export async function deleteForumPost(id: number): Promise<BasicResponse> {
-  const response = await api.get<BasicResponse>(`/v1/forum/delete/${id}`);
+  const response = await api.post<BasicResponse>(`/v1/forum/delete/${id}`);
   return response.data;
 }

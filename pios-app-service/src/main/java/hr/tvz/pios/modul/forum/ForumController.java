@@ -38,7 +38,7 @@ public class ForumController {
     return forumService.createForumPost(auth, request);
   }
 
-  @GetMapping("/delete/{id}")
+  @PostMapping("/delete/{id}")
   public BasicResponse deleteForumPost(UserAuthentication auth, @PathVariable Long id) {
     return forumService.deletePost(auth, id);
   }
