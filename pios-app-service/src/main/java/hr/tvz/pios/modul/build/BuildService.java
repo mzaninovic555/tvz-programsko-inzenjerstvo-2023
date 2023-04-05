@@ -99,8 +99,8 @@ public class BuildService {
     try {
       buildRepository.deleteById(build.get().getId());
     } catch (org.springframework.dao.DataIntegrityViolationException ex) {
-      throw PiosException.badRequest(Message.warn(
-          "You can't delete this build because it has a forum post associated to it. Delete the post first"));
+      throw PiosException.badRequest(
+          Message.warn("You can't delete this build because it has a forum post associated to it. Delete the post first"));
     }
 
     return new BasicResponse(Message.success("Build deleted successfully"));
@@ -111,7 +111,8 @@ public class BuildService {
 
     // ak ocemo mijenjat je li public, i postoji forum post, baci exception
     if (req.isPublic() != build.isPublic && forumRepository.getById(build.getId()).isPresent()) {
-      throw PiosException.badRequest(Message.error("You can't change build to private while it's associated with a forum post"));
+      throw PiosException.badRequest(
+          Message.error("You can't change build to private while it's associated with a forum post"));
     }
 
     build.setFinalized(req.isFinalized());
