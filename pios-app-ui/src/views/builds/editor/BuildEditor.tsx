@@ -19,9 +19,9 @@ import {Column} from 'primereact/column';
 import Type from '../../component-search/Type';
 import ComponentSelectDialog from './ComponentSelectDialog';
 import {Image} from 'primereact/image';
-import Component from '~/views/component-search/Component';
 import {normalize} from '../../../common/dateHelper';
 import {Messages} from 'primereact/messages';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 const BuildEditor = () => {
   const params = useParams();
@@ -117,7 +117,7 @@ const BuildEditor = () => {
     );
   };
 
-  const removeComponent = (component: Component) => {
+  const removeComponent = (component: ComponentResponse) => {
     changeBuildComponent({
       add: false,
       componentId: component.id,
