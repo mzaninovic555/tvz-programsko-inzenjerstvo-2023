@@ -1,6 +1,7 @@
 import Component from '~/views/component-search/Component';
 
 interface BuildResponse {
+  id: string;
   link: string;
   title?: string;
   description?: string;

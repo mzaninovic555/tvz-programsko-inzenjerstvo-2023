@@ -7,6 +7,7 @@ import java.util.List;
  * Rekord za slanje buildova kod dohvaćanja.
  */
 public record BuildResponse(
+    Long id,
     String link,
     String title,
     String description,
@@ -17,6 +18,7 @@ public record BuildResponse(
     String ownerUsername) {
   public static BuildResponse fromBuild(Build build) {
     return new BuildResponse(
+        build.getId(),
         build.getLink(),
         build.getTitle(),
         build.getDescription(),

@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.forum;
 
+import hr.tvz.pios.common.exception.BasicResponse;
 import hr.tvz.pios.config.security.user.UserAuthentication;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,10 @@ public class ForumController {
   public ForumPostCreateResponse createForumPost(UserAuthentication auth,
       @RequestBody ForumPostCreateRequest request) {
     return forumService.createForumPost(auth, request);
+  }
+
+  @GetMapping("/delete/{id}")
+  public BasicResponse deleteForumPost(UserAuthentication auth, @PathVariable Long id) {
+    return forumService.deletePost(auth, id);
   }
 }

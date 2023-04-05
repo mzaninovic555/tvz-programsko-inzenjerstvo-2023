@@ -96,7 +96,12 @@ public class BuildService {
           Message.error("You do not have permission to delete this build"));
     }
 
-    buildRepository.deleteById(build.get().getId());
+    try {
+      buildRepository.deleteById(build.get().getId());
+    } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+      throw PiosException.badRequest(
+        Message.warn("You can't delete this build because it has a forum post associated to it. Delete the post first"));
+    }
 
     return new BasicResponse(Message.success("Build deleted successfully"));
   }

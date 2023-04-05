@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {Card} from 'primereact/card';
-import {getForumPosts} from '../../views/forum/ForumService';
+import {deleteForumPost, getForumPosts} from '../../views/forum/ForumService';
 import {AxiosError} from 'axios';
 import BasicResponse from '../../common/messages/BasicResponse';
 import {apiToToast, showMessagesWithoutReference} from '../../common/messages/messageHelper';
@@ -12,16 +12,19 @@ import Post from '~/views/forum/Post';
 import {useNavigate} from 'react-router-dom';
 import useToastContext from '../../context/ToastContext';
 import {InputText} from 'primereact/inputtext';
-import {Dropdown} from 'primereact/dropdown';
 import {Button} from 'primereact/button';
 import {useDebounce} from 'primereact/hooks';
 import {clearedFilters} from '../../common/messages/LocalMessages';
+import {ConfirmDialog} from 'primereact/confirmdialog';
+import useAuthContext from '../../context/AuthContext';
 
 const Forum = () => {
   const [posts, setPosts] = useState<Post[]>();
   const [forumTitleSearch, debouncedForumTitleSearch, setForumTitleSearch] =
       useDebounce('', 500) as [string, string, React.Dispatch<React.SetStateAction<string | undefined>>];
+  const [forumToDelete, setForumToDelete] = useState<Post>();
 
+  const auth = useAuthContext();
   const {toast} = useToastContext();
   const navigate = useNavigate();
   const messages = useRef<Messages>(null);
@@ -66,6 +69,28 @@ const Forum = () => {
     </>;
   };
 
+  const actionsTemplate = (post: Post) => {
+    console.debug(`${auth.auth.info?.username}    ${post.authorUsername}    ${auth.auth.info?.username != post.authorUsername}`)
+    if (auth.auth.info?.username != post.authorUsername) {
+      return <span></span>;
+    }
+    return (<div>
+      <Button onClick={() => deleteForumClick(post)} icon="pi pi-trash" className="ml-1 p-button-danger"/>
+    </div>);
+  };
+
+  const deleteForumClick = (obj: Post) => {
+    setForumToDelete(obj);
+  };
+
+  const deleteForumConfirm = () => {
+    deleteForumPost(forumToDelete!.id).then((res) => {
+      toast.current?.show(res.messages.map(apiToToast));
+      setPosts((prev) => prev?.filter((b) => b.id != forumToDelete?.id));
+      setForumToDelete(undefined);
+    }).catch(handleRequestFailure);
+  };
+
   const priceBodyTemplate = (post: Post) => {
     return <span>{`${post.totalPrice}€`}</span>;
   };
@@ -89,14 +114,20 @@ const Forum = () => {
         <Column header="Author" field={'authorUsername'} />
         <Column sortField={'totalPrice'} sortable header="Price" body={priceBodyTemplate} />
         <Column sortField={'createdAt'} sortable header="Creation Date" body={createdAtBodyTemplate} />
+        <Column body={actionsTemplate} />
       </DataTable>}
   </>);
 
-  return (
+  return (<>
     <Card title="Forum posts">
       {body}
     </Card>
-  );
+    <ConfirmDialog header="Delete post?" message="Are you sure you want to delete this post?"
+      acceptIcon="pi pi-trash"
+      reject={() => setForumToDelete(undefined)} acceptLabel="Yes"
+      visible={forumToDelete != undefined}
+      accept={deleteForumConfirm} acceptClassName="p-button-danger"/>
+  </>);
 };
 
 export default Forum;
