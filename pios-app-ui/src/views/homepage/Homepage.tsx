@@ -1,14 +1,34 @@
-import React from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Button} from 'primereact/button';
+import React, {useEffect, useState} from 'react';
+import BuildResponse from '~/views/builds/service/BuildResponse';
+import {getTopRatedBuilds} from './HomepageService';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
+import TopComponents from './TopComponents';
 
 const Homepage = () => {
-  const navigate = useNavigate();
+  const [topBuilds, setTopBuilds] = useState<BuildResponse[]>();
+  const [topComponents, setTopComponents] = useState<ComponentResponse[]>();
+
+  useEffect(() => {
+    void fetchTopComponents();
+    void fetchTopBuilds();
+  }, []);
+
+  const fetchTopComponents = async () => {
+    const res = await getTopRatedBuilds().catch(console.error);
+    if (!res) {
+      return;
+    }
+    setTopComponents(res);
+  };
+
+  const fetchTopBuilds = async () => {
+    setTopComponents([]);
+  };
+
   return (
-    <div>
-      <p>Homepage!</p>
-      <Button label="Go to /test" onClick={() => navigate('/test')}/>
-    </div>
+    <>
+      <TopComponents components={topComponents}/>
+    </>
   );
 };
 
