@@ -15,6 +15,11 @@ export const menuItems: MenuItem[] = [
     label: 'Component Search',
     icon: 'pi pi-search',
     url: '/component-search'
+  },
+  {
+    label: 'Forums',
+    icon: 'pi pi-book',
+    url: '/forum'
   }
 ];
 
