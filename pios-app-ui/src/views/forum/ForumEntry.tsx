@@ -10,7 +10,8 @@ import {Column} from 'primereact/column';
 import Type from '../../views/component-search/Type';
 import {normalize} from '../../common/dateHelper';
 import Spinner from '../../components/Spinner';
-import {Image} from "primereact/image";
+import {Image} from 'primereact/image';
+import ReactMarkdown from 'react-markdown';
 
 const ForumEntry = () => {
   const [componentDefs] = useState(Object.values(Type).map((x) => ({type: x})));
@@ -42,7 +43,7 @@ const ForumEntry = () => {
   const selectTemplate = (obj: {type: string}) => {
     const matching = build!.components.filter((comp) => comp.type == obj.type);
     if (matching.length == 0) {
-      return <span>No Component Selected</span>
+      return <span>No Component Selected</span>;
     }
     return (<>
       {matching.map((x) => <div key={x.id} className="flex align-items-center">
@@ -71,9 +72,11 @@ const ForumEntry = () => {
           <h4 style={{color: '#6366f1'}} className={'mb-2 mt-1'}>Total price: {post?.totalPrice}€</h4>
         </div>
 
-        <div className={'m-2 mt-4 border-solid border-1 border-round p-2 border-300 surface-200'}>
+        <div style={{wordWrap: 'break-word'}} className={'m-2 mt-4 border-solid border-1 border-round p-2 border-300 surface-200'}>
           <h4 style={{color: '#6366f1'}} className={'mb-0 mt-1'}>Description</h4>
-          <p style={{wordWrap: 'break-word'}} className={'mt-2'}>{post?.content !== '' ? post?.content : '-'}</p>
+          <ReactMarkdown>
+            {post.content}
+          </ReactMarkdown>
         </div>
       </Card>
       <div>
