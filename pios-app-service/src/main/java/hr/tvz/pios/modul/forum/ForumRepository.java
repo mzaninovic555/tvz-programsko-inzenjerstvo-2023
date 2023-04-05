@@ -18,4 +18,6 @@ public interface ForumRepository {
   Integer updateById(Post post);
 
   Integer deleteById(Long id);
+
+  List<Post> getLatestsPosts(Integer count);
 }

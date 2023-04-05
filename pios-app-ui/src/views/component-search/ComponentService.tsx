@@ -1,9 +1,9 @@
 import api from '../../common/api';
-import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
 import ManufacturerResponse from '~/views/component-search/ManufacturerResponse';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 export async function getComponents(componentSearch: string, priceRange: number[], componentType?: string, manufacturerSearch?: string)
-    : Promise<ComponentSearchResponse[]> {
+    : Promise<ComponentResponse[]> {
   const url = new URLSearchParams();
   url.set('name', componentSearch);
   url.set('type', componentType ?? '');
@@ -11,12 +11,12 @@ export async function getComponents(componentSearch: string, priceRange: number[
   url.set('minPrice', String(priceRange[0]));
   url.set('maxPrice', String(priceRange[1]));
 
-  const response = await api.get<ComponentSearchResponse[]>(`/v1/component?${url.toString()}`);
+  const response = await api.get<ComponentResponse[]>(`/v1/component?${url.toString()}`);
   return response.data;
 }
 
-export async function getComponentById(id: number): Promise<ComponentSearchResponse> {
-  const response = await api.get<ComponentSearchResponse>(`/v1/component/${id}`);
+export async function getComponentById(id: number): Promise<ComponentResponse> {
+  const response = await api.get<ComponentResponse>(`/v1/component/${id}`);
   return response.data;
 }
 

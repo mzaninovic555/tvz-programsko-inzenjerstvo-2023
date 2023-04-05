@@ -1,8 +1,8 @@
-import Component from '~/views/component-search/Component';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 interface WishlistEntry {
   id: number;
-  component: Component;
+  component: ComponentResponse;
   addedAt: Date;
 }
 

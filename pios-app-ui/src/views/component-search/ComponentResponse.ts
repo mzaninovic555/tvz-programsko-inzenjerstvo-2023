@@ -1,17 +1,17 @@
 import Manufacturer from '~/views/component-search/Manufacturer';
 import Type from '~/views/component-search/Type';
 
-interface Component {
+interface ComponentResponse {
   id: number;
+  imageBase64: string;
+  manufacturer: Manufacturer;
   name: string;
   price: number;
-  type: Type;
-  data: string;
-  imageBase64: string | undefined;
-  manufacturer: Manufacturer;
-  rating?: number;
+  rating: number;
   reviewCount: number;
   reviewed?: boolean;
+  type: Type;
 }
 
-export default Component;
+export default ComponentResponse;
+

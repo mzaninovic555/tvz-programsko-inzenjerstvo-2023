@@ -19,10 +19,10 @@ import {Column} from 'primereact/column';
 import Type from '../../component-search/Type';
 import ComponentSelectDialog from './ComponentSelectDialog';
 import {Image} from 'primereact/image';
-import Component from '~/views/component-search/Component';
 import {normalize} from '../../../common/dateHelper';
 import {Messages} from 'primereact/messages';
 import ForumCreateDialog from '../../../views/forum/ForumCreateDialog';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 const BuildEditor = () => {
   const params = useParams();
@@ -104,7 +104,7 @@ const BuildEditor = () => {
     {!build.ownerUsername && !build.isFinalized &&
       <Message severity="warn" className="w-full mb-2"
         text="This build is not owned by any user, anyone with a link to it can edit it, finalize the build before sharing"/>}
-    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center">
+    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center flex-wrap">
       <span>Shareable link: {finalLink}</span>
       <Button className="ml-3" icon="pi pi-copy" onClick={copyLink}/>
     </div>}/>
@@ -121,7 +121,7 @@ const BuildEditor = () => {
     );
   };
 
-  const removeComponent = (component: Component) => {
+  const removeComponent = (component: ComponentResponse) => {
     changeBuildComponent({
       add: false,
       componentId: component.id,
@@ -156,7 +156,7 @@ const BuildEditor = () => {
     }
     return (<>
       {matching.map((x) => <div key={x.id} className="flex align-items-center">
-        <Image className="pios-image w-1 mr-1 inline-block" alt={x.name} preview
+        <Image className="pios-image w-3rem mr-1 inline-block" alt={x.name} preview
           src={x.imageBase64 ? `data:image/jpeg;base64,${x.imageBase64}` : `/unknown.jpg`}/>
         {x.name}
       </div>)}

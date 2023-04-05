@@ -1,6 +1,6 @@
 package hr.tvz.pios.modul.build;
 
-import hr.tvz.pios.modul.component.Component;
+import hr.tvz.pios.modul.component.ComponentResponse;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ public record BuildResponse(
     Boolean isPublic,
     Boolean isFinalized,
     Boolean isPublished,
-    List<Component> components,
+    List<ComponentResponse> components,
     String ownerUsername) {
   public static BuildResponse fromBuild(Build build) {
     return new BuildResponse(
@@ -25,7 +25,7 @@ public record BuildResponse(
         build.isPublic(),
         build.isFinalized(),
         build.getIsPublished(),
-        build.getComponents(),
+        build.getComponents().stream().map(ComponentResponse::fromComponent).toList(),
         build.getUser() == null ? null : build.getUser().getUsername());
   }
 }

@@ -106,7 +106,7 @@ const BuildEditDialog = (props: BuildEditDialog) => {
   };
 
   return (<Dialog header="Edit Build Info" onHide={() => hide(false)} visible={props.visible} resizable={false}
-    draggable={false} className="w-7" footer={footer}>
+    draggable={false} style={{width: '90vw'}} footer={footer}>
     <Messages ref={messages}/>
     <form id="edit-build-form" onSubmit={onFormSubmit}>
       <FormInputText name="Title" value={titleInput.value} onChange={(v) => dispatchTitle({type: 'change', value: v})}

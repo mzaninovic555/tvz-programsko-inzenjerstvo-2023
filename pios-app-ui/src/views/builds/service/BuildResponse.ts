@@ -1,4 +1,4 @@
-import Component from '~/views/component-search/Component';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 interface BuildResponse {
   id: string;
@@ -7,7 +7,7 @@ interface BuildResponse {
   description?: string;
   isPublic: boolean;
   isFinalized: boolean;
-  components: Component[];
+  components: ComponentResponse[];
   ownerUsername?: string;
   isPublished: boolean;
 }
