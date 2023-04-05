@@ -74,9 +74,11 @@ const ForumEntry = () => {
 
         <div style={{wordWrap: 'break-word'}} className={'m-2 mt-4 border-solid border-1 border-round p-2 border-300 surface-200'}>
           <h4 style={{color: '#6366f1'}} className={'mb-0 mt-1'}>Description</h4>
+          {(!post.content || post.content === '') && <p>N/A</p>}
+          {post.content && post.content !== '' &&
           <ReactMarkdown>
             {post.content}
-          </ReactMarkdown>
+          </ReactMarkdown>}
         </div>
       </Card>
       <div>
