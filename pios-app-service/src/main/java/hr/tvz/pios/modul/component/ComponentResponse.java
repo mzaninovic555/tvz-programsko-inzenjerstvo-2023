@@ -5,7 +5,7 @@ import hr.tvz.pios.modul.manufacturer.Manufacturer;
 import java.math.BigDecimal;
 
 /**
- * Rekord za slanje odgovora kod dohvata komponenata
+ * Rekord za slanje odgovora kod dohvata komponenata.
  */
 public record ComponentResponse(
     Long id,
