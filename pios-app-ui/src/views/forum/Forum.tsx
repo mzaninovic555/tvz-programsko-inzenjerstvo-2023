@@ -70,7 +70,6 @@ const Forum = () => {
   };
 
   const actionsTemplate = (post: Post) => {
-    console.debug(`${auth.auth.info?.username}    ${post.authorUsername}    ${auth.auth.info?.username != post.authorUsername}`)
     if (auth.auth.info?.username != post.authorUsername) {
       return <span></span>;
     }
