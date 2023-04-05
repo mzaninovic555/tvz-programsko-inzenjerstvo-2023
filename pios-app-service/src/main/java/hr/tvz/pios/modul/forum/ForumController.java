@@ -32,6 +32,14 @@ public class ForumController {
     return forumService.getById(id);
   }
 
+  @GetMapping("/latest")
+  public List<Post> getLatestPosts(@RequestParam Integer count) {
+    if (count == null) {
+      count = 5;
+    }
+    return forumService.getLatestPosts(count);
+  }
+
   @PostMapping("/create")
   public ForumPostCreateResponse createForumPost(UserAuthentication auth,
       @RequestBody ForumPostCreateRequest request) {

@@ -40,6 +40,7 @@ public class SecurityConfig {
     "/api/v1/build/edit/component",
     "/api/v1/manufacturer",
     "/api/v1/forum",
+    "/api/v1/forum/latest",
     "/api/v1/forum/id/**",
   };
 

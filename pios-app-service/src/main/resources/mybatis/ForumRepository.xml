@@ -39,6 +39,24 @@
     group by p.id, u.username
   </select>
 
+  <select id="getLatestsPosts" resultMap="postResultMap">
+    select
+    <include refid="postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value=""/>
+    </include>, u.username author_username
+    from posts p
+    join builds b on p.id = b.id
+    left join builds_components bc on b.id = bc.build_id
+    left join components c on c.id = bc.component_id
+    join users u on b.user_id = u.id
+    group by p.id, u.username
+    order by p.created_at desc
+    <if test="count != null">
+      limit #{count}
+    </if>
+  </select>
+
   <select id="getById" resultMap="postResultMap">
     select
     <include refid="postResultMapColumns">

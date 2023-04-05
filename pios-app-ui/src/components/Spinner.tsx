@@ -13,7 +13,7 @@ const Spinner = (props: SpinnerProps) => {
       <div className="text-center">
         {!props.error && <h2 className="p-component">{props.text}</h2>}
         {props.error && <h2 className="p-component p-error">{props.error}</h2>}
-        {!props.error && <ProgressSpinner/>}
+        <ProgressSpinner/>
       </div>
     </div>
   );

@@ -42,7 +42,8 @@ public class ForumService {
     return new ForumResponse(postOptional.get(), BuildResponse.fromBuild(buildOptional.get()));
   }
 
-  public ForumPostCreateResponse createForumPost(UserAuthentication auth, ForumPostCreateRequest request) {
+  public ForumPostCreateResponse createForumPost(
+      UserAuthentication auth, ForumPostCreateRequest request) {
     Optional<Build> postBuildOptional = buildRepository.getById(request.id());
     Optional<User> userOptional = userRepository.getByUsername(auth.getUsername());
 
@@ -53,15 +54,18 @@ public class ForumService {
 
     // build mora biti public za kreiranje posta
     if (!build.isPublic()) {
-      throw PiosException.badRequest(Message.error("Build has to be public for creating a forum post"));
+      throw PiosException.badRequest(
+          Message.error("Build has to be public for creating a forum post"));
     }
 
     if (userOptional.isPresent() && !build.getUser().getId().equals(userOptional.get().getId())) {
-      throw PiosException.forbidden(Message.error("You don't have permission to post the selected build"));
+      throw PiosException.forbidden(
+          Message.error("You don't have permission to post the selected build"));
     }
 
     if (forumRepository.getById(build.getId()).isPresent()) {
-      throw PiosException.conflict(Message.error("A post associated with that build already exists"));
+      throw PiosException.conflict(
+          Message.error("A post associated with that build already exists"));
     }
 
     // id-evi posta i builda na koji se veze su jednaki
@@ -82,10 +86,16 @@ public class ForumService {
       throw PiosException.notFound(Message.error("Forum post doesn't exist"));
     }
     if (!optionalPost.get().getAuthorUsername().equals(auth.getUsername())) {
-      throw PiosException.notFound(Message.error("You don't have the authroization to delete this post"));
+      throw PiosException.notFound(
+          Message.error("You don't have the authroization to delete this post"));
     }
 
     forumRepository.deleteById(id);
-    return new BasicResponse(Message.success("Successfuly deleted post: " + optionalPost.get().getTitle()));
+    return new BasicResponse(
+        Message.success("Successfuly deleted post: " + optionalPost.get().getTitle()));
+  }
+
+  public List<Post> getLatestPosts(Integer count) {
+    return forumRepository.getLatestsPosts(count);
   }
 }

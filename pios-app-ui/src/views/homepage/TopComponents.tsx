@@ -8,6 +8,7 @@ import {Chip} from 'primereact/chip';
 
 interface TopComponentsResponse {
   components?: ComponentResponse[];
+  error?: string;
 }
 
 const TopComponents = (props: TopComponentsResponse) => {
@@ -35,19 +36,17 @@ const TopComponents = (props: TopComponentsResponse) => {
   ];
 
   if (!props.components) {
-    return (<Spinner height="unset" text="Loading top components..."/>);
+    return (<Spinner height="unset" text="Loading top components..." error={props.error}/>);
   }
 
   const header = (<h1 className="text-center color-primary">Top rated components</h1>);
 
   const template = (item: ComponentResponse) => {
-    console.debug(item);
-
     const max = 5;
 
     return (
-      <Card style={{marginLeft: '0.575rem'}}>
-        <h2 style={{marginTop: 0}}>{item.name}</h2>
+      <Card style={{marginLeft: '0.2rem', marginRight: '0.2rem', marginBottom: '10px'}}>
+        <h2 style={{marginTop: 0, height: '2rem'}}>{item.name}</h2>
         <img style={{height: '300px', width: '100%', objectFit: 'contain'}} alt={item.name}
           className="pios-image shadow-2 block xl:block mx-auto border-round"
           src={item.imageBase64 ? `data:image/jpeg;base64,${item.imageBase64}` : `/unknown.jpg`}/>
