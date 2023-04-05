@@ -52,9 +52,9 @@
       <property name="columnPrefix" value="c_"/>
     </include>
     from BUILDS b
-      join users u on u.id = b.user_id
-      join builds_components bc on b.id = bc.build_id
-      join components c on bc.component_id = c.id
+      left join users u on u.id = b.user_id
+      left join builds_components bc on b.id = bc.build_id
+      left join components c on bc.component_id = c.id
     where b.id = #{id}
   </select>
 

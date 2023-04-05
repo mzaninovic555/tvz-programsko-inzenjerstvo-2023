@@ -28,8 +28,8 @@
     </include>, u.username author_username
     from posts p
       join builds b on p.id = b.id
-      join builds_components bc on b.id = bc.build_id
-      join components c on c.id = bc.component_id
+      left join builds_components bc on b.id = bc.build_id
+      left join components c on c.id = bc.component_id
       join users u on b.user_id = u.id
     <where>
       <if test="title != null and title != ''">
@@ -47,8 +47,8 @@
     </include>, u.username author_username
     from posts p
       join builds b on p.id = b.id
-      join builds_components bc on b.id = bc.build_id
-      join components c on c.id = bc.component_id
+      left join builds_components bc on b.id = bc.build_id
+      left join components c on c.id = bc.component_id
       join users u on b.user_id = u.id
     where p.id = #{id}
     group by p.id, u.username
@@ -61,7 +61,7 @@
       content,
       created_at
     ) values (
-      #{id}
+      #{id},
       #{title},
       #{content},
       #{createdAt}

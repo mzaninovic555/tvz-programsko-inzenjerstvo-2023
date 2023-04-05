@@ -1,6 +1,7 @@
 package hr.tvz.pios.modul.forum;
 
 import hr.tvz.pios.common.Message;
+import hr.tvz.pios.common.exception.BasicResponse;
 import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.security.user.UserAuthentication;
 import hr.tvz.pios.modul.build.Build;
@@ -73,5 +74,18 @@ public class ForumService {
     forumRepository.insert(post);
 
     return new ForumPostCreateResponse(post.id, Message.success("Successfully created forum post"));
+  }
+
+  public BasicResponse deletePost(UserAuthentication auth, Long id) {
+    Optional<Post> optionalPost = forumRepository.getById(id);
+    if (optionalPost.isEmpty()) {
+      throw PiosException.notFound(Message.error("Forum post doesn't exist"));
+    }
+    if (!optionalPost.get().getAuthorUsername().equals(auth.getUsername())) {
+      throw PiosException.notFound(Message.error("You don't have the authroization to delete this post"));
+    }
+
+    forumRepository.deleteById(id);
+    return new BasicResponse(Message.success("Successfuly deleted post: " + optionalPost.get().getTitle()));
   }
 }
