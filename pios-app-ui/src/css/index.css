@@ -7,8 +7,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-image: url('../../static/logo-big-opaque-225.png');
-  background-repeat: no-repeat;
-  background-size: 100%;
+  background-repeat: repeat-y;
+  background-position: top;
 }
 
 code {
