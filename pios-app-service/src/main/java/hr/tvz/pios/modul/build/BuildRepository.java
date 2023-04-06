@@ -18,8 +18,6 @@ public interface BuildRepository {
 
   void insert(Build build);
 
-  void insertBuildComponent(Long buildId, Long componentId);
-
   Integer updateById(Build build);
 
   void deleteById(Long id);
