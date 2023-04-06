@@ -35,9 +35,10 @@ public class BuildControllerTest {
   User user = User.builder().username("johndoe").role(Role.builder().role("ROLE_USER").build()).build();
 
   final String link = "0c74b16c-6f8e-418b-9001-4119777b7906";
+  final String link2 = "9566720e-1901-4b6d-8a3c-1c8a65231ae6";
 
   BuildInfoChangeRequest buildInfoChangeRequest = new BuildInfoChangeRequest(link, "titula", "description", true, true);
-  BuildComponentChangeRequest buildComponentChangeRequest = new BuildComponentChangeRequest(link, 1L, true);
+  BuildComponentChangeRequest buildComponentChangeRequest = new BuildComponentChangeRequest(link2, 1L, true);
 
   @Test
   void getBuildByLink() throws Exception {
@@ -71,7 +72,7 @@ public class BuildControllerTest {
   @Transactional
   void removeBuild() throws Exception {
     this.mockMvc.perform(
-        post("/api/v1/build/delete/" + link)
+        post("/api/v1/build/delete/" + link2)
           .header("authorization", "Bearer " + jwtService.createJwtToken(user))
           .contentType(MediaType.APPLICATION_JSON))
       .andExpect(status().isOk());
