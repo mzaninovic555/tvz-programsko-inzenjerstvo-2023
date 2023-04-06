@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="hr.tvz.pios.modul.forum.ForumRepository">
+  <resultMap id="postResultMap" type="hr.tvz.pios.modul.forum.Post">
+    <id     property="id"                 column="id" />
+    <result property="title"              column="title" />
+    <result property="content"            column="content" />
+    <result property="createdAt"          column="created_at" />
+    <result property="authorUsername"     column="author_username" />
+    <result property="totalPrice"         column="total_price" />
+  </resultMap>
+
+  <!-- SQL -->
+  <sql id="postResultMapColumns">
+    ${alias}id               ${columnPrefix}id,
+    ${alias}title            ${columnPrefix}title,
+    ${alias}content          ${columnPrefix}content,
+    ${alias}created_at       ${columnPrefix}created_at,
+    sum(c.price)             ${columnPrefix}total_price
+  </sql>
+
+  <!-- SELECT -->
+  <select id="getAllPosts" resultMap="postResultMap">
+    select
+    <include refid="postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value=""/>
+    </include>, u.username author_username
+    from posts p
+      join builds b on p.id = b.id
+      left join builds_components bc on b.id = bc.build_id
+      left join components c on c.id = bc.component_id
+      join users u on b.user_id = u.id
+    <where>
+      <if test="title != null and title != ''">
+        and lower(p.title) like concat('%', lower(#{title}), '%')
+      </if>
+    </where>
+    group by p.id, u.username
+  </select>
+
+  <select id="getLatestsPosts" resultMap="postResultMap">
+    select
+    <include refid="postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value=""/>
+    </include>, u.username author_username
+    from posts p
+    join builds b on p.id = b.id
+    left join builds_components bc on b.id = bc.build_id
+    left join components c on c.id = bc.component_id
+    join users u on b.user_id = u.id
+    group by p.id, u.username
+    order by p.created_at desc
+    <if test="count != null">
+      limit #{count}
+    </if>
+  </select>
+
+  <select id="getById" resultMap="postResultMap">
+    select
+    <include refid="postResultMapColumns">
+      <property name="alias" value="p."/>
+      <property name="columnPrefix" value=""/>
+    </include>, u.username author_username
+    from posts p
+      join builds b on p.id = b.id
+      left join builds_components bc on b.id = bc.build_id
+      left join components c on c.id = bc.component_id
+      join users u on b.user_id = u.id
+    where p.id = #{id}
+    group by p.id, u.username
+  </select>
+
+  <insert id="insert" parameterType="hr.tvz.pios.modul.forum.Post">
+    insert into POSTS (
+      id,
+      title,
+      content,
+      created_at
+    ) values (
+      #{id},
+      #{title},
+      #{content},
+      #{createdAt}
+    )
+  </insert>
+
+  <update id="updateById" parameterType="hr.tvz.pios.modul.forum.Post">
+    update POSTS
+    set id = #{id},
+        title = #{title},
+        content = #{content}
+    where id = #{id}
+  </update>
+
+  <delete id="deleteById">
+    delete from POSTS
+    where id = #{id}
+  </delete>
+</mapper>

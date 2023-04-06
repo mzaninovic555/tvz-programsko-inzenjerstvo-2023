@@ -1,27 +1,31 @@
 package hr.tvz.pios.modul.build;
 
-import hr.tvz.pios.modul.component.Component;
+import hr.tvz.pios.modul.component.ComponentResponse;
 import java.util.List;
 
 /**
  * Rekord za slanje buildova kod dohvaćanja.
  */
 public record BuildResponse(
+    Long id,
     String link,
     String title,
     String description,
-    boolean isPublic,
-    boolean isFinalized,
-    List<Component> components,
+    Boolean isPublic,
+    Boolean isFinalized,
+    Boolean isPublished,
+    List<ComponentResponse> components,
     String ownerUsername) {
-  static BuildResponse fromBuild(Build build) {
+  public static BuildResponse fromBuild(Build build) {
     return new BuildResponse(
+        build.getId(),
         build.getLink(),
         build.getTitle(),
         build.getDescription(),
         build.isPublic(),
         build.isFinalized(),
-        build.getComponents(),
+        build.getIsPublished(),
+        build.getComponents().stream().map(ComponentResponse::fromComponent).toList(),
         build.getUser() == null ? null : build.getUser().getUsername());
   }
 }

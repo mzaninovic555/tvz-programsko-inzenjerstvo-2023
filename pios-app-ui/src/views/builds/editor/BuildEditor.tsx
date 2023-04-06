@@ -19,9 +19,10 @@ import {Column} from 'primereact/column';
 import Type from '../../component-search/Type';
 import ComponentSelectDialog from './ComponentSelectDialog';
 import {Image} from 'primereact/image';
-import Component from '~/views/component-search/Component';
 import {normalize} from '../../../common/dateHelper';
 import {Messages} from 'primereact/messages';
+import ForumCreateDialog from '../../../views/forum/ForumCreateDialog';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 const BuildEditor = () => {
   const params = useParams();
@@ -29,14 +30,13 @@ const BuildEditor = () => {
   const [componentDefs] = useState(Object.values(Type).map((x) => ({type: x})));
   const [selectorType, setSelectorType] = useState<Type>();
   const [showEdit, setShowEdit] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
   const [loadError, setLoadError] = useState<string>();
   const {auth} = useAuthContext();
   const {toast} = useToastContext();
   const messages = useRef<Messages>(null);
 
   const canEdit = build?.isFinalized ? false : build?.ownerUsername ? build?.ownerUsername == auth.info?.username : true;
-  // TODO implement
-  const published = false;
 
   const buildLink = params.buildLink || '';
   if (!buildLink) {
@@ -88,6 +88,10 @@ const BuildEditor = () => {
     setSelectorType(undefined);
   };
 
+  const onForumDialogHide = () => {
+    setShowCreate(false);
+  };
+
   const finalLink = `${window.location.origin}/builds/${build.link}`;
 
   const copyLink = () => {
@@ -100,9 +104,9 @@ const BuildEditor = () => {
     {!build.ownerUsername && !build.isFinalized &&
       <Message severity="warn" className="w-full mb-2"
         text="This build is not owned by any user, anyone with a link to it can edit it, finalize the build before sharing"/>}
-    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center">
+    <Message severity="info" className="w-full mb-2" text={<div className="flex align-items-center flex-wrap">
       <span>Shareable link: {finalLink}</span>
-      <Button className="ml-1" icon="pi pi-copy" onClick={copyLink}/>
+      <Button className="ml-3" icon="pi pi-copy" onClick={copyLink}/>
     </div>}/>
   </>);
 
@@ -117,7 +121,7 @@ const BuildEditor = () => {
     );
   };
 
-  const removeComponent = (component: Component) => {
+  const removeComponent = (component: ComponentResponse) => {
     changeBuildComponent({
       add: false,
       componentId: component.id,
@@ -152,7 +156,7 @@ const BuildEditor = () => {
     }
     return (<>
       {matching.map((x) => <div key={x.id} className="flex align-items-center">
-        <Image className="pios-image w-1 mr-1 inline-block" alt={x.name} preview
+        <Image className="pios-image w-3rem mr-1 inline-block" alt={x.name} preview
           src={x.imageBase64 ? `data:image/jpeg;base64,${x.imageBase64}` : `/unknown.jpg`}/>
         {x.name}
       </div>)}
@@ -162,7 +166,8 @@ const BuildEditor = () => {
   const totalPrice = build.components.map((x) => x.price).reduce((a, b) => a + b, 0);
 
   return (<>
-    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build}/>
+    <BuildEditDialog visible={showEdit} onHide={onDialogHide} build={build} published={build.isPublished}/>
+    <ForumCreateDialog build={build} onHide={onForumDialogHide} visible={showCreate} />
     <ComponentSelectDialog visible={selectorType != undefined} onHide={onSelectHide} type={selectorType} build={build}/>
     {linkHeader}
     <Card className={classes.card}>
@@ -179,17 +184,17 @@ const BuildEditor = () => {
           <h3>Public</h3>
           <span>{build.isPublic ? 'Yes' : 'No'}</span>
         </div>
-        <div className="col-12">
+        <div style={{wordWrap: 'break-word'}} className="col-12">
           <h3>Description</h3>
           <span>{build.description || 'N/A'}</span>
         </div>
       </div>
     </Card>
-    {/*tooltip="TODO, must be finalized b4 publish" tooltipOptions={{position: 'top', showOnDisabled: true}}*/}
     <div className="flex flex-row align-items-end my-2 justify-content-end">
-      {!published && auth.authenticated && build.ownerUsername == auth.info?.username &&
-        <Button label="Publish (WIP)" icon="pi pi-upload" className="p-button-success mr-1"
-          disabled={published || !auth.authenticated || build.ownerUsername != auth.info?.username}/>}
+      {!build.isPublished && auth.authenticated && build.ownerUsername == auth.info?.username &&
+        <Button label="Publish" icon="pi pi-upload" className="p-button-success mr-1" onClick={() => setShowCreate(true)}
+          disabled={build.isPublished || !auth.authenticated || build.ownerUsername != auth.info?.username || !auth.authenticated || !build.isPublic}
+          tooltip="Build has to be public" tooltipOptions={{position: 'top', showOnDisabled: true}}/>}
       <Button label="Edit Build Info" icon="pi pi-file-edit" onClick={() => setShowEdit(true)}
         disabled={!canEdit && (!auth.authenticated || build.ownerUsername != auth.info?.username)}/>
     </div>

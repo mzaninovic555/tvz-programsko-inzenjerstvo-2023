@@ -33,11 +33,15 @@ public class SecurityConfig {
     "/api/v1/register",
     "/api/v1/activate",
     "/api/v1/component",
+    "/api/v1/component/top-rated",
     "/api/v1/build/create",
     "/api/v1/build/from-link/**",
     "/api/v1/build/edit/info",
     "/api/v1/build/edit/component",
     "/api/v1/manufacturer",
+    "/api/v1/forum",
+    "/api/v1/forum/latest",
+    "/api/v1/forum/id/**",
   };
 
   private final PiosJwtDecoder piosJwtDecoder;

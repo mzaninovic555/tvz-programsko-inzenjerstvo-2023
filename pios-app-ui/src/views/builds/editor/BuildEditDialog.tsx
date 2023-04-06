@@ -18,6 +18,7 @@ interface BuildEditDialog {
   build: BuildResponse;
   onHide: (changed: boolean, newBuild?: BuildResponse) => void;
   visible: boolean;
+  published: boolean;
 }
 
 const BuildEditDialog = (props: BuildEditDialog) => {
@@ -105,7 +106,7 @@ const BuildEditDialog = (props: BuildEditDialog) => {
   };
 
   return (<Dialog header="Edit Build Info" onHide={() => hide(false)} visible={props.visible} resizable={false}
-    draggable={false} className="w-7" footer={footer}>
+    draggable={false} style={{width: '90vw'}} footer={footer}>
     <Messages ref={messages}/>
     <form id="edit-build-form" onSubmit={onFormSubmit}>
       <FormInputText name="Title" value={titleInput.value} onChange={(v) => dispatchTitle({type: 'change', value: v})}
@@ -122,7 +123,9 @@ const BuildEditDialog = (props: BuildEditDialog) => {
         {props.build.ownerUsername && <>
           <label htmlFor="isPublic" className="block font-bold">Public</label>
           <InputSwitch readOnly={!auth.authenticated} inputId="isPublic" checked={isPublic}
-            onChange={(e) => setIsPublic(Boolean(e.value))}/>
+            tooltip="Build can't be changed to private if a forum post is associated to it"
+            tooltipOptions={{position: 'bottom', showOnDisabled: true}}
+            onChange={(e) => setIsPublic(Boolean(e.value))} disabled={props.published}/>
           <br/>
           <small className="p-info">When a build is marked as public anyone can see it, but only you can edit it</small>
         </>}

@@ -17,21 +17,20 @@ import Type from '../../views/component-search/Type';
 import {Slider} from 'primereact/slider';
 import {Tag} from 'primereact/tag';
 import ComponentTemplate from './ComponentTemplate';
-import ComponentSearchResponse from '~/views/component-search/ComponentSearchResponse';
 import {useSearchParams} from 'react-router-dom';
-import Component from '~/views/component-search/Component';
 import ManufacturerResponse from '~/views/component-search/ManufacturerResponse';
 import useToastContext from '../../context/ToastContext';
 import {clearedFilters} from '../../common/messages/LocalMessages';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 interface ComponentSearchProps {
   type?: Type;
   modalMode?: boolean;
-  onComponentSelected?: (component: Component) => void;
+  onComponentSelected?: (component: ComponentResponse) => void;
 }
 
 const ComponentSearch = (props: ComponentSearchProps) => {
-  const [components, setComponents] = useState<ComponentSearchResponse[]>([]);
+  const [components, setComponents] = useState<ComponentResponse[]>([]);
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [manufacturers, setManufacturers] = useState<ManufacturerResponse[]>([]);
   const [params] = useSearchParams();
@@ -56,10 +55,12 @@ const ComponentSearch = (props: ComponentSearchProps) => {
   const [sortOrder, setSortOrder] = useState<0 | 1 | -1 | null | undefined>(0);
   const [sortField, setSortField] = useState<string>();
   const sortOptions = [
-    {label: 'Price High to Low', value: '!component.price'},
-    {label: 'Price Low to High', value: 'component.price'},
-    {label: 'Name A-Z', value: 'component.name'},
-    {label: 'Name Z-A', value: '!component.name'},
+    {label: 'Price High to Low', value: '!price'},
+    {label: 'Price Low to High', value: 'price'},
+    {label: 'Rating High to Low', value: '!rating'},
+    {label: 'Rating Low to High', value: 'rating'},
+    {label: 'Name A-Z', value: 'name'},
+    {label: 'Name Z-A', value: '!name'},
   ];
 
   useEffect(() => {
@@ -180,23 +181,23 @@ const ComponentSearch = (props: ComponentSearchProps) => {
     </>;
   };
 
-  const template = (product: ComponentSearchResponse) => {
+  const template = (product: ComponentResponse) => {
     const disabledText = !auth.auth.authenticated ? 'You need to log in to wishlist items' :
-      wishlist.includes(product.component.id) ? 'Item is already wishlisted' : undefined;
+      wishlist.includes(product.id) ? 'Item is already wishlisted' : undefined;
     const wishlistButton = (
       <>
         <Button icon="pi pi-plus" label="Wishlist" disabled={!!disabledText} tooltip={disabledText}
-          tooltipOptions={{position: 'top', showOnDisabled: true}} onClick={() => addToWishlist(product.component.id)}/>
+          tooltipOptions={{position: 'top', showOnDisabled: true}} onClick={() => addToWishlist(product.id)}/>
       </>
     );
-    return <ComponentTemplate component={product.component} button={wishlistButton}/>;
+    return <ComponentTemplate component={product} button={wishlistButton}/>;
   };
 
-  const modalTemplate = (product: ComponentSearchResponse) => {
+  const modalTemplate = (product: ComponentResponse) => {
     const button = (
-      <Button icon="pi pi-plus" label="Select" onClick={() => props.onComponentSelected?.(product.component)}/>
+      <Button icon="pi pi-plus" label="Select" onClick={() => props.onComponentSelected?.(product)}/>
     );
-    return <ComponentTemplate component={product.component} button={button} hideReviews/>;
+    return <ComponentTemplate component={product} button={button} hideReviews/>;
   };
 
   const body = (<>

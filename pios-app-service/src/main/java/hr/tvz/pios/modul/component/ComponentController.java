@@ -20,7 +20,7 @@ public class ComponentController {
   ComponentService componentService;
 
   @GetMapping
-  public List<ComponentSearchResponse> getComponents(
+  public List<ComponentResponse> getComponents(
       UserAuthentication auth,
       @RequestParam String name,
       @RequestParam String type,
@@ -31,7 +31,12 @@ public class ComponentController {
   }
 
   @GetMapping("/{id}")
-  public ComponentSearchResponse getById(UserAuthentication auth, @PathVariable Long id) {
+  public ComponentResponse getById(UserAuthentication auth, @PathVariable Long id) {
     return componentService.getById(auth, id);
+  }
+
+  @GetMapping("/top-rated")
+  public List<ComponentResponse> getTopRatedComponents() {
+    return componentService.getTopRatedComponents();
   }
 }

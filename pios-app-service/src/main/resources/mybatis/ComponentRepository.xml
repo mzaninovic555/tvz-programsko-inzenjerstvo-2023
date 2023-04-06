@@ -97,6 +97,35 @@
     where c.type = #{type}
   </select>
 
+  <select id="getTopRated" resultMap="componentResultMap">
+    select
+    <include refid="componentResultMapColumns">
+      <property name="alias" value="c."/>
+      <property name="columnPrefix" value=""/>
+    </include>,
+    <include refid="hr.tvz.pios.modul.manufacturer.ManufacturerRepository.ManufacturerResultMapColumns">
+      <property name="alias" value="m."/>
+      <property name="columnPrefix" value="m_"/>
+    </include>
+    from COMPONENTS c
+         join MANUFACTURERS m on c.manufacturer_id = m.id
+         left join REVIEWS r on r.id = r.component_id
+    group by c.id, m.id
+--     me and the boys doing some basic sorting in sql 😎
+    order by case when (
+      select count(*)
+        from REVIEWS r2
+       where r2.component_id = c.id
+    ) = 0 then 1 else 0 end asc,
+    (
+      select round(avg(r.rating), 1)
+        from COMPONENTS c2
+             left join REVIEWS r on c.id = r.component_id
+       where c2.id = c.id group by c2.id
+    ) desc
+    limit 6
+  </select>
+
   <insert id="insert" parameterType="hr.tvz.pios.modul.component.Component">
     insert into COMPONENTS (
       name,

@@ -1,4 +1,3 @@
-import Component from '~/views/component-search/Component';
 import {Rating, RatingChangeEvent} from 'primereact/rating';
 import React, {useEffect, useState} from 'react';
 import {Image} from 'primereact/image';
@@ -10,9 +9,10 @@ import BasicResponse from '~/common/messages/BasicResponse';
 import useToastContext from '../../context/ToastContext';
 import {apiToToast} from '../../common/messages/messageHelper';
 import {normalize} from '../../common/dateHelper';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 interface ComponentTemplateProps {
-  component: Component;
+  component: ComponentResponse;
   button: JSX.Element;
   additionalData?: JSX.Element | JSX.Element[];
   hideReviews?: boolean;
@@ -22,7 +22,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
   const product = props.component;
   const [rating, setRating] = useState(product.rating);
   const [ratingRounded, setRatingRounded] =
-    useState(product.rating == undefined ? undefined : Math.round(product.rating));
+    useState(Math.round(product.rating));
   const [isReviewed, setIsReviewed] = useState(product.reviewed);
   const [reviewCount, setReviewCount] = useState(product.reviewCount);
   const {auth} = useAuthContext();
@@ -37,7 +37,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
   }, [product]);
 
   useEffect(() => {
-    setRatingRounded(rating == undefined ? undefined : Math.round(rating));
+    setRatingRounded(Math.round(rating));
   }, [rating]);
 
   const readOnly = !auth.authenticated;
@@ -97,7 +97,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
               <Rating className="mr-2" value={ratingRounded} onChange={setRatingIntercept} disabled={readOnly} max={max}
                 tooltip={readOnly ? 'You need to log in to review components' : ''} cancel={auth.authenticated && isReviewed}
                 tooltipOptions={{position: 'top', showOnDisabled: true}}/>
-              <span>{rating == undefined ? '' : `${rating}/${max}`} ({reviewCount || 0} review{reviewCount == 1 ? '' : 's'})</span>
+              <span>{`${rating}/${max}`} ({reviewCount} review{reviewCount == 1 ? '' : 's'})</span>
             </div>}
             <div className="flex">
               <Chip label={product.manufacturer.name} className="mr-2"/>

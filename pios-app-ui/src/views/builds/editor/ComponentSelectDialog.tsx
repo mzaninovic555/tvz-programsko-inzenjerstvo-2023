@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import {Dialog} from 'primereact/dialog';
-import Component from '~/views/component-search/Component';
 import Type from '../../../views/component-search/Type';
 import ComponentSearch from '../../../views/component-search/ComponentSearch';
 import {changeBuildComponent} from '../service/BuildService';
@@ -10,6 +9,7 @@ import {apiToToast, showMessagesWithoutReference} from '../../../common/messages
 import {Messages} from 'primereact/messages';
 import {AxiosError} from 'axios/index';
 import BasicResponse from '~/common/messages/BasicResponse';
+import ComponentResponse from '~/views/component-search/ComponentResponse';
 
 interface ComponentSelectDialogProps {
   build: BuildResponse;
@@ -31,7 +31,7 @@ const ComponentSelectDialog = (props: ComponentSelectDialogProps) => {
     showMessagesWithoutReference(msgs, messages);
   };
 
-  const onComponentSelected = (component: Component) => {
+  const onComponentSelected = (component: ComponentResponse) => {
     changeBuildComponent({
       link: props.build.link,
       componentId: component.id,
@@ -48,7 +48,7 @@ const ComponentSelectDialog = (props: ComponentSelectDialogProps) => {
 
   return (
     <Dialog header={`Select a ${props.type}`} onHide={() => hide(false)} visible={props.visible} resizable={false}
-      draggable={false} className="w-7">
+      draggable={false} style={{width: '90vw'}}>
       <Messages ref={messages}/>
       <ComponentSearch modalMode type={props.type} onComponentSelected={onComponentSelected}/>
     </Dialog>
