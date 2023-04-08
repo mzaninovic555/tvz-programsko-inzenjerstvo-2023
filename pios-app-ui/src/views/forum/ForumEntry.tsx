@@ -12,6 +12,7 @@ import {normalize} from '../../common/dateHelper';
 import Spinner from '../../components/Spinner';
 import {Image} from 'primereact/image';
 import ReactMarkdown from 'react-markdown';
+import {Message} from "primereact/message";
 
 const ForumEntry = () => {
   const [componentDefs] = useState(Object.values(Type).map((x) => ({type: x})));
@@ -69,7 +70,11 @@ const ForumEntry = () => {
           <h4 style={{color: '#6366f1'}} className={'mb-0 mt-1'}>BUILD</h4>
           <h1 className={'mb-1 mt-0'}>{post?.title}</h1>
           <h3 className={'mb-2 mt-0'}>by {post?.authorUsername}</h3>
-          <h4 style={{color: '#6366f1'}} className={'mb-2 mt-1'}>Total price: {normalize(post?.totalPrice || 0)}€</h4>
+          <h4 style={{color: '#6366f1'}} className={'mb-3 mt-1'}>Total price: {normalize(post?.totalPrice || 0)}€</h4>
+          {(!build.compatibilityMessages || build.compatibilityMessages.length == 0) &&
+              <Message className="w-30 mb-2" severity="success" text="This build is fully compatible" />}
+          {build.compatibilityMessages && build.compatibilityMessages.length > 0 &&
+              <Message className="w-30 mb-2" severity="warn" text="This build has compatibility issues" />}
         </div>
 
         <div style={{wordWrap: 'break-word'}} className={'m-2 mt-4 border-solid border-1 border-round p-2 border-300 surface-200'}>

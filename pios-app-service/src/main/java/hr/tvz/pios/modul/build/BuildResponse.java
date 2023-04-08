@@ -1,5 +1,6 @@
 package hr.tvz.pios.modul.build;
 
+import hr.tvz.pios.common.Message;
 import hr.tvz.pios.modul.component.ComponentResponse;
 import java.util.List;
 
@@ -15,8 +16,9 @@ public record BuildResponse(
     Boolean isFinalized,
     Boolean isPublished,
     List<ComponentResponse> components,
-    String ownerUsername) {
-  public static BuildResponse fromBuild(Build build) {
+    String ownerUsername,
+    Message[] compatibilityMessages) {
+  public static BuildResponse fromBuild(Build build, Message[] compatibilityMessages) {
     return new BuildResponse(
         build.getId(),
         build.getLink(),
@@ -26,6 +28,7 @@ public record BuildResponse(
         build.isFinalized(),
         build.getIsPublished(),
         build.getComponents().stream().map(ComponentResponse::fromComponent).toList(),
-        build.getUser() == null ? null : build.getUser().getUsername());
+        build.getUser() == null ? null : build.getUser().getUsername(),
+        compatibilityMessages);
   }
 }

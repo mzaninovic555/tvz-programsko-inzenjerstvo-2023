@@ -16,7 +16,8 @@ public record ComponentResponse(
     Double rating,
     Integer reviewCount,
     Boolean reviewed,
-    Type type) {
+    Type type,
+    String data) {
   public static ComponentResponse fromComponent(Component component) {
     return new ComponentResponse(
         component.getId(),
@@ -27,6 +28,7 @@ public record ComponentResponse(
         component.getRating() == null ? 0 : component.getRating(),
         component.getReviewCount() == null ? 0 : component.getReviewCount(),
         component.getReviewed(),
-        component.getType());
+        component.getType(),
+        component.getData());
   }
 }

@@ -1,0 +1,19 @@
+-- roles
+INSERT INTO ROLES (ROLE) VALUES ('ROLE_ADMIN');
+INSERT INTO ROLES VALUES (2, 'ROLE_USER');
+
+-- users
+INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, DESCRIPTION, ROLE_ID, IS_ACTIVATED, ACCOUNT_TYPE)
+VALUES ('johndoe', '$2a$12$6s6NEUm6/lmrtKABILwgy.B2xd9vw0YA.LxmbWbHrzdpIuIDqgToK', 'johndoe@example.com', 'Hi, I am John Doe!', 2, true, 'LOCAL');
+
+INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, DESCRIPTION, ROLE_ID, IS_ACTIVATED, ACCOUNT_TYPE)
+VALUES ('janedoe', '$2a$12$/RmB4px02j3F1kIsa1kSI.64iFEE6VHkZ5yQaer/WQhLV61yflnGq', 'janedoe@example.com', 'Hi, I am Jane Doe!', 1, true, 'LOCAL');
+
+INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, DESCRIPTION, ROLE_ID, IS_ACTIVATED, ACCOUNT_TYPE)
+VALUES ('bobsmith', '$2a$12$/RmB4px02j3F1kIsa1kSI.64iFEE6VHkZ5yQaer/WQhLV61yflnGq', 'bobsmith@example.com', 'Hi, I am Bob Smith!', 1, true, 'LOCAL');
+
+INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, DESCRIPTION, ROLE_ID, IS_ACTIVATED, ACCOUNT_TYPE)
+VALUES ('alicejohnson', '$2a$12$/RmB4px02j3F1kIsa1kSI.64iFEE6VHkZ5yQaer/WQhLV61yflnGq', 'alicejohnson@example.com', 'Hi, I am Alice Johnson!', 1, true, 'LOCAL');
+
+INSERT INTO USERS (USERNAME, PASSWORD, EMAIL, DESCRIPTION, ROLE_ID, IS_ACTIVATED, ACCOUNT_TYPE)
+VALUES ('jimmychoo', '$2a$12$/RmB4px02j3F1kIsa1kSI.64iFEE6VHkZ5yQaer/WQhLV61yflnGq', 'jimmychoo@example.com', 'Hi, I am Jimmy Choo!', 1, true, 'LOCAL');

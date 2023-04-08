@@ -3,6 +3,7 @@ import Spinner from '../../components/Spinner';
 import {DataTable} from 'primereact/datatable';
 import {Column} from 'primereact/column';
 import Post from '~/views/forum/Post';
+import './Homepage.css';
 import {normalize} from '../../common/dateHelper';
 import {useNavigate} from 'react-router-dom';
 
@@ -18,7 +19,7 @@ const LatestPosts = (props: LatestBuildsProps) => {
     return (<Spinner height="unset" text="Loading recent posts..." error={props.error}/>);
   }
 
-  const header = (<h1 className="text-center color-primary">Latest posts</h1>);
+  const header = (<h1 className="text-center text-0 strikethrough">Latest posts</h1>);
 
   const createdAtBodyTemplate = (post: Post) => (<span>{new Date(post.createdAt).toLocaleString()}</span>);
   const priceBodyTemplate = (post: Post) => (<span>{normalize(post.totalPrice || 0)}€</span>);

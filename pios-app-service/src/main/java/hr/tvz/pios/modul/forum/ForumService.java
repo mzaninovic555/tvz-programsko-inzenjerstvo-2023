@@ -7,6 +7,7 @@ import hr.tvz.pios.config.security.user.UserAuthentication;
 import hr.tvz.pios.modul.build.Build;
 import hr.tvz.pios.modul.build.BuildRepository;
 import hr.tvz.pios.modul.build.BuildResponse;
+import hr.tvz.pios.modul.build.BuildService;
 import hr.tvz.pios.modul.user.User;
 import hr.tvz.pios.modul.user.UserRepository;
 import java.time.LocalDateTime;
@@ -27,6 +28,8 @@ public class ForumService {
   BuildRepository buildRepository;
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  BuildService buildService;
 
 
   public List<Post> getAll(String title) {
@@ -39,7 +42,11 @@ public class ForumService {
     if (postOptional.isEmpty() || buildOptional.isEmpty()) {
       throw PiosException.notFound(Message.error("Requested forum post not found"));
     }
-    return new ForumResponse(postOptional.get(), BuildResponse.fromBuild(buildOptional.get()));
+    return new ForumResponse(
+        postOptional.get(),
+        BuildResponse.fromBuild(
+            buildOptional.get(),
+            buildService.checkComponentsCompatibility(buildOptional.get().getComponents())));
   }
 
   public ForumPostCreateResponse createForumPost(

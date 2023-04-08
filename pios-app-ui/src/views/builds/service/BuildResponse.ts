@@ -1,4 +1,5 @@
 import ComponentResponse from '~/views/component-search/ComponentResponse';
+import Message from '~/common/messages/Message';
 
 interface BuildResponse {
   id: string;
@@ -10,6 +11,7 @@ interface BuildResponse {
   components: ComponentResponse[];
   ownerUsername?: string;
   isPublished: boolean;
+  compatibilityMessages: Message[];
 }
 
 export default BuildResponse;

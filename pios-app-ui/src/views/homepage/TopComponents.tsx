@@ -5,6 +5,7 @@ import ComponentResponse from '~/views/component-search/ComponentResponse';
 import {Card} from 'primereact/card';
 import {Rating} from 'primereact/rating';
 import {Chip} from 'primereact/chip';
+import './Homepage.css';
 
 interface TopComponentsResponse {
   components?: ComponentResponse[];
@@ -39,14 +40,14 @@ const TopComponents = (props: TopComponentsResponse) => {
     return (<Spinner height="unset" text="Loading top components..." error={props.error}/>);
   }
 
-  const header = (<h1 className="text-center color-primary">Top rated components</h1>);
+  const header = (<h1 className="text-center text-0 strikethrough">Top rated components</h1>);
 
   const template = (item: ComponentResponse) => {
     const max = 5;
 
     return (
       <Card style={{marginLeft: '0.2rem', marginRight: '0.2rem', marginBottom: '10px'}}>
-        <h2 style={{marginTop: 0, height: '2rem'}}>{item.name}</h2>
+        <h2 style={{marginTop: 0, height: '2rem', marginBottom: 50}}>{item.name}</h2>
         <img style={{height: '300px', width: '100%', objectFit: 'contain'}} alt={item.name}
           className="pios-image shadow-2 block xl:block mx-auto border-round"
           src={item.imageBase64 ? `data:image/jpeg;base64,${item.imageBase64}` : `/unknown.jpg`}/>

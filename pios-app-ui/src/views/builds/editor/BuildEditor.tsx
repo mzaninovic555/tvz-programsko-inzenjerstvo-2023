@@ -110,6 +110,19 @@ const BuildEditor = () => {
     </div>}/>
   </>);
 
+  const compatibilityMessagesToList = (
+    <div>
+      {build.compatibilityMessages.map((message) => <li key={message.content}>{message.content}</li>)}
+    </div>
+  );
+
+  const compatibilityHeader = (<>
+    {(!build.compatibilityMessages || build.compatibilityMessages.length == 0) &&
+      <Message severity="success" className="w-full mb-2" text="No detected compatibility issues"/>}
+    {build.compatibilityMessages && build.compatibilityMessages.length > 0 &&
+        <Message severity="error" className="w-full mb-2" content={compatibilityMessagesToList}/>}
+  </>);
+
   const typeTemplate = (obj: {type: string}) => {
     return <Link className="pios-link" to={'/component-search?type=' + obj.type}>{obj.type}</Link>;
   };
@@ -170,6 +183,7 @@ const BuildEditor = () => {
     <ForumCreateDialog build={build} onHide={onForumDialogHide} visible={showCreate} />
     <ComponentSelectDialog visible={selectorType != undefined} onHide={onSelectHide} type={selectorType} build={build}/>
     {linkHeader}
+    {compatibilityHeader}
     <Card className={classes.card}>
       <div className="flex flex-wrap">
         <div className="col-4">

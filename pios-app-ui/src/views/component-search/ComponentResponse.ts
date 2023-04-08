@@ -11,6 +11,7 @@ interface ComponentResponse {
   reviewCount: number;
   reviewed?: boolean;
   type: Type;
+  data: string;
 }
 
 export default ComponentResponse;

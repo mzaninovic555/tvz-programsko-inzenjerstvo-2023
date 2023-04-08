@@ -1,17 +1,24 @@
 package hr.tvz.pios.modul.build;
 
 import hr.tvz.pios.common.Message;
+import hr.tvz.pios.common.Type;
 import hr.tvz.pios.common.exception.BasicResponse;
 import hr.tvz.pios.common.exception.PiosException;
 import hr.tvz.pios.config.security.user.UserAuthentication;
+import hr.tvz.pios.modul.build.compatibility.CompatibilityError;
+import hr.tvz.pios.modul.build.compatibility.CompatibilityService;
 import hr.tvz.pios.modul.component.Component;
 import hr.tvz.pios.modul.component.ComponentRepository;
 import hr.tvz.pios.modul.forum.ForumRepository;
 import hr.tvz.pios.modul.user.User;
 import hr.tvz.pios.modul.user.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,7 +48,7 @@ public class BuildService {
     }
 
     return buildRepository.getByUserId(user.get().getId()).stream()
-        .map(BuildResponse::fromBuild)
+        .map(build -> BuildResponse.fromBuild(build, new Message[]{}))
         .toList();
   }
 
@@ -76,7 +83,8 @@ public class BuildService {
       throw PiosException.forbidden(Message.error("You do not have permission to view this build"));
     }
 
-    return BuildResponse.fromBuild(build.get());
+    return BuildResponse.fromBuild(
+        build.get(), checkComponentsCompatibility(build.get().getComponents()));
   }
 
   public BasicResponse removeBuild(UserAuthentication auth, String link) {
@@ -125,7 +133,8 @@ public class BuildService {
     buildRepository.updateById(build);
 
     return new BuildChangeResponse(
-        BuildResponse.fromBuild(build), Message.success("Build info updated successfully"));
+        BuildResponse.fromBuild(build, checkComponentsCompatibility(build.getComponents())),
+        Message.success("Build info updated successfully"));
   }
 
   public BuildChangeResponse editComponent(
@@ -158,7 +167,9 @@ public class BuildService {
             + (req.add() ? "added" : "removed")
             + " successfully";
 
-    return new BuildChangeResponse(BuildResponse.fromBuild(newBuild), Message.success(message));
+    return new BuildChangeResponse(
+        BuildResponse.fromBuild(newBuild, checkComponentsCompatibility(newBuild.getComponents())),
+        Message.success(message));
   }
 
   public Build validateRequest(UserAuthentication auth, String link) {
@@ -185,4 +196,67 @@ public class BuildService {
 
     return build.get();
   }
+
+  /**
+   * Provjerava komponente za predefinirane probleme u kompatibilnosti.
+   * @param components lista komponenti
+   * @return lista poruka sa kompatibilnim problemima
+   */
+  // CHECKSTYLE:OFF
+  public Message[] checkComponentsCompatibility(List<Component> components) {
+    List<Message> messages = new ArrayList<>();
+    Map<Type, Component> mapTypeComponent = components
+        .stream()
+        .collect(Collectors.toMap(Component::getType, Function.identity()));
+
+    if (mapTypeComponent.containsKey(Type.PSU)) {
+      Boolean check = CompatibilityService.checkMaxPowerAndPSUCompatibility(
+          components, mapTypeComponent.get(Type.PSU).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MAX_POWER_PSU.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.MOTHERBOARD) && mapTypeComponent.containsKey(Type.RAM)) {
+      Boolean check = CompatibilityService.checkMotherboardAndRAMCompatibility(
+          mapTypeComponent.get(Type.RAM).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MOTHERBOARD_RAM.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.MOTHERBOARD) && mapTypeComponent.containsKey(Type.RAM)) {
+      Boolean check = CompatibilityService.checkMotherboardAndRAMSlotNumberCompatibility(
+          mapTypeComponent.get(Type.RAM).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MOTHERBOARD_RAM_SLOTS.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.CASE) && mapTypeComponent.containsKey(Type.MOTHERBOARD)) {
+      Boolean check = CompatibilityService.checkCaseAndMotherboardCompatibility(
+          mapTypeComponent.get(Type.CASE).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MOTHERBOARD_CASE.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.CPU) && mapTypeComponent.containsKey(Type.MOTHERBOARD)) {
+      Boolean check = CompatibilityService.checkCPUAndMotherboardCompatibility(
+          mapTypeComponent.get(Type.CPU).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MOTHERBOARD_CPU.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.CPU) && mapTypeComponent.containsKey(Type.COOLER)) {
+      Boolean check = CompatibilityService.checkCPUAndCoolerCompatibility(
+          mapTypeComponent.get(Type.CPU).getData(), mapTypeComponent.get(Type.COOLER).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.CPU_COOLER.getErrorText()));
+      }
+    }
+    return messages.toArray(new Message[0]);
+  }
+  // CHECKSTYLE:ON
 }
