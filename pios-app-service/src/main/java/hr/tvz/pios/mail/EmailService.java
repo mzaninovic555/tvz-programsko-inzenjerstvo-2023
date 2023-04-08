@@ -38,6 +38,9 @@ public class EmailService {
   }
 
   private void posaljiMail(String toAddress, String subject, String html) {
+    if (!piosProperties.mailEnabled()) {
+      return;
+    }
     MimeMessagePreparator messagePreparator = mimeMessage -> {
       MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
       messageHelper.setFrom(piosProperties.mail().from());
