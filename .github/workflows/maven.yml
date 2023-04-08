@@ -10,7 +10,6 @@ name: Java CI with Maven
 
 on:
   workflow_dispatch:
-  pull_request:
   push:
     branches:
       - '*'
@@ -19,6 +18,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: pios
+          POSTGRES_PASSWORD: tvz_pios_2023
+          POSTGRES_DB: pios
+        ports:
+          - 5432:5432
 
     steps:
     - uses: actions/checkout@v3

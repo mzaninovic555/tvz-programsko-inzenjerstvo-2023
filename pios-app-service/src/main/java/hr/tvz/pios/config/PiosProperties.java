@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "pios")
 public record PiosProperties(
     String frontendUrl,
+    Boolean mailEnabled,
     Mail mail,
     Jwt jwt,
     String[] corsOrigins) {
