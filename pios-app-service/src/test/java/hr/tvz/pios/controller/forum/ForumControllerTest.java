@@ -85,6 +85,18 @@ public class ForumControllerTest {
 
   @Test
   @Transactional
+  void createForumPostExpect400() throws Exception {
+    ForumPostCreateRequest forumPostCreateRequest = new ForumPostCreateRequest(3L, "title of test post", "content of test post");
+    this.mockMvc.perform(
+            post("/api/v1/forum/create")
+                .header("authorization", "Bearer " + jwtService.createJwtToken(user))
+                .content(objectMapper.writeValueAsString(forumPostCreateRequest))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  @Transactional
   void deleteForumPost() throws Exception {
     Integer id = 1;
     this.mockMvc.perform(
