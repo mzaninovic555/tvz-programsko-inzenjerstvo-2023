@@ -39,7 +39,9 @@ public class ForumService {
     if (postOptional.isEmpty() || buildOptional.isEmpty()) {
       throw PiosException.notFound(Message.error("Requested forum post not found"));
     }
-    return new ForumResponse(postOptional.get(), BuildResponse.fromBuild(buildOptional.get()));
+    return new ForumResponse(
+        postOptional.get(),
+        BuildResponse.fromBuild(buildOptional.get(), new Message[] {}));
   }
 
   public ForumPostCreateResponse createForumPost(
