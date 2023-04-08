@@ -1,19 +1,20 @@
 package hr.tvz.pios.repository.component;
 
-import hr.tvz.pios.common.Type;
-import hr.tvz.pios.modul.component.Component;
-import hr.tvz.pios.modul.component.ComponentRepository;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import hr.tvz.pios.common.Type;
+import hr.tvz.pios.modul.component.Component;
+import hr.tvz.pios.modul.component.ComponentRepository;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
 @SpringBootTest
+@ActiveProfiles(profiles = "test")
 public class ComponentRepositoryTest {
 
   @Autowired
