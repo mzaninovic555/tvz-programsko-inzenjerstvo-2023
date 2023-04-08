@@ -84,6 +84,15 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
     setIsReviewed(false);
   };
 
+  const printSpecs = () => {
+    const listItems: JSX.Element[] = [];
+    const jsonSpecs = JSON.parse(product.data);
+    for (const key in jsonSpecs) {
+      listItems.push(<Chip className={'mr-2'} key={key} label={`${key}: ${jsonSpecs[key]}`}></Chip>);
+    }
+    return <>{listItems}</>;
+  };
+
   return (
     <div className="col-12 md:col-12 lg:col-12 xl:col-12 sm:col-12">
       <div className="flex flex-column sm:flex-column md:flex-row xl:flex-row xl:align-items-start p-3 gap-4">
@@ -101,6 +110,7 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
             </div>}
             <div className="flex">
               <Chip label={product.manufacturer.name} className="mr-2"/>
+              {printSpecs()}
               <div className="flex align-items-center gap-3">
                 <span className="flex align-items-center gap-2">
                   <i className="pi pi-tag"/>
