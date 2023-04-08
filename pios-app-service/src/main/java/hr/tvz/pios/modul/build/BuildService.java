@@ -109,8 +109,8 @@ public class BuildService {
   public BuildChangeResponse editInfo(UserAuthentication auth, BuildInfoChangeRequest req) {
     Build build = validateRequest(auth, req.link());
 
-    // ak ocemo mijenjat je li public, i postoji forum post, baci exception
-    if (req.isPublic() != build.isPublic && forumRepository.getById(build.getId()).isPresent()) {
+    // ak ocemo mijenjat build u private, i postoji forum post, baci exception
+    if (build.isPublic() && req.isPublic() != build.isPublic && forumRepository.getById(build.getId()).isPresent()) {
       throw PiosException.badRequest(
           Message.error("You can't change build to private while it's associated with a forum post"));
     }
