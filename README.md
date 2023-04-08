@@ -16,7 +16,6 @@ Korištene tehnologije:
 * Project Lombok
 * JUnit
 * PostgreSQL
-* H2 Memory za integracijske testove
 * Flyway Migracije
 * ReactJS
 * PrimeReact
