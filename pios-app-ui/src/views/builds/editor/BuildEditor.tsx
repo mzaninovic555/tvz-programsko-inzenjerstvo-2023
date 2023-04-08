@@ -112,7 +112,7 @@ const BuildEditor = () => {
 
   const compatibilityMessagesToList = (
     <div>
-      {build.compatibilityMessages.map((message) => <li>{message.content}</li>)}
+      {build.compatibilityMessages.map((message) => <li key={message.content}>{message.content}</li>)}
     </div>
   );
 
@@ -120,7 +120,7 @@ const BuildEditor = () => {
     {(!build.compatibilityMessages || build.compatibilityMessages.length == 0) &&
       <Message severity="success" className="w-full mb-2" text="No detected compatibility issues"/>}
     {build.compatibilityMessages && build.compatibilityMessages.length > 0 &&
-        <Message severity="warn" className="w-full mb-2" content={compatibilityMessagesToList}/>}
+        <Message severity="error" className="w-full mb-2" content={compatibilityMessagesToList}/>}
   </>);
 
   const typeTemplate = (obj: {type: string}) => {

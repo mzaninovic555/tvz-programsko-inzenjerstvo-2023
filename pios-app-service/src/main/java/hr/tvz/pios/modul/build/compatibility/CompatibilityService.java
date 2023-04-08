@@ -2,7 +2,9 @@ package hr.tvz.pios.modul.build.compatibility;
 
 
 import com.google.gson.Gson;
+import hr.tvz.pios.common.Type;
 import hr.tvz.pios.modul.component.Component;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,11 +26,25 @@ public class CompatibilityService {
     Map<String, String> map1 = getMapFromJson(json1);
     Map<String, String> map2 = getMapFromJson(json2);
 
-    if (map1.get(parameter) == null || map2.get(parameter) == null) {
+    if (!map1.containsKey(parameter) || !map2.containsKey(parameter)) {
       return Boolean.TRUE;
     }
 
-    return map1.get(parameter).equalsIgnoreCase(map2.get(parameter));
+    return map1.get(parameter).equalsIgnoreCase(map2.get(parameter))
+        || splitListAndCheckIfContains(map1.get(parameter), map2.get(parameter), ",")
+        || splitListAndCheckIfContains(map2.get(parameter), map1.get(parameter), ",");
+  }
+
+  /**
+   * Provjerava sadrži li prvi parametar drugi string, nakon što se prvi splita po splitRegex.
+   * @param stringToSplit String koji se splita i pretvara u polje
+   * @param stringToCheck String koji se provjerava postoji li u listi
+   * @param splitRegex Regex po kojem se splita string
+   * @return TRUE - nadjen
+   */
+  private static Boolean splitListAndCheckIfContains(String stringToSplit, String stringToCheck, String splitRegex) {
+    return Arrays.stream(stringToSplit.split(splitRegex))
+        .anyMatch(value -> value.strip().equalsIgnoreCase(stringToCheck.strip()));
   }
 
   private static Map<String, String> getMapFromJson(String json) {
@@ -39,8 +55,24 @@ public class CompatibilityService {
     return checkComponentCompatibility(cpuJson, motherboardJson, "Socket");
   }
 
+  public static Boolean checkCPUAndCoolerCompatibility(String cpuJson, String coolerJson) {
+    return checkComponentCompatibility(cpuJson, coolerJson, "Socket");
+  }
+
   public static Boolean checkMotherboardAndRAMCompatibility(String ramJson, String motherboardJson) {
     return checkComponentCompatibility(ramJson, motherboardJson, "RAM Type");
+  }
+
+  public static Boolean checkMotherboardAndRAMSlotNumberCompatibility(String ramJson, String motherboardJson) {
+    String parameter = "Memory Slots";
+    Map<String, String> ramMap = getMapFromJson(ramJson);
+    Map<String, String> motherboardMap = getMapFromJson(motherboardJson);
+
+    if (!ramMap.containsKey(parameter) || !motherboardMap.containsKey(parameter)) {
+      return Boolean.TRUE;
+    }
+
+    return Double.parseDouble(ramMap.get(parameter)) <= Double.parseDouble(motherboardMap.get(parameter));
   }
 
   public static Boolean checkCaseAndMotherboardCompatibility(String caseJson, String motherboardJson) {
@@ -55,12 +87,15 @@ public class CompatibilityService {
     if (psuJsonMap.get(wattageString) == null) {
       return Boolean.TRUE;
     }
-    double psuWattage = Double.parseDouble(psuJsonMap.get(wattageString));
+    double psuWattage = Double.parseDouble(psuJsonMap.get(wattageString).replaceAll("[A-z]", ""));
     double componentsWattageSum = components
         .stream()
+        .filter(component -> !component.getType().equals(Type.PSU))
         .mapToDouble(component -> {
-          Map<String, String> mapJson = getMapFromJson(component.getData());
-          return mapJson.get(wattageString) != null ? Double.parseDouble(mapJson.get(wattageString)) : 0.0;
+          Map<String, String> componentJson = getMapFromJson(component.getData());
+          return componentJson.containsKey(wattageString)
+              ? Double.parseDouble(componentJson.get(wattageString).replaceAll("[A-z]", ""))
+              : 0.0;
         })
         .sum();
 

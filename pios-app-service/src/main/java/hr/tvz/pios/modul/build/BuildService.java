@@ -202,13 +202,14 @@ public class BuildService {
    * @param components lista komponenti
    * @return lista poruka sa kompatibilnim problemima
    */
-  private Message[] checkComponentsCompatibility(List<Component> components) {
+  // CHECKSTYLE:OFF
+  public Message[] checkComponentsCompatibility(List<Component> components) {
     List<Message> messages = new ArrayList<>();
     Map<Type, Component> mapTypeComponent = components
         .stream()
         .collect(Collectors.toMap(Component::getType, Function.identity()));
 
-    if (mapTypeComponent.get(Type.PSU) != null) {
+    if (mapTypeComponent.containsKey(Type.PSU)) {
       Boolean check = CompatibilityService.checkMaxPowerAndPSUCompatibility(
           components, mapTypeComponent.get(Type.PSU).getData());
       if (!check) {
@@ -221,6 +222,14 @@ public class BuildService {
           mapTypeComponent.get(Type.RAM).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
       if (!check) {
         messages.add(Message.warn(CompatibilityError.MOTHERBOARD_RAM.getErrorText()));
+      }
+    }
+
+    if (mapTypeComponent.containsKey(Type.MOTHERBOARD) && mapTypeComponent.containsKey(Type.RAM)) {
+      Boolean check = CompatibilityService.checkMotherboardAndRAMSlotNumberCompatibility(
+          mapTypeComponent.get(Type.RAM).getData(), mapTypeComponent.get(Type.MOTHERBOARD).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.MOTHERBOARD_RAM_SLOTS.getErrorText()));
       }
     }
 
@@ -240,9 +249,14 @@ public class BuildService {
       }
     }
 
-    if (messages.size() == 0) {
-      messages.add(Message.success("No compatibility issues detected"));
+    if (mapTypeComponent.containsKey(Type.CPU) && mapTypeComponent.containsKey(Type.COOLER)) {
+      Boolean check = CompatibilityService.checkCPUAndCoolerCompatibility(
+          mapTypeComponent.get(Type.CPU).getData(), mapTypeComponent.get(Type.COOLER).getData());
+      if (!check) {
+        messages.add(Message.warn(CompatibilityError.CPU_COOLER.getErrorText()));
+      }
     }
     return messages.toArray(new Message[0]);
   }
+  // CHECKSTYLE:ON
 }
