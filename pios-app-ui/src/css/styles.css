@@ -152,3 +152,7 @@
 .card-content-no-bottom-margin > .p-card-body > .p-card-content {
   padding-bottom: 0;
 }
+
+.small-chip > span {
+  font-size: small;
+}

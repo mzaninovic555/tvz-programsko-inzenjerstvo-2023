@@ -85,12 +85,10 @@ const ComponentTemplate = (props: ComponentTemplateProps) => {
   };
 
   const printSpecs = () => {
-    const listItems: JSX.Element[] = [];
-    const jsonSpecs = JSON.parse(product.data);
-    for (const key in jsonSpecs) {
-      listItems.push(<Chip className={'mr-2'} key={key} label={`${key}: ${jsonSpecs[key]}`}></Chip>);
-    }
-    return <>{listItems}</>;
+    const jsonSpecs = JSON.parse(product.data) as Record<string, string>;
+    return (<>
+      {Object.keys(jsonSpecs).map((key) => <Chip className={'mr-2 small-chip'} key={key} label={`${key}: ${jsonSpecs[key]}`}/>)}
+    </>);
   };
 
   return (

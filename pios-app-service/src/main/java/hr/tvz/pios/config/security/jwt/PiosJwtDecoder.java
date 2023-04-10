@@ -15,10 +15,10 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.oauth2.jwt.BadJwtException;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 /**
@@ -63,7 +63,7 @@ public class PiosJwtDecoder implements JwtDecoder {
 
     // If an exception occurred throw JwtException (ends authentication)
     if (caughtException != null) {
-      throw new JwtException("Invalid JWT - " + caughtException.getMessage());
+      throw new BadJwtException("Invalid JWT - " + caughtException.getMessage());
     }
 
     try {
@@ -81,7 +81,7 @@ public class PiosJwtDecoder implements JwtDecoder {
           .claims(c -> c.putAll(claims))
           .build();
     } catch (ParseException e) {
-      throw new JwtException("Provided token is not valid");
+      throw new BadJwtException("Provided token is not valid");
     }
   }
 }
